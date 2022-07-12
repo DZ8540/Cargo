@@ -1,0 +1,17 @@
+# * Folders
+
+tmp
+build
+coverage
+node_modules
+
+.idea
+.vscode
+.history
+
+# * Files
+
+.env
+.DS_STORE
+
+*.mwb.bak
