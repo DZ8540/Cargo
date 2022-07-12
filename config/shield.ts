@@ -236,3 +236,11 @@ export const hsts: ShieldConfig['hsts'] = {
 export const contentTypeSniffing: ShieldConfig['contentTypeSniffing'] = {
   enabled: true,
 }
+
+export const ROLES_NAMES = ['admin', 'cargo owner', 'carrier', 'carrier - cargo owner'] as const
+export enum RolesNames {
+  ADMIN = 0,
+  CARGO_OWNER = 1,
+  CARRIER = 2,
+  CARRIER_CARGO_OWNER = 3,
+}
