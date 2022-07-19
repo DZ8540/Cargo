@@ -61,7 +61,8 @@ export const TABLES_NAMES = {
    * * User
    */
 
-  ROLE: 'roles',
+  ROLES: 'roles',
+  USERS: 'users',
 
 } as const
 
