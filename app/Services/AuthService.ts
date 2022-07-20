@@ -4,6 +4,7 @@ import type ApiLoginValidator from 'App/Validators/Auth/ApiLoginValidator'
 import type RegisterValidator from 'App/Validators/Auth/Register/RegisterValidator'
 import type CodeVerifyValidator from 'App/Validators/Auth/Register/CodeVerifyValidator'
 import type EmailVerifyValidator from 'App/Validators/Auth/Register/EmailVerifyValidator'
+import type ForgotPasswordValidator from 'App/Validators/Auth/ForgotPassword/ForgotPasswordValidator'
 import type { Err } from 'Contracts/response'
 import type { AuthHeaders } from 'Contracts/auth'
 import type { ModelAttributes } from '@ioc:Adonis/Lucid/Orm'
@@ -16,6 +17,7 @@ import RedisService from './RedisService'
 import TokenService from './TokenService'
 import MailerService from './MailerService'
 import UserService from './User/UserService'
+import Logger from '@ioc:Adonis/Core/Logger'
 import { RedisKeys } from 'Config/redis'
 import { getRandom } from 'Helpers/index'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
@@ -49,9 +51,9 @@ export default class AuthService {
     }
   }
 
-  public static async emailVerify({ email }: EmailVerifyValidator['schema']['props']): Promise<void> {
+  public static async emailVerify({ email }: EmailVerifyValidator['schema']['props'], isForForgotPassword: boolean = false): Promise<void> {
     const code: number = getRandom(100000, 999999) // Only 6-digit code
-    const redisKey: RedisKeys = RedisKeys.EMAIL_VERIFY
+    const redisKey: RedisKeys = isForForgotPassword ? RedisKeys.FORGOT_PASSWORD_USER_VERIFY : RedisKeys.EMAIL_VERIFY
 
     try {
       await RedisService.set(redisKey, email, code, { expiration: authConfig.userVerifyExpire, safety: true })
@@ -62,8 +64,8 @@ export default class AuthService {
     }
   }
 
-  public static async codeVerify(payload: CodeVerifyValidator['schema']['props']): Promise<void> {
-    const redisKey: RedisKeys = RedisKeys.EMAIL_VERIFY
+  public static async codeVerify(payload: CodeVerifyValidator['schema']['props'], isForForgotPassword: boolean = false): Promise<void> {
+    const redisKey: RedisKeys = isForForgotPassword ? RedisKeys.FORGOT_PASSWORD_USER_VERIFY : RedisKeys.EMAIL_VERIFY
 
     try {
       const candidateCode: string = await RedisService.get(redisKey, payload.email)
@@ -89,6 +91,28 @@ export default class AuthService {
       return await UserService.create(userPayload)
     } catch (err: Err | any) {
       throw err
+    }
+  }
+
+  public static async forgotPassword(payload: ForgotPasswordValidator['schema']['props']): Promise<User> {
+    try {
+      await this.codeVerify(payload, true)
+
+      await RedisService.remove(RedisKeys.FORGOT_PASSWORD_USER_VERIFY, payload.email)
+    } catch (err: Err | any) {
+      throw err
+    }
+
+    try {
+      const user: User = await UserService.get(payload.email)
+
+      return await user.merge({
+        password: payload.password,
+        avatar: user.$original.avatar, // For mutate hook and remove uploads in avatar path
+      }).save()
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
     }
   }
 

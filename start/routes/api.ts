@@ -18,6 +18,14 @@ Route.group(() => {
 
     }).prefix('register')
 
+    Route.group(() => {
+
+      Route.post('/', 'Api/AuthController.forgotPassword')
+      Route.post('/emailVerify', 'Api/AuthController.forgotPasswordEmailVerify')
+      Route.post('/codeVerify', 'Api/AuthController.forgotPasswordCodeVerify')
+
+    }).prefix('/forgotPassword')
+
   }).prefix('auth')
 
   /**

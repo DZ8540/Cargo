@@ -45,7 +45,8 @@ export default redisConfig({
   },
 })
 
-export const REDIS_KEYS = ['emailVerify'] as const
+export const REDIS_KEYS = ['emailVerify', 'forgotPasswordUserVerify'] as const
 export enum RedisKeys {
   EMAIL_VERIFY = 0,
+  FORGOT_PASSWORD_USER_VERIFY = 1,
 }
