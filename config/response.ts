@@ -20,6 +20,8 @@ export enum ResponseMessages {
 
   VALIDATION_ERROR = 'Заполните пожалуйста все поля правильно!',
   CODE_VERIFICATION_NOT_FOUND = 'Код верификации не найден!',
+  TOKEN_ERROR = 'Токен верификации пользователя не найден или просрочен!',
+  MISS_AUTH_HEADERS = 'Не найдены необходимые заголовки для авторизации!',
   CODE_VERIFICATION_ALREADY_EXISTS = 'Верификационный код уже был отправлен вам на почту!',
 
   /**

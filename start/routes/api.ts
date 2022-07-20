@@ -8,6 +8,8 @@ Route.group(() => {
 
   Route.group(() => {
 
+    Route.post('/login', 'Api/AuthController.login').middleware('CheckAuthHeaders')
+
     Route.group(() => {
 
       Route.post('/', 'Api/AuthController.register')

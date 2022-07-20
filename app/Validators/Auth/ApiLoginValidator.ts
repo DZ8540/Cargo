@@ -4,10 +4,9 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import IndexValidator from '../IndexValidator'
 import { schema } from '@ioc:Adonis/Core/Validator'
-import { getVerifyCodeRules } from 'App/Validators/Rules/auth'
-import { getUserEmailRules } from 'App/Validators/Rules/User/user'
+import { getUserEmailRules, getUserPasswordRules } from '../Rules/User/user'
 
-export default class CodeVerifyValidator extends IndexValidator {
+export default class ApiLoginValidator extends IndexValidator {
   constructor(protected ctx: HttpContextContract) {
     super()
   }
@@ -32,13 +31,13 @@ export default class CodeVerifyValidator extends IndexValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string({ trim: true }, getUserEmailRules('unique')),
-    verifyCode: schema.number(getVerifyCodeRules()),
+    email: schema.string({ trim: true }, getUserEmailRules()),
+    password: schema.string({ trim: true }, getUserPasswordRules()),
   })
 
   /**
-   * Custom messages for validation failures. You can make use of dot notation `(.)`
-   * for targeting nested fields and array expressions `(*)` for targeting all
+   * Custom messages for validation failures. You can make use of dot notation (.)
+   * for targeting nested fields and array expressions (*) for targeting all
    * children of an array. For example:
    *
    * {
@@ -47,8 +46,5 @@ export default class CodeVerifyValidator extends IndexValidator {
    * }
    *
    */
-  public messages = {
-    ...this.messages,
-    range: '' // Not displaying code digit
-  }
+  public messages = this.messages
 }

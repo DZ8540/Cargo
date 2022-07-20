@@ -1,18 +1,55 @@
 // * Types
 import type User from 'App/Models/User/User'
 import type { Err } from 'Contracts/response'
+import type { AuthHeaders } from 'Contracts/auth'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
 
 import AuthService from 'App/Services/AuthService'
 import ResponseService from 'App/Services/ResponseService'
 import ExceptionService from 'App/Services/ExceptionService'
-import RegisterValidator from 'App/Validators/Auth/RegisterValidator'
-import CodeVerifyValidator from 'App/Validators/Auth/CodeVerifyValidator'
-import EmailVerifyValidator from 'App/Validators/Auth/EmailVerifyValidator'
+import ApiLoginValidator from 'App/Validators/Auth/ApiLoginValidator'
+import RegisterValidator from 'App/Validators/Auth/Register/RegisterValidator'
+import CodeVerifyValidator from 'App/Validators/Auth/Register/CodeVerifyValidator'
+import EmailVerifyValidator from 'App/Validators/Auth/Register/EmailVerifyValidator'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
+import { COOKIE_REFRESH_TOKEN_CONFIG, COOKIE_REFRESH_TOKEN_KEY } from 'Config/auth'
 
 export default class AuthController {
+  public async login({ request, response }: HttpContextContract) {
+    let payload: ApiLoginValidator['schema']['props']
+    const headers: AuthHeaders = {
+      fingerprint: request.header('User-Fingerprint')!,
+      userAgent: request.header('User-Agent')!,
+      ip: request.ip(),
+    }
+
+    try {
+      payload = await request.validate(ApiLoginValidator)
+    } catch (err: any) {
+      throw new ExceptionService({
+        code: ResponseCodes.VALIDATION_ERROR,
+        message: ResponseMessages.VALIDATION_ERROR,
+        errors: err.messages,
+      })
+    }
+
+    try {
+      const data = await AuthService.loginViaAPI(payload, headers)
+
+      response.cookie(COOKIE_REFRESH_TOKEN_KEY, data.tokens.refresh, COOKIE_REFRESH_TOKEN_CONFIG)
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, {
+        user: data.user,
+        token: data.tokens.access
+      }))
+    } catch (err: Err | any) {
+      response.clearCookie(COOKIE_REFRESH_TOKEN_KEY)
+
+      throw new ExceptionService(err)
+    }
+  }
+
   /**
    * * Register
    */
