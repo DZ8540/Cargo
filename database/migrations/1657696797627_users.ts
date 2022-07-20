@@ -14,7 +14,7 @@ export default class extends BaseSchema {
 
       table.string('email').unique().notNullable()
       table.string('password').notNullable()
-      table.boolean('subject').notNullable().comment(`
+      table.boolean('subject').defaultTo(0).notNullable().comment(`
         Тип лица
         0 - физ лицо
         1 - юр лицо

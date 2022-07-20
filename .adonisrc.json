@@ -4,19 +4,22 @@
     "./commands",
     "@adonisjs/core/build/commands/index.js",
     "@adonisjs/repl/build/commands",
-    "@adonisjs/lucid/build/commands"
+    "@adonisjs/lucid/build/commands",
+    "@adonisjs/mail/build/commands"
   ],
   "exceptionHandlerNamespace": "App/Exceptions/Handler",
   "aliases": {
     "App": "app",
     "Config": "config",
     "Database": "database",
-    "Contracts": "contracts"
+    "Contracts": "contracts",
+    "Helpers": "helpers"
   },
   "preloads": [
     "./start/routes",
     "./start/kernel",
-    "./start/database"
+    "./start/database",
+    "./start/validator"
   ],
   "providers": [
     "./providers/AppProvider",
@@ -24,7 +27,9 @@
     "@adonisjs/session",
     "@adonisjs/view",
     "@adonisjs/shield",
-    "@adonisjs/lucid"
+    "@adonisjs/lucid",
+    "@adonisjs/redis",
+    "@adonisjs/mail"
   ],
   "metaFiles": [
     {
