@@ -20,6 +20,12 @@ export default class extends BaseSchema {
 
       table.timestamp('createdAt', { useTz: true }).notNullable()
       table.timestamp('updatedAt', { useTz: true }).notNullable()
+
+      /**
+       * * Comment
+       */
+
+      table.comment('Роль админа всегда должна быть первой!!!')
     })
   }
 

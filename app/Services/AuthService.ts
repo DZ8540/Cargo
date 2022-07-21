@@ -116,6 +116,32 @@ export default class AuthService {
     }
   }
 
+  public static async refreshToken(userId: User['id'], token: string, headers: AuthHeaders): Promise<Tokens> {
+    let user: User
+    let tokenData: UserTokenPayload
+
+    try {
+      user = await UserService.get(userId)
+      tokenData = TokenService.verifyToken(token, authConfig.refresh.key)
+
+
+      if (userId != tokenData.id)
+        throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.TOKEN_ERROR } as Err
+    } catch (err: Err | any) {
+      throw err
+    }
+
+    try {
+      const tokens: Tokens = this.createTokens(user)
+
+      await TokenService.updateUserTokenSession(token, tokens.refresh, headers)
+
+      return tokens
+    } catch (err: Err | any) {
+      throw err
+    }
+  }
+
   /**
    * * Private methods
    */

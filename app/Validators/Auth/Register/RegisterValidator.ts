@@ -33,10 +33,10 @@ export default class RegisterValidator extends IndexValidator {
    *    ```
    */
   public schema = schema.create({
-    roleId: schema.number(getRoleIdRules()),
-    email: schema.string({ trim: true }, getUserEmailRules('unique')),
     verifyCode: schema.number(getVerifyCodeRules()),
     password: schema.string({ trim: true }, getUserPasswordRules(true)),
+    email: schema.string({ trim: true }, getUserEmailRules('unique')),
+    roleId: schema.number(getRoleIdRules({ isWithoutAdmin: true, withUniqueOrExists: 'exists' })),
   })
 
   /**

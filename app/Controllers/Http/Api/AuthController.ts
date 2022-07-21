@@ -1,6 +1,7 @@
 // * Types
 import type User from 'App/Models/User/User'
 import type { Err } from 'Contracts/response'
+import type { Tokens } from 'Contracts/token'
 import type { AuthHeaders } from 'Contracts/auth'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
@@ -46,6 +47,28 @@ export default class AuthController {
         user: data.user,
         token: data.tokens.access
       }))
+    } catch (err: Err | any) {
+      response.clearCookie(COOKIE_REFRESH_TOKEN_KEY)
+
+      throw new ExceptionService(err)
+    }
+  }
+
+  public async refreshToken({ request, params, response }: HttpContextContract) {
+    const userId: User['id'] = params.userId
+    const token: string = request.cookie(COOKIE_REFRESH_TOKEN_KEY)
+    const headers: AuthHeaders = {
+      fingerprint: request.header('User-Fingerprint')!,
+      userAgent: request.header('User-Agent')!,
+      ip: request.ip(),
+    }
+
+    try {
+      const tokens: Tokens = await AuthService.refreshToken(userId, token, headers)
+
+      response.cookie(COOKIE_REFRESH_TOKEN_KEY, tokens.refresh, COOKIE_REFRESH_TOKEN_CONFIG)
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, tokens.access))
     } catch (err: Err | any) {
       response.clearCookie(COOKIE_REFRESH_TOKEN_KEY)
 

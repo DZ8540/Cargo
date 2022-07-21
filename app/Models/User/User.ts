@@ -48,7 +48,7 @@ export default class User extends BaseModel {
   public city?: string
 
   @column()
-  public avatar?: string
+  public avatar?: string | null
 
   /**
    * * Foreign keys
