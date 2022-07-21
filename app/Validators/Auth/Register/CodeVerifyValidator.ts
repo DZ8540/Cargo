@@ -1,4 +1,5 @@
 // * Types
+import type { CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
 
@@ -47,7 +48,7 @@ export default class CodeVerifyValidator extends IndexValidator {
    * }
    *
    */
-  public messages = {
+  public messages: CustomMessages = {
     ...this.messages,
     range: '' // Not displaying code digit
   }

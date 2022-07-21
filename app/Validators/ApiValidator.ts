@@ -1,14 +1,12 @@
 // * Types
 import type { CustomMessages } from '@ioc:Adonis/Core/Validator'
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
 
-import IndexValidator from '../IndexValidator'
-import { schema } from '@ioc:Adonis/Core/Validator'
-import { getUserEmailRules, getUserPasswordRules } from '../Rules/User/user'
+import IndexValidator from './IndexValidator'
+import { rules, schema } from '@ioc:Adonis/Core/Validator'
 
-export default class ApiLoginValidator extends IndexValidator {
-  constructor(protected ctx: HttpContextContract) {
+export default class ApiValidator extends IndexValidator {
+  constructor() {
     super()
   }
 
@@ -32,13 +30,20 @@ export default class ApiLoginValidator extends IndexValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string({ trim: true }, getUserEmailRules()),
-    password: schema.string({ trim: true }, getUserPasswordRules()),
+    page: schema.number([ rules.unsigned() ]),
+
+    /**
+     * * Optional schemes
+     */
+
+    limit: schema.number.optional([ rules.unsigned() ]),
+    orderBy: schema.enum.optional(['asc', 'desc'] as const),
+    orderByColumn: schema.string.optional({ trim: true }),
   })
 
   /**
-   * Custom messages for validation failures. You can make use of dot notation (.)
-   * for targeting nested fields and array expressions (*) for targeting all
+   * Custom messages for validation failures. You can make use of dot notation `(.)`
+   * for targeting nested fields and array expressions `(*)` for targeting all
    * children of an array. For example:
    *
    * {

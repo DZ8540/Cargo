@@ -1,3 +1,4 @@
+import News from 'App/Models/News'
 import User from 'App/Models/User/User'
 import Factory from '@ioc:Adonis/Lucid/Factory'
 import { ROLES_NAMES } from 'Config/shield'
@@ -10,17 +11,27 @@ export const UserFactory = Factory
     const randomRole = Math.floor(Math.random() * roles.length) + 1
 
     return {
+      roleId: randomRole,
+      avatar: faker.image.avatar(),
       email: faker.internet.email(),
-      password: faker.internet.password(),
+      city: faker.address.cityName(),
+      lastName: faker.name.lastName(),
       subject: faker.datatype.boolean(),
       firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
+      password: faker.internet.password(),
       phone: faker.unique(faker.phone.number),
       companyName: faker.unique(faker.company.companyName),
       taxIdentificationNumber: faker.unique(faker.datatype.number),
-      city: faker.address.cityName(),
-      avatar: faker.image.avatar(),
-      roleId: randomRole,
+    }
+  })
+  .build()
+
+export const NewsFactory = Factory
+  .define(News, ({ faker }) => {
+    return {
+      image: faker.image.animals(),
+      title: faker.unique(faker.vehicle.vehicle),
+      description: faker.lorem.paragraphs(10),
     }
   })
   .build()

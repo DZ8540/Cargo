@@ -1,4 +1,5 @@
 // * Types
+import type { CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
 
@@ -47,5 +48,5 @@ export default class ForgotPasswordCodePasswordVerifyValidator extends IndexVali
    * }
    *
    */
-  public messages = this.messages
+  public messages: CustomMessages = this.messages
 }

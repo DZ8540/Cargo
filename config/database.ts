@@ -14,6 +14,7 @@ export const USER_PASSWORD_MIN_USERS_LENGTH: number = 8
 export const USER_PASSWORD_MAX_USERS_LENGTH: number = 50
 
 export const TABLES_NAMES = {
+  NEWS: 'news',
 
   /**
    * * User
@@ -22,7 +23,6 @@ export const TABLES_NAMES = {
   ROLES: 'roles',
   USERS: 'users',
   SESSIONS: 'sessions',
-
 } as const
 
 const databaseConfig: DatabaseConfig = {

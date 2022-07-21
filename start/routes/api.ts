@@ -62,4 +62,16 @@ Route.group(() => {
 
   }).prefix('user')
 
+  /**
+   * * News
+   */
+
+  Route.group(() => {
+
+    Route.post('/', 'Api/NewsController.all')
+    Route.post('/random', 'Api/NewsController.random')
+    Route.post('/:slug', 'Api/NewsController.get')
+
+  }).prefix('/news')
+
 }).prefix('api')
