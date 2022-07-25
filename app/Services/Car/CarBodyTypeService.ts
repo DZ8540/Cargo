@@ -3,7 +3,7 @@ import type { Err } from 'Contracts/response'
 // * Types
 
 import Logger from '@ioc:Adonis/Core/Logger'
-import CarBodyType from 'App/Models/CarBodyType'
+import CarBodyType from 'App/Models/Car/CarBodyType'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class CarBodyTypeService {

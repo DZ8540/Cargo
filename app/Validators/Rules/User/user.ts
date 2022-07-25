@@ -7,10 +7,17 @@ import { rules } from '@ioc:Adonis/Core/Validator'
 import {
   USER_PASSWORD_MAX_USERS_LENGTH, USER_PASSWORD_MIN_USERS_LENGTH,
   TABLES_NAMES, USER_FULL_NAME_MIN_USERS_LENGTH,
-  USER_FULL_NAME_MAX_USERS_LENGTH
+  USER_FULL_NAME_MAX_USERS_LENGTH,
 } from 'Config/database'
 
 const TABLE: string = TABLES_NAMES.USERS
+
+export function getUserIdRules(table: string = TABLE): Rule[] {
+  return [
+    rules.unsigned(),
+    rules.exists({ table, column: 'id' })
+  ]
+}
 
 export function getUserEmailRules(withUniqueOrExists: 'unique' | 'exists' | false = false, currentUserId: User['id'] | null = null, table: string = TABLE): Rule[] {
   const rulesArr: Rule[] = [ rules.email() ]

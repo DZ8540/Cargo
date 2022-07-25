@@ -1,7 +1,8 @@
 import News from 'App/Models/News'
+import Car from 'App/Models/Car/Car'
 import User from 'App/Models/User/User'
 import Factory from '@ioc:Adonis/Lucid/Factory'
-import CarBodyType from 'App/Models/CarBodyType'
+import CarBodyType from 'App/Models/Car/CarBodyType'
 import { ROLES_NAMES } from 'Config/shield'
 
 export const UserFactory = Factory
@@ -37,8 +38,31 @@ export const NewsFactory = Factory
   })
   .build()
 
+/**
+ * * Car
+ */
+
 export const CarBodyTypeFactory = Factory
   .define(CarBodyType, ({ faker }) => {
     return { name: faker.unique(faker.vehicle.type) }
+  })
+  .relation('cars', () => CarFactory)
+  .build()
+
+export const CarFactory = Factory
+  .define(Car, ({ faker }) => {
+    return {
+      name: faker.lorem.word(),
+      additionalConfiguration: faker.datatype.number(2),
+      carrying: faker.datatype.number(),
+      capacity: faker.datatype.number(),
+      width: faker.datatype.number(),
+      height: faker.datatype.number(),
+      length: faker.datatype.number(),
+      sts: faker.unique(faker.vehicle.vin),
+      vin: faker.unique(faker.vehicle.vin),
+      pts: faker.unique(faker.vehicle.vrm),
+      userId: faker.datatype.number({ min: 1, max: 20 }),
+    }
   })
   .build()

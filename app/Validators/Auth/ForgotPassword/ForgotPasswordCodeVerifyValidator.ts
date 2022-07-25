@@ -13,7 +13,7 @@ export default class ForgotPasswordCodePasswordVerifyValidator extends IndexVali
     super()
   }
 
-  /*
+  /**
    * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
    *
    * For example:

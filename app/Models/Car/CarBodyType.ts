@@ -1,8 +1,10 @@
 // * Types
 import type { DateTime } from 'luxon'
+import type { HasMany } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import Car from './Car'
+import { BaseModel, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 
 export default class CarBodyType extends BaseModel {
   public static readonly columns = [
@@ -25,4 +27,11 @@ export default class CarBodyType extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  /**
+   * * Relations
+   */
+
+  @hasMany(() => Car, { foreignKey: 'carBodyTypeId' })
+  public cars: HasMany<typeof Car>
 }

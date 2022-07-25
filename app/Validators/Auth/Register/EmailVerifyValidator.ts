@@ -11,7 +11,7 @@ export default class EmailVerifyValidator extends IndexValidator {
     super()
   }
 
-  /*
+  /**
    * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
    *
    * For example:

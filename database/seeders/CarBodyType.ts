@@ -6,7 +6,7 @@ export default class extends BaseSeeder {
   public async run () {
 
     try {
-      await CarBodyTypeFactory.createMany(10)
+      await CarBodyTypeFactory.with('cars', 10).createMany(10)
     } catch (err: any) {
       Logger.error(err)
     }

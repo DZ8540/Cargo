@@ -2,8 +2,6 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
 
-  Route.post('/carBodyTypes', 'Api/CarBodyTypesController.getAll').middleware('CheckAccessToken')
-
   /**
    * * Auth
    */
@@ -70,10 +68,26 @@ Route.group(() => {
 
   Route.group(() => {
 
-    Route.post('/', 'Api/NewsController.all')
+    Route.post('/', 'Api/NewsController.paginate')
     Route.post('/random', 'Api/NewsController.random')
     Route.post('/:slug', 'Api/NewsController.get')
 
   }).prefix('/news')
+
+  /**
+   * * Car
+   */
+
+  Route.group(() => {
+
+    Route.get('/bodyTypes', 'Api/Car/CarBodyTypesController.getAll')
+    Route.post('/user/:userId', 'Api/Car/CarsController.paginate')
+
+    Route.get('/:id', 'Api/Car/CarsController.get')
+    Route.patch('/:id', 'Api/Car/CarsController.update')
+    Route.delete('/:id', 'Api/Car/CarsController.delete')
+    Route.post('/', 'Api/Car/CarsController.create')
+
+  }).prefix('car').middleware('CheckAccessToken')
 
 }).prefix('api')

@@ -1,19 +1,21 @@
 // * Types
-import type User from 'App/Models/User/User'
+import type Car from 'App/Models/Car/Car'
 import type { CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
 
 import IndexValidator from './IndexValidator'
-import { getRoleIdRules } from './Rules/User/role'
+import { getUserIdRules } from './Rules/User/user'
 import { schema } from '@ioc:Adonis/Core/Validator'
+import { getCarBodyTypeIdRules } from './Rules/Car/carBodyType'
 import {
-  getUserAvatarOptions, getUserCityRules, getUserCompanyNameRules, getUserEmailRules,
-  getUserFirstNameRules, getUserLastNameRules, getUserPhoneRules, getUserTaxIdentificationNumberRules,
-} from './Rules/User/user'
+  getCarAdditionalConfigurationRules, getCarCapacityRules, getCarCarryingRules, getCarHeightRules,
+  getCarLengthRules, getCarNameRules, getCarPtsRules, getCarStsRules,
+  getCarVinRules, getCarWidthRules
+} from './Rules/Car/car'
 
-export default class UserValidator extends IndexValidator {
-  private readonly currentUserId: User['id'] | null = this.ctx.params.id ?? null
+export default class CarValidator extends IndexValidator {
+  private readonly currentId: Car['id'] | null = this.ctx.params.id ?? null
 
   constructor(protected ctx: HttpContextContract) {
     super()
@@ -39,21 +41,23 @@ export default class UserValidator extends IndexValidator {
    *    ```
    */
   public schema = schema.create({
-    subject: schema.boolean(),
-    roleId: schema.number(getRoleIdRules({ isWithoutAdmin: true, withUniqueOrExists: 'exists' })),
-    email: schema.string({ trim: true }, getUserEmailRules('unique', this.currentUserId)),
+    name: schema.string({ trim: true }, getCarNameRules()),
+    carBodyTypeId: schema.number(getCarBodyTypeIdRules()),
+    additionalConfiguration: schema.number(getCarAdditionalConfigurationRules()),
+    carrying: schema.number(getCarCarryingRules()),
+    capacity: schema.number(getCarCapacityRules()),
+    width: schema.number(getCarWidthRules()),
+    height: schema.number(getCarHeightRules()),
+    length: schema.number(getCarLengthRules()),
+    userId: schema.number(getUserIdRules()),
 
     /**
      * * Optional schemes
      */
 
-    avatar: schema.file.optional(getUserAvatarOptions()),
-    city: schema.string.optional({ trim: true }, getUserCityRules()),
-    lastName: schema.string.optional({ trim: true }, getUserLastNameRules()),
-    firstName: schema.string.optional({ trim: true }, getUserFirstNameRules()),
-    companyName: schema.string.optional({ trim: true }, getUserCompanyNameRules(this.currentUserId)),
-    phone: schema.string.optional({ trim: true }, getUserPhoneRules(true, this.currentUserId)),
-    taxIdentificationNumber: schema.number.optional(getUserTaxIdentificationNumberRules('unique', this.currentUserId)),
+    sts: schema.string.optional({ trim: true }, getCarStsRules('unique', this.currentId)),
+    vin: schema.string.optional({ trim: true }, getCarVinRules('unique', this.currentId)),
+    pts: schema.string.optional({ trim: true }, getCarPtsRules('unique', this.currentId)),
   })
 
   /**

@@ -8,13 +8,14 @@
 import Env from '@ioc:Adonis/Core/Env'
 import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 
-export const USER_FULL_NAME_MIN_USERS_LENGTH: number = 2
-export const USER_FULL_NAME_MAX_USERS_LENGTH: number = 20
-export const USER_PASSWORD_MIN_USERS_LENGTH: number = 8
-export const USER_PASSWORD_MAX_USERS_LENGTH: number = 50
-
 export const TABLES_NAMES = {
   NEWS: 'news',
+
+  /**
+   * * Car
+   */
+
+  CARS: 'cars',
   CAR_BODY_TYPES: 'carBodyTypes',
 
   /**
@@ -25,6 +26,28 @@ export const TABLES_NAMES = {
   USERS: 'users',
   SESSIONS: 'sessions',
 } as const
+
+/**
+ * * Car
+ */
+
+export const CAR_NAME_MIN_LENGTH = 2
+export const CAR_NAME_MAX_LENGTH = 50
+export const CAR_STS_MIN_LENGTH = 2
+export const CAR_STS_MAX_LENGTH = 50
+export const CAR_VIN_MIN_LENGTH = 2
+export const CAR_VIN_MAX_LENGTH = 50
+export const CAR_PTS_MIN_LENGTH = 2
+export const CAR_PTS_MAX_LENGTH = 50
+
+/**
+ * * User
+ */
+
+export const USER_FULL_NAME_MIN_USERS_LENGTH: number = 2
+export const USER_FULL_NAME_MAX_USERS_LENGTH: number = 20
+export const USER_PASSWORD_MIN_USERS_LENGTH: number = 8
+export const USER_PASSWORD_MAX_USERS_LENGTH: number = 50
 
 const databaseConfig: DatabaseConfig = {
   /*

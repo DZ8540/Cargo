@@ -1,5 +1,6 @@
 // * Types
 import type News from 'App/Models/News'
+import type { ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
 
@@ -10,7 +11,7 @@ import ExceptionService from 'App/Services/ExceptionService'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class NewsController {
-  public async all({ request, response }: HttpContextContract) {
+  public async paginate({ request, response }: HttpContextContract) {
     let payload: ApiValidator['schema']['props']
 
     try {
@@ -24,7 +25,7 @@ export default class NewsController {
     }
 
     try {
-      const news: News[] = await NewsService.paginate(payload)
+      const news: ModelPaginatorContract<News> = await NewsService.paginate(payload)
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, news))
     } catch (err: Error | any) {
