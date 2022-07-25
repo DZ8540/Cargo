@@ -15,6 +15,7 @@ export const USER_PASSWORD_MAX_USERS_LENGTH: number = 50
 
 export const TABLES_NAMES = {
   NEWS: 'news',
+  CAR_BODY_TYPES: 'carBodyTypes',
 
   /**
    * * User

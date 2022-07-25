@@ -2,6 +2,8 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
 
+  Route.post('/carBodyTypes', 'Api/CarBodyTypesController.getAll').middleware('CheckAccessToken')
+
   /**
    * * Auth
    */

@@ -1,6 +1,7 @@
 import News from 'App/Models/News'
 import User from 'App/Models/User/User'
 import Factory from '@ioc:Adonis/Lucid/Factory'
+import CarBodyType from 'App/Models/CarBodyType'
 import { ROLES_NAMES } from 'Config/shield'
 
 export const UserFactory = Factory
@@ -33,5 +34,11 @@ export const NewsFactory = Factory
       title: faker.unique(faker.vehicle.vehicle),
       description: faker.lorem.paragraphs(10),
     }
+  })
+  .build()
+
+export const CarBodyTypeFactory = Factory
+  .define(CarBodyType, ({ faker }) => {
+    return { name: faker.unique(faker.vehicle.type) }
   })
   .build()
