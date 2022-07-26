@@ -2,6 +2,8 @@
 import type UserValidator from 'App/Validators/UserValidator'
 import type RegisterValidator from 'App/Validators/Auth/Register/RegisterValidator'
 import type { Err } from 'Contracts/response'
+import type { PaginateConfig } from 'Contracts/services'
+import type { ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
 import User from 'App/Models/User/User'
@@ -11,6 +13,15 @@ import { USER_PATH } from 'Config/drive'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class UserService {
+  public static async paginate(config: PaginateConfig<User>, columns: typeof User.columns[number][] = []): Promise<ModelPaginatorContract<User>> {
+    try {
+      return await User.query().select(columns).getViaPaginate(config)
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
+
   public static async get(id: User['id']): Promise<User>
   public static async get(email: User['email']): Promise<User>
   public static async get(idOrEmail: User['id'] | User['email']): Promise<User> {
@@ -114,6 +125,24 @@ export default class UserService {
       return await this.get(id)
     } catch (err: Err | any) {
       throw err
+    }
+  }
+
+  public static async blockAction(id: User['id'], action: 'block' | 'unblock'): Promise<void> {
+    let item: User
+    const isBlocked: User['isBlocked'] = action == 'block' ? true : false
+
+    try {
+      item = await UserService.get(id)
+    } catch (err: Err | any) {
+      throw err
+    }
+
+    try {
+      await item.merge({ isBlocked }).save()
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
     }
   }
 }

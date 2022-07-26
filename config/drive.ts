@@ -9,6 +9,7 @@ import Env from '@ioc:Adonis/Core/Env'
 import Application from '@ioc:Adonis/Core/Application'
 import { driveConfig } from '@adonisjs/core/build/config'
 
+export const IMG_PLACEHOLDER: string = 'placeholder.jpg'
 export const USER_PATH: string = 'User'
 
 /*

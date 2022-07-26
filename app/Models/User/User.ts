@@ -3,14 +3,16 @@ import type { DateTime } from 'luxon'
 // * Types
 
 import Hash from '@ioc:Adonis/Core/Hash'
-import { BaseModel, beforeSave, column } from '@ioc:Adonis/Lucid/Orm'
+import { RolesNames } from 'Config/shield'
+import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
+import { BaseModel, beforeSave, column, computed } from '@ioc:Adonis/Lucid/Orm'
 
 export default class User extends BaseModel {
   public static readonly columns = [
-    'id', 'email', 'password', 'subject',
+    'id', 'isBlocked', 'email', 'password',
     'firstName', 'lastName', 'phone', 'companyName',
     'taxIdentificationNumber', 'city', 'avatar', 'roleId',
-    'createdAt', 'updatedAt', 'endAccessDate',
+    'createdAt', 'updatedAt', 'endAccessDate', 'subject',
   ] as const
 
   /**
@@ -19,6 +21,9 @@ export default class User extends BaseModel {
 
   @column({ isPrimary: true })
   public id: number
+
+  @column()
+  public isBlocked: boolean
 
   @column()
   public email: string
@@ -69,6 +74,52 @@ export default class User extends BaseModel {
 
   @column.dateTime()
   public endAccessDate?: DateTime
+
+  /**
+   * * Computed properties
+   */
+
+  @computed()
+  public get fullName(): string {
+    return `${this.lastName} ${this.firstName}`
+  }
+
+  @computed()
+  public get subjectForUser(): string {
+    return this.subject ? 'Юр. лицо' : 'Физ. лицо'
+  }
+
+  @computed()
+  public get roleForUser(): string {
+    const roleToArrIndex: number = this.roleId - 1
+
+    switch (roleToArrIndex) {
+      case RolesNames.ADMIN:
+        return 'Админ'
+
+      case RolesNames.CARGO_OWNER:
+        return 'Грузовладелец'
+
+      case RolesNames.CARRIER:
+        return 'Перевозчик'
+
+      case RolesNames.CARRIER_CARGO_OWNER:
+        return 'Грузовладелец - перевозчик'
+
+      default:
+        return 'Неизвестно'
+    }
+  }
+
+  @computed()
+  public get createdAtForUser(): string {
+    return this.createdAt?.setLocale('ru-RU').toFormat(GLOBAL_DATETIME_FORMAT)
+  }
+
+  @computed()
+  public get isBlockedForUser(): string {
+    return Number(this.isBlocked) ? 'Да' : 'Нет'
+  }
 
   /**
    * * Hooks

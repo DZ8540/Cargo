@@ -34,8 +34,10 @@ export default class AuthService {
     try {
       user = await UserService.get(payload.email)
 
-      if (!(await Hash.verify(user.password, payload.password)))
-        throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.USER_NOT_FOUND } as Err
+      if (
+        !(await Hash.verify(user.password, payload.password)) ||
+        user.isBlocked
+      ) throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.USER_NOT_FOUND } as Err
     } catch (err: Err | any) {
       throw err
     }

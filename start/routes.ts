@@ -26,4 +26,37 @@ Route.group(() => {
 
   Route.get('/', 'IndexController.home').as('home')
 
+  /**
+   * * User
+   */
+
+  Route.group(() => {
+
+    Route.get('/', 'UsersController.index').as('index')
+    Route
+      .get('/:id', 'UsersController.show')
+      .as('show')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+    Route
+      .post('/block/:id', 'UsersController.block')
+      .as('block')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+    Route
+      .post('/unblock/:id', 'UsersController.unblock')
+      .as('unblock')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+  }).prefix('/users').as('users')
+
 })

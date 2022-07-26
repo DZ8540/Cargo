@@ -8,6 +8,14 @@
 import Env from '@ioc:Adonis/Core/Env'
 import { ShieldConfig } from '@ioc:Adonis/Addons/Shield'
 
+export const ROLES_NAMES = ['admin', 'cargo owner', 'carrier', 'carrier - cargo owner'] as const
+export enum RolesNames {
+  ADMIN = 0,
+  CARGO_OWNER = 1,
+  CARRIER = 2,
+  CARRIER_CARGO_OWNER = 3,
+}
+
 /*
 |--------------------------------------------------------------------------
 | Content Security Policy
@@ -93,7 +101,7 @@ export const csrf: ShieldConfig['csrf'] = {
 	| ```
   |
   */
-  exceptRoutes: [],
+  exceptRoutes: ({ request }) => request.url().includes('/api'),
 
   /*
   |--------------------------------------------------------------------------
@@ -235,12 +243,4 @@ export const hsts: ShieldConfig['hsts'] = {
 */
 export const contentTypeSniffing: ShieldConfig['contentTypeSniffing'] = {
   enabled: true,
-}
-
-export const ROLES_NAMES = ['admin', 'cargo owner', 'carrier', 'carrier - cargo owner'] as const
-export enum RolesNames {
-  ADMIN = 0,
-  CARGO_OWNER = 1,
-  CARRIER = 2,
-  CARRIER_CARGO_OWNER = 3,
 }
