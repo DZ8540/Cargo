@@ -19,6 +19,7 @@
 */
 
 import './routes/api'
+import './routes/auth'
 
 import Route from '@ioc:Adonis/Core/Route'
 
@@ -59,4 +60,4 @@ Route.group(() => {
 
   }).prefix('/users').as('users')
 
-})
+}).middleware('CheckAdminPanelAccess')

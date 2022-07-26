@@ -1,5 +1,6 @@
 // * Types
 import type User from 'App/Models/User/User'
+import type LoginValidator from 'App/Validators/Auth/LoginValidator'
 import type ApiLoginValidator from 'App/Validators/Auth/ApiLoginValidator'
 import type RegisterValidator from 'App/Validators/Auth/Register/RegisterValidator'
 import type CodeVerifyValidator from 'App/Validators/Auth/Register/CodeVerifyValidator'
@@ -20,6 +21,7 @@ import UserService from './User/UserService'
 import Logger from '@ioc:Adonis/Core/Logger'
 import { RedisKeys } from 'Config/redis'
 import { getRandom } from 'Helpers/index'
+import { RolesNames } from 'Config/shield'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 type LoginViaAPIReturnData = {
@@ -28,31 +30,6 @@ type LoginViaAPIReturnData = {
 }
 
 export default class AuthService {
-  public static async loginViaAPI(payload: ApiLoginValidator['schema']['props'], headers: AuthHeaders): Promise<LoginViaAPIReturnData> {
-    let user: User
-
-    try {
-      user = await UserService.get(payload.email)
-
-      if (
-        !(await Hash.verify(user.password, payload.password)) ||
-        user.isBlocked
-      ) throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.USER_NOT_FOUND } as Err
-    } catch (err: Err | any) {
-      throw err
-    }
-
-    try {
-      const tokens: Tokens = this.createTokens(user)
-
-      await TokenService.createUserTokenSession(user.id, tokens.refresh, headers)
-
-      return { user, tokens }
-    } catch (err: Err | any) {
-      throw err
-    }
-  }
-
   public static async emailVerify({ email }: EmailVerifyValidator['schema']['props'], isForForgotPassword: boolean = false): Promise<void> {
     const code: number = getRandom(100000, 999999) // Only 6-digit code
     const redisKey: RedisKeys = isForForgotPassword ? RedisKeys.FORGOT_PASSWORD_USER_VERIFY : RedisKeys.EMAIL_VERIFY
@@ -139,6 +116,62 @@ export default class AuthService {
       await TokenService.updateUserTokenSession(token, tokens.refresh, headers)
 
       return tokens
+    } catch (err: Err | any) {
+      throw err
+    }
+  }
+
+  public static async checkAdminAccess(id: User['id']): Promise<void> {
+    let user: User
+    const roleToArrIndex: RolesNames = RolesNames.ADMIN + 1
+
+    try {
+      user = await UserService.get(id)
+    } catch (err: Err | any) {
+      throw err
+    }
+
+    if (user.roleId != roleToArrIndex)
+      throw { code: ResponseCodes.SERVER_ERROR, message: ResponseMessages.USER_NOT_FOUND } as Err
+  }
+
+  /**
+   * * Login
+   */
+
+  public static async login(payload: LoginValidator['schema']['props']): Promise<User> {
+    try {
+      const user: User = await UserService.get(payload.email)
+
+      if (!(await Hash.verify(user.password, payload.password)))
+        throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.USER_NOT_FOUND } as Err
+
+      return user
+    } catch (err: Err | any) {
+      throw err
+    }
+  }
+
+  public static async loginViaAPI(payload: ApiLoginValidator['schema']['props'], headers: AuthHeaders): Promise<LoginViaAPIReturnData> {
+    let user: User
+
+    try {
+      user = await UserService.get(payload.email)
+
+      if (
+        !(await Hash.verify(user.password, payload.password)) ||
+        user.isBlocked
+      ) throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.USER_NOT_FOUND } as Err
+    } catch (err: Err | any) {
+      throw err
+    }
+
+    try {
+      const tokens: Tokens = this.createTokens(user)
+
+      await TokenService.createUserTokenSession(user.id, tokens.refresh, headers)
+
+      return { user, tokens }
     } catch (err: Err | any) {
       throw err
     }

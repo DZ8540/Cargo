@@ -9,6 +9,8 @@ import Env from '@ioc:Adonis/Core/Env'
 import Application from '@ioc:Adonis/Core/Application'
 import { sessionConfig } from '@adonisjs/session/build/config'
 
+export const SESSION_USER_KEY: string = 'user'
+
 export default sessionConfig({
   /*
   |--------------------------------------------------------------------------

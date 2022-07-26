@@ -11,12 +11,12 @@
         <div class="d-flex">
           @if(item.isBlocked)
             <form action="{{ route('users.unblock', { id: item.id }) }}" method="POST">
-              {{--  {{ csrfField() }}  --}}
+              {{ csrfField() }}
               <button type="submit" class="btn btn-primary btn-sm">Разблокировать</button>
             </form>
           @else
             <form action="{{ route('users.block', { id: item.id }) }}" method="POST">
-              {{--  {{ csrfField() }}  --}}
+              {{ csrfField() }}
               <button type="submit" class="btn btn-danger btn-sm">Заблокировать</button>
             </form>
           @endif

@@ -22,6 +22,7 @@ import Server from '@ioc:Adonis/Core/Server'
 */
 Server.middleware.register([
   () => import('@ioc:Adonis/Core/BodyParser'),
+  () => import('@ioc:Adonis/Addons/Shield'),
 ])
 
 /*
@@ -44,4 +45,5 @@ Server.middleware.registerNamed({
   CheckAuthHeaders: () => import('App/Middleware/CheckAuthHeaders'),
   CheckAccessToken: () => import('App/Middleware/CheckAccessToken'),
   CheckRefreshToken: () => import('App/Middleware/CheckRefreshToken'),
+  CheckAdminPanelAccess: () => import('App/Middleware/CheckAdminPanelAccess'),
 })
