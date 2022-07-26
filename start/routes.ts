@@ -60,4 +60,37 @@ Route.group(() => {
 
   }).prefix('/users').as('users')
 
+  /**
+   * * Car
+   */
+
+  Route.group(() => {
+
+    Route.get('/', 'CarsController.index').as('index')
+    Route
+      .get('/:id', 'CarsController.show')
+      .as('show')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+    Route
+      .post('/verify/:id', 'CarsController.verify')
+      .as('verify')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+    Route
+      .post('/unVerify/:id', 'CarsController.unVerify')
+      .as('unVerify')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+  }).prefix('/cars').as('cars')
+
 }).middleware('CheckAdminPanelAccess')

@@ -133,7 +133,7 @@ export default class UserService {
     const isBlocked: User['isBlocked'] = action == 'block' ? true : false
 
     try {
-      item = await UserService.get(id)
+      item = await this.get(id)
     } catch (err: Err | any) {
       throw err
     }

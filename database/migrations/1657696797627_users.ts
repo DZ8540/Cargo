@@ -12,7 +12,10 @@ export default class extends BaseSchema {
        * * Not nullable columns
        */
 
-      table.boolean('isBlocked').defaultTo(0).notNullable()
+      table.boolean('isBlocked').defaultTo(0).notNullable().comment(`
+        0 - не заблокирован
+        1 - заблокирован
+      `)
       table.string('email').unique().notNullable()
       table.string('password').notNullable()
       table.boolean('subject').defaultTo(0).notNullable().comment(`

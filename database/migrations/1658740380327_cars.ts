@@ -12,6 +12,11 @@ export default class extends BaseSchema {
        * * Not nullable columns
        */
 
+      table.boolean('isVerified').defaultTo(0).notNullable().comment(`
+        0 - не верифицирована
+        1 - верифицирована
+        Верификация идет из админки
+      `)
       table.string('name').notNullable()
       table.integer('additionalConfiguration').unsigned().notNullable().comment(`
         0 - грузовик

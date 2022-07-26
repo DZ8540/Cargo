@@ -1,25 +1,25 @@
 // * Types
-import type User from 'App/Models/User/User'
+import type Car from 'App/Models/Car/Car'
 import type { Err } from 'Contracts/response'
 import type { ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
 
-import UserService from 'App/Services/User/UserService'
+import CarService from 'App/Services/Car/CarService'
 
-export default class UsersController {
+export default class CarsController {
   public async index({ view, session, request, route, response }: HttpContextContract) {
     const baseUrl: string = route!.pattern
     const page: number = request.input('page', 1)
-    const columns: typeof User.columns[number][] = [
-      'id', 'email', 'firstName', 'lastName',
-      'roleId', 'subject', 'isBlocked',
+    const columns: typeof Car.columns[number][] = [
+      'id', 'isVerified', 'name', 'carrying',
+      'capacity', 'length', 'width', 'height',
     ]
 
     try {
-      const users: ModelPaginatorContract<User> = await UserService.paginate({ page, baseUrl }, columns)
+      const cars: ModelPaginatorContract<Car> = await CarService.paginate({ page, baseUrl }, columns)
 
-      return view.render('pages/users/index', { users })
+      return view.render('pages/cars/index', { cars })
     } catch (err: Err | any) {
       session.flash('error', err.message)
       return response.redirect().back()
@@ -27,12 +27,12 @@ export default class UsersController {
   }
 
   public async show({ view, session, params, response }: HttpContextContract) {
-    const id: User['id'] = params.id
+    const id: Car['id'] = params.id
 
     try {
-      const item: User = await UserService.get(id)
+      const item: Car = await CarService.get(id)
 
-      return view.render('pages/users/show', { item })
+      return view.render('pages/cars/show', { item })
     } catch (err: Err | any) {
       session.flash('error', err.message)
       return response.redirect().back()
@@ -40,14 +40,14 @@ export default class UsersController {
   }
 
   /**
-   * * Block
+   * * Verify
    */
 
-  public async block({ params, response, session }: HttpContextContract) {
-    const id: User['id'] = params.id
+  public async verify({ params, response, session }: HttpContextContract) {
+    const id: Car['id'] = params.id
 
     try {
-      await UserService.blockAction(id, 'block')
+      await CarService.verifyAction(id, 'verify')
     } catch (err: Err | any) {
       session.flash('error', err.message)
     }
@@ -55,11 +55,11 @@ export default class UsersController {
     return response.redirect().back()
   }
 
-  public async unblock({ params, response, session }: HttpContextContract) {
-    const id: User['id'] = params.id
+  public async unVerify({ params, response, session }: HttpContextContract) {
+    const id: Car['id'] = params.id
 
     try {
-      await UserService.blockAction(id, 'unblock')
+      await CarService.verifyAction(id, 'unVerify')
     } catch (err: Err | any) {
       session.flash('error', err.message)
     }

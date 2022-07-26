@@ -11,8 +11,8 @@ export default class User extends BaseModel {
   public static readonly columns = [
     'id', 'isBlocked', 'email', 'password',
     'firstName', 'lastName', 'phone', 'companyName',
-    'taxIdentificationNumber', 'city', 'avatar', 'roleId',
-    'createdAt', 'updatedAt', 'endAccessDate', 'subject',
+    'taxIdentificationNumber', 'city', 'avatar', 'subject',
+    'roleId', 'createdAt', 'updatedAt', 'endAccessDate',
   ] as const
 
   /**

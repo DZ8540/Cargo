@@ -4,14 +4,15 @@ import type CarBodyType from './CarBodyType'
 import type { DateTime } from 'luxon'
 // * Types
 
-import { BaseModel, column, scope } from '@ioc:Adonis/Lucid/Orm'
+import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
+import { BaseModel, column, computed, scope } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Car extends BaseModel {
   public static readonly columns = [
-    'id', 'name', 'additionalConfiguration', 'carrying',
+    'id', 'isVerified', 'name', 'additionalConfiguration',
     'capacity', 'width', 'height', 'length',
     'sts', 'vin', 'pts', 'carBodyTypeId',
-    'userId', 'createdAt', 'updatedAt',
+    'carrying', 'userId', 'createdAt', 'updatedAt',
   ] as const
 
   /**
@@ -20,6 +21,9 @@ export default class Car extends BaseModel {
 
   @column({ isPrimary: true })
   public id: number
+
+  @column()
+  public isVerified: boolean
 
   @column()
   public name: string
@@ -70,6 +74,20 @@ export default class Car extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  /**
+   * * Computed properties
+   */
+
+  @computed()
+  public get createdAtForUser(): string {
+    return this.createdAt?.setLocale('ru-RU').toFormat(GLOBAL_DATETIME_FORMAT)
+  }
+
+  @computed()
+  public get isVerifiedForUser(): string {
+    return Number(this.isVerified) ? 'Да' : 'Нет'
+  }
 
   /**
    * * Query scopes
