@@ -33,9 +33,9 @@ export default class ForgotPasswordValidator extends IndexValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string({ trim: true }, getUserEmailRules('exists')),
     verifyCode: schema.number(getVerifyCodeRules()),
     password: schema.string({ trim: true }, getUserPasswordRules()),
+    email: schema.string({ trim: true }, getUserEmailRules('exists')),
   })
 
   /**

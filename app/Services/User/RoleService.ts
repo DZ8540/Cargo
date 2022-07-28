@@ -9,7 +9,7 @@ import { ResponseCodes, ResponseMessages } from 'Config/response'
 export default class RoleService {
   public static async getAll(): Promise<Role[]> {
     try {
-      return await Role.all()
+      return await Role.query().withScopes((scopes) => scopes.notAdmin())
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err

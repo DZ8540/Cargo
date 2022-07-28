@@ -2,7 +2,8 @@
 import type { DateTime } from 'luxon'
 // * Types
 
-import { BaseModel, beforeSave, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeSave, column, scope } from '@ioc:Adonis/Lucid/Orm'
+import { RolesNames } from 'Config/shield'
 
 export default class Role extends BaseModel {
   public static readonly columns = [
@@ -25,6 +26,16 @@ export default class Role extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  /**
+   * * Query scopes
+   */
+
+  public static notAdmin = scope((query) => {
+    const roleNameToId: number = RolesNames.ADMIN + 1
+
+    query.whereNot('id', roleNameToId)
+  })
 
   /**
    * * Hooks

@@ -3,12 +3,16 @@ import type { CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
 
-import IndexValidator from '../../IndexValidator'
+import ApiValidator from '../ApiValidator'
 import { schema } from '@ioc:Adonis/Core/Validator'
-import { getVerifyCodeRules } from 'App/Validators/Rules/auth'
-import { getUserEmailRules } from 'App/Validators/Rules/User/user'
+import { getCarBodyTypeIdRules } from '../Rules/Car/carBodyType'
+import { getRouteToRouteRules, getRouteFromRouteRules } from '../Rules/route'
+import {
+  getCarCapacityRules, getCarCarryingRules, getCarHeightRules,
+  getCarLengthRules, getCarWidthRules
+} from '../Rules/Car/car'
 
-export default class ForgotPasswordCodePasswordVerifyValidator extends IndexValidator {
+export default class RouteSearchValidator extends ApiValidator {
   constructor(protected ctx: HttpContextContract) {
     super()
   }
@@ -33,8 +37,22 @@ export default class ForgotPasswordCodePasswordVerifyValidator extends IndexVali
    *    ```
    */
   public schema = schema.create({
-    verifyCode: schema.number(getVerifyCodeRules()),
-    email: schema.string({ trim: true }, getUserEmailRules('exists')),
+    ...this.preSchema,
+
+    onlyVerified: schema.boolean(),
+
+    width: schema.number.optional(getCarWidthRules()),
+    length: schema.number.optional(getCarLengthRules()),
+    height: schema.number.optional(getCarHeightRules()),
+    carryingTo: schema.number.optional(getCarCarryingRules()),
+    capacityTo: schema.number.optional(getCarCapacityRules()),
+    carryingFrom: schema.number.optional(getCarCarryingRules()),
+    capacityFrom: schema.number.optional(getCarCapacityRules()),
+
+    toRoute: schema.string.optional({ trim: true }, getRouteToRouteRules()),
+    fromRoute: schema.string.optional({ trim: true }, getRouteFromRouteRules()),
+
+    carBodyTypeId: schema.number.optional(getCarBodyTypeIdRules()),
   })
 
   /**

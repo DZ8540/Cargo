@@ -15,4 +15,20 @@ export default class CarBodyTypeService {
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
     }
   }
+
+  public static async get(id: CarBodyType['id']): Promise<CarBodyType> {
+    let item: CarBodyType | null
+
+    try {
+      item = await CarBodyType.find(id)
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+
+    if (!item)
+      throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.ERROR } as Err
+
+    return item
+  }
 }

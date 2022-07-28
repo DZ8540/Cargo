@@ -90,4 +90,24 @@ Route.group(() => {
 
   }).prefix('car').middleware('CheckAccessToken')
 
+  /**
+   * * Route
+   */
+
+  Route.group(() => {
+
+    Route.get('/count', 'Api/RoutesController.count')
+    Route.post('/search', 'Api/RoutesController.search')
+    Route.post('/paginate/:city', 'Api/RoutesController.paginate')
+    Route.post('/notArchive/:userId', 'Api/RoutesController.paginateUserRoutes').middleware('CheckAccessToken')
+    Route.post('/archive/:userId', 'Api/RoutesController.paginateArchiveUserRoutes').middleware('CheckAccessToken')
+    Route.post('/unArchive/:id', 'Api/RoutesController.unArchive').middleware('CheckAccessToken')
+
+    Route.post('/:id', 'Api/RoutesController.get')
+    Route.patch('/:id', 'Api/RoutesController.update').middleware('CheckAccessToken')
+    Route.delete('/:id', 'Api/RoutesController.delete').middleware('CheckAccessToken')
+    Route.post('/', 'Api/RoutesController.create').middleware('CheckAccessToken')
+
+  }).prefix('route')
+
 }).prefix('api')

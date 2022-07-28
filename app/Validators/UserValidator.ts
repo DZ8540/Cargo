@@ -40,19 +40,22 @@ export default class UserValidator extends IndexValidator {
    */
   public schema = schema.create({
     subject: schema.boolean(),
-    roleId: schema.number(getRoleIdRules({ isWithoutAdmin: true, withUniqueOrExists: 'exists' })),
     email: schema.string({ trim: true }, getUserEmailRules('unique', this.currentUserId)),
+
+    roleId: schema.number(getRoleIdRules({ isWithoutAdmin: true, withUniqueOrExists: 'exists' })),
 
     /**
      * * Optional schemes
      */
 
-    avatar: schema.file.optional(getUserAvatarOptions()),
-    city: schema.string.optional({ trim: true }, getUserCityRules()),
     lastName: schema.string.optional({ trim: true }, getUserLastNameRules()),
     firstName: schema.string.optional({ trim: true }, getUserFirstNameRules()),
-    companyName: schema.string.optional({ trim: true }, getUserCompanyNameRules(this.currentUserId)),
+
+    avatar: schema.file.optional(getUserAvatarOptions()),
+    city: schema.string.optional({ trim: true }, getUserCityRules()),
     phone: schema.string.optional({ trim: true }, getUserPhoneRules(true, this.currentUserId)),
+
+    companyName: schema.string.optional({ trim: true }, getUserCompanyNameRules(this.currentUserId)),
     taxIdentificationNumber: schema.number.optional(getUserTaxIdentificationNumberRules('unique', this.currentUserId)),
   })
 

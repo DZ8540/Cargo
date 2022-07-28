@@ -33,8 +33,8 @@ export default class CodeVerifyValidator extends IndexValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string({ trim: true }, getUserEmailRules('unique')),
     verifyCode: schema.number(getVerifyCodeRules()),
+    email: schema.string({ trim: true }, getUserEmailRules('unique')),
   })
 
   /**

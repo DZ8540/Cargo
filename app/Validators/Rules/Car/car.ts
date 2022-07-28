@@ -11,6 +11,15 @@ import {
   TABLES_NAMES
 } from 'Config/database'
 
+const TABLE: string = TABLES_NAMES.CARS
+
+export function getCarIdRules(table: string = TABLE): Rule[] {
+  return [
+    rules.unsigned(),
+    rules.exists({ table, column: 'id' })
+  ]
+}
+
 export function getCarNameRules(): Rule[] {
   return [
     rules.minLength(CAR_NAME_MIN_LENGTH),
@@ -45,7 +54,7 @@ export function getCarLengthRules(): Rule[] {
   return [ rules.unsigned() ]
 }
 
-export function getCarStsRules(withUniqueOrExists: 'unique' | false = false, currentId: Car['id'] | null = null, table: string = TABLES_NAMES.CARS): Rule[] {
+export function getCarStsRules(withUniqueOrExists: 'unique' | false = false, currentId: Car['id'] | null = null, table: string = TABLE): Rule[] {
   const rulesArr: Rule[] = [
     rules.minLength(CAR_STS_MIN_LENGTH),
     rules.maxLength(CAR_STS_MAX_LENGTH),
@@ -57,7 +66,7 @@ export function getCarStsRules(withUniqueOrExists: 'unique' | false = false, cur
   return rulesArr
 }
 
-export function getCarVinRules(withUniqueOrExists: 'unique' | false = false, currentId: Car['id'] | null = null, table: string = TABLES_NAMES.CARS): Rule[] {
+export function getCarVinRules(withUniqueOrExists: 'unique' | false = false, currentId: Car['id'] | null = null, table: string = TABLE): Rule[] {
   const rulesArr: Rule[] = [
     rules.minLength(CAR_VIN_MIN_LENGTH),
     rules.maxLength(CAR_VIN_MAX_LENGTH),
@@ -69,7 +78,7 @@ export function getCarVinRules(withUniqueOrExists: 'unique' | false = false, cur
   return rulesArr
 }
 
-export function getCarPtsRules(withUniqueOrExists: 'unique' | false = false, currentId: Car['id'] | null = null, table: string = TABLES_NAMES.CARS): Rule[] {
+export function getCarPtsRules(withUniqueOrExists: 'unique' | false = false, currentId: Car['id'] | null = null, table: string = TABLE): Rule[] {
   const rulesArr: Rule[] = [
     rules.minLength(CAR_PTS_MIN_LENGTH),
     rules.maxLength(CAR_PTS_MAX_LENGTH),

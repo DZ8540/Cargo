@@ -10,6 +10,7 @@ import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 
 export const TABLES_NAMES = {
   NEWS: 'news',
+  ROUTES: 'routes',
 
   /**
    * * Car
@@ -28,17 +29,24 @@ export const TABLES_NAMES = {
 } as const
 
 /**
+ * * Route
+ */
+
+export const ROUTE_ROUTE_MIN_LENGTH: number = 2
+export const ROUTE_ROUTE_MAX_LENGTH: number = 50
+
+/**
  * * Car
  */
 
-export const CAR_NAME_MIN_LENGTH = 2
-export const CAR_NAME_MAX_LENGTH = 50
-export const CAR_STS_MIN_LENGTH = 2
-export const CAR_STS_MAX_LENGTH = 50
-export const CAR_VIN_MIN_LENGTH = 2
-export const CAR_VIN_MAX_LENGTH = 50
-export const CAR_PTS_MIN_LENGTH = 2
-export const CAR_PTS_MAX_LENGTH = 50
+export const CAR_NAME_MIN_LENGTH: number = 2
+export const CAR_NAME_MAX_LENGTH: number = 50
+export const CAR_STS_MIN_LENGTH: number = 2
+export const CAR_STS_MAX_LENGTH: number = 50
+export const CAR_VIN_MIN_LENGTH: number = 2
+export const CAR_VIN_MAX_LENGTH: number = 50
+export const CAR_PTS_MIN_LENGTH: number = 2
+export const CAR_PTS_MAX_LENGTH: number = 50
 
 /**
  * * User

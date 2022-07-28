@@ -6,6 +6,18 @@ import IndexValidator from './IndexValidator'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 
 export default class ApiValidator extends IndexValidator {
+  protected readonly preSchema = {
+    page: schema.number([ rules.unsigned() ]),
+
+    /**
+     * * Optional schemes
+     */
+
+    limit: schema.number.optional([ rules.unsigned() ]),
+    orderBy: schema.enum.optional(['asc', 'desc'] as const),
+    orderByColumn: schema.string.optional({ trim: true }),
+  }
+
   constructor() {
     super()
   }
@@ -29,17 +41,7 @@ export default class ApiValidator extends IndexValidator {
    *     ])
    *    ```
    */
-  public schema = schema.create({
-    page: schema.number([ rules.unsigned() ]),
-
-    /**
-     * * Optional schemes
-     */
-
-    limit: schema.number.optional([ rules.unsigned() ]),
-    orderBy: schema.enum.optional(['asc', 'desc'] as const),
-    orderByColumn: schema.string.optional({ trim: true }),
-  })
+  public schema = schema.create(this.preSchema)
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`

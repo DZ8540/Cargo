@@ -42,14 +42,16 @@ export default class CarValidator extends IndexValidator {
    */
   public schema = schema.create({
     name: schema.string({ trim: true }, getCarNameRules()),
-    carBodyTypeId: schema.number(getCarBodyTypeIdRules()),
     additionalConfiguration: schema.number(getCarAdditionalConfigurationRules()),
-    carrying: schema.number(getCarCarryingRules()),
-    capacity: schema.number(getCarCapacityRules()),
+
     width: schema.number(getCarWidthRules()),
     height: schema.number(getCarHeightRules()),
     length: schema.number(getCarLengthRules()),
+    capacity: schema.number(getCarCapacityRules()),
+    carrying: schema.number(getCarCarryingRules()),
+
     userId: schema.number(getUserIdRules()),
+    carBodyTypeId: schema.number(getCarBodyTypeIdRules()),
 
     /**
      * * Optional schemes
