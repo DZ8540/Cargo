@@ -13,6 +13,19 @@ export const TABLES_NAMES = {
   ROUTES: 'routes',
 
   /**
+   * * Cargo
+   */
+
+  CARGOS: 'cargos',
+
+  CARGOS_LOADINGS: 'cargosLoadings',
+  CARGOS_UNLOADINGS: 'cargosUnloadings',
+
+  CARGOS_ITEMS: 'cargosItems',
+  CARGOS_ITEMS_TYPES: 'cargosItemsTypes',
+  CARGOS_ITEMS_PACKAGE_TYPES: 'cargosItemsPackageTypes',
+
+  /**
    * * Car
    */
 
@@ -34,6 +47,16 @@ export const TABLES_NAMES = {
 
 export const ROUTE_ROUTE_MIN_LENGTH: number = 2
 export const ROUTE_ROUTE_MAX_LENGTH: number = 50
+
+/**
+ * * Cargo
+ */
+
+export const CARGO_TOWN_MIN_LENGTH: number = 2
+export const CARGO_TOWN_MAX_LENGTH: number = 50
+
+export const CARGO_ADDRESS_MIN_LENGTH: number = 2
+export const CARGO_ADDRESS_MAX_LENGTH: number = 100
 
 /**
  * * Car

@@ -70,7 +70,7 @@ Route.group(() => {
 
     Route.post('/', 'Api/NewsController.paginate')
     Route.post('/random', 'Api/NewsController.random')
-    Route.post('/:slug', 'Api/NewsController.get')
+    Route.get('/:slug', 'Api/NewsController.get')
 
   }).prefix('/news')
 
@@ -103,11 +103,34 @@ Route.group(() => {
     Route.post('/archive/:userId', 'Api/RoutesController.paginateArchiveUserRoutes').middleware('CheckAccessToken')
     Route.post('/unArchive/:id', 'Api/RoutesController.unArchive').middleware('CheckAccessToken')
 
-    Route.post('/:id', 'Api/RoutesController.get')
+    Route.get('/:id', 'Api/RoutesController.get')
     Route.patch('/:id', 'Api/RoutesController.update').middleware('CheckAccessToken')
     Route.delete('/:id', 'Api/RoutesController.delete').middleware('CheckAccessToken')
     Route.post('/', 'Api/RoutesController.create').middleware('CheckAccessToken')
 
   }).prefix('route')
+
+  /**
+   * * Cargo
+   */
+
+  Route.group(() => {
+
+    Route.get('/itemTypes', 'Api/Cargo/CargosItemsTypesController.getAll').middleware('CheckAccessToken')
+    Route.get('/packageTypes', 'Api/Cargo/CargosItemsPackageTypesController.getAll').middleware('CheckAccessToken')
+
+    Route.get('/count', 'Api/Cargo/CargosController.count')
+    Route.post('/search', 'Api/Cargo/CargosController.search')
+    Route.post('/paginate/:city', 'Api/Cargo/CargosController.paginate')
+    Route.post('/notArchive/:userId', 'Api/Cargo/CargosController.paginateUserRoutes').middleware('CheckAccessToken')
+    Route.post('/archive/:userId', 'Api/Cargo/CargosController.paginateArchiveUserRoutes').middleware('CheckAccessToken')
+    Route.post('/unArchive/:id', 'Api/Cargo/CargosController.unArchive').middleware('CheckAccessToken')
+
+    Route.get('/:id', 'Api/Cargo/CargosController.get')
+    Route.patch('/:id', 'Api/Cargo/CargosController.update').middleware('CheckAccessToken')
+    Route.delete('/:id', 'Api/Cargo/CargosController.delete').middleware('CheckAccessToken')
+    Route.post('/', 'Api/Cargo/CargosController.create').middleware('CheckAccessToken')
+
+  }).prefix('cargo')
 
 }).prefix('api')
