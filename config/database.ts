@@ -11,6 +11,7 @@ import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 export const TABLES_NAMES = {
   NEWS: 'news',
   ROUTES: 'routes',
+  ROUTES_OR_CARGOS_CONTACTS: 'routesOrCargosContacts',
 
   /**
    * * Cargo
@@ -48,6 +49,9 @@ export const TABLES_NAMES = {
 export const ROUTE_ROUTE_MIN_LENGTH: number = 2
 export const ROUTE_ROUTE_MAX_LENGTH: number = 50
 
+export const ROUTE_NOTE_MIN_LENGTH = 2
+export const ROUTE_NOTE_MAX_LENGTH = 512
+
 /**
  * * Cargo
  */
@@ -57,6 +61,9 @@ export const CARGO_TOWN_MAX_LENGTH: number = 50
 
 export const CARGO_ADDRESS_MIN_LENGTH: number = 2
 export const CARGO_ADDRESS_MAX_LENGTH: number = 100
+
+export const CARGO_NOTE_MIN_LENGTH = 2
+export const CARGO_NOTE_MAX_LENGTH = 512
 
 /**
  * * Car

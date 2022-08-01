@@ -1,6 +1,7 @@
 // * Types
 import type User from 'App/Models/User/User'
 import type CargoValidator from 'App/Validators/Cargo/CargoValidator'
+import type RouteOrCargoContact from 'App/Models/RouteOrCargoContact'
 import type CargoSearchValidator from 'App/Validators/Cargo/CargoSearchValidator'
 import type { Err } from 'Contracts/response'
 import type { JSONPaginate } from 'Contracts/database'
@@ -15,6 +16,7 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import CargoItemService from './CargoItemService'
 import CargoLoadingService from './CargoLoadingService'
 import CargoUnloadingService from './CargoUnloadingService'
+import RouteOrCargoContactService from '../RouteOrCargoContactService'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class CargoService {
@@ -91,6 +93,7 @@ export default class CargoService {
   public static async create(payload: CargoValidator['schema']['props']): Promise<Cargo> {
     let id: Cargo['id']
     const trx: TransactionClientContract = await Database.transaction()
+    const contactsPayload: Partial<ModelAttributes<RouteOrCargoContact>>[] | undefined = payload.contacts
     const cargoPayload: Partial<ModelAttributes<Cargo>> = {
       adr1: payload.adr1,
       adr2: payload.adr2,
@@ -124,6 +127,14 @@ export default class CargoService {
     }
 
     try {
+      if (contactsPayload) {
+        for (const item of contactsPayload) {
+          item.cargoId = id
+        }
+
+        await RouteOrCargoContactService.createMany(contactsPayload, { trx })
+      }
+
       await CargoItemService.createMany(id, payload.items, { trx })
       await CargoLoadingService.createMany(id, payload.loadings, { trx })
       await CargoUnloadingService.createMany(id, payload.unloadings, { trx })

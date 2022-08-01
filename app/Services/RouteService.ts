@@ -1,14 +1,19 @@
 // * Types
 import type User from 'App/Models/User/User'
 import type RouteValidator from 'App/Validators/Route/RouteValidator'
+import type RouteOrCargoContact from 'App/Models/RouteOrCargoContact'
 import type RouteSearchValidator from 'App/Validators/Route/RouteSearchValidator'
 import type { Err } from 'Contracts/response'
 import type { JSONPaginate } from 'Contracts/database'
-import type { PaginateConfig } from 'Contracts/services'
+import type { ModelAttributes } from '@ioc:Adonis/Lucid/Orm'
+import type { PaginateConfig, ServiceConfig } from 'Contracts/services'
+import type { TransactionClientContract } from '@ioc:Adonis/Lucid/Database'
 // * Types
 
 import Route from 'App/Models/Route'
 import Logger from '@ioc:Adonis/Core/Logger'
+import Database from '@ioc:Adonis/Lucid/Database'
+import RouteOrCargoContactService from './RouteOrCargoContactService'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class RouteService {
@@ -66,11 +71,11 @@ export default class RouteService {
     }
   }
 
-  public static async get(id: Route['id']): Promise<Route> {
+  public static async get(id: Route['id'], { trx }: ServiceConfig<Route> = {}): Promise<Route> {
     let item: Route | null
 
     try {
-      item = await Route.find(id)
+      item = await Route.find(id, { client: trx })
     } catch (err: Err | any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
@@ -83,33 +88,66 @@ export default class RouteService {
   }
 
   public static async create(payload: RouteValidator['schema']['props']): Promise<Route> {
+    let id: Route['id']
+    const trx: TransactionClientContract = await Database.transaction()
+    const contactsPayload: Partial<ModelAttributes<RouteOrCargoContact>>[] | undefined = payload.contacts
+
     try {
-      return await Route.create(payload)
+      id = (await Route.create(payload, { client: trx })).id
     } catch (err: any) {
+      await trx.rollback()
+
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+
+    try {
+      if (contactsPayload) {
+        for (const item of contactsPayload) {
+          item.routeId = id
+        }
+
+        await RouteOrCargoContactService.createMany(contactsPayload, { trx })
+      }
+
+      await trx.commit()
+
+      return await this.get(id)
+    } catch (err: Err | any) {
+      await trx.rollback()
+
+      throw err
     }
   }
 
   public static async update(id: Route['id'], payload: RouteValidator['schema']['props']): Promise<Route> {
     let item: Route
+    const trx: TransactionClientContract = await Database.transaction()
 
     try {
-      item = await this.get(id)
+      item = await this.get(id, { trx })
     } catch (err: Err | any) {
+      await trx.rollback()
+
       throw err
     }
 
     try {
       await item.merge(payload).save()
     } catch (err: any) {
+      await trx.rollback()
+
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
     }
 
     try {
+      await trx.commit()
+
       return await this.get(id)
     } catch (err: Err | any) {
+      await trx.rollback()
+
       throw err
     }
   }

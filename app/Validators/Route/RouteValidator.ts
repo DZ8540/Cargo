@@ -7,10 +7,11 @@ import IndexValidator from '../IndexValidator'
 import { getCarIdRules } from '../Rules/Car/car'
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
-import { getUserIdRules } from '../Rules/User/user'
+import { getUserFirstNameRules, getUserIdRules, getUserPhoneRules } from '../Rules/User/user'
 import {
   getRouteToRouteRules, getRouteFromRouteRules, getRouteLoadingRadiusRules, getRouteUnloadingRadiusRules,
-  getRouteDateRules, getRouteDateDaysRules, getRouteDatePeriodTypeRules, getRoutePriceRules
+  getRouteDateRules, getRouteDateDaysRules, getRouteDatePeriodTypeRules, getRoutePriceRules,
+  getRouteNoteRules,
 } from '../Rules/route'
 
 export default class RouteValidator extends IndexValidator {
@@ -62,6 +63,12 @@ export default class RouteValidator extends IndexValidator {
 
     loadingRadius: schema.number.optional(getRouteLoadingRadiusRules()),
     unloadingRadius: schema.number.optional(getRouteUnloadingRadiusRules()),
+
+    note: schema.string.optional({ trim: true }, getRouteNoteRules()),
+    contacts: schema.array.optional().members(schema.object().members({
+      phone: schema.string.optional({ trim: true }, getUserPhoneRules()),
+      firstName: schema.string.optional({ trim: true }, getUserFirstNameRules()),
+    })),
   })
 
   /**

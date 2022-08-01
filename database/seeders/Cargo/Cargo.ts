@@ -7,6 +7,7 @@ export default class extends BaseSeeder {
 
     try {
       await CargoFactory
+        .with('contacts', 2)
         .with('loadings', 3)
         .with('unloadings', 3)
         .createMany(50)

@@ -1,11 +1,12 @@
 // * Types
 import type CarBodyType from './Car/CarBodyType'
 import type { DateTime } from 'luxon'
-import type { BelongsTo, ModelObject, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import { BelongsTo, HasMany, hasMany, ModelObject, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
 import Car from './Car/Car'
 import User from './User/User'
+import RouteOrCargoContact from './RouteOrCargoContact'
 import CarBodyTypeService from 'App/Services/Car/CarBodyTypeService'
 import {
   BaseModel, beforeFetch, beforeFind,
@@ -70,6 +71,9 @@ export default class Route extends BaseModel {
   @column()
   public prepayment?: number
 
+  @column()
+  public note?: string
+
   /**
    * * Foreign keys
    */
@@ -99,6 +103,9 @@ export default class Route extends BaseModel {
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
+
+  @hasMany(() => RouteOrCargoContact)
+  public contacts: HasMany<typeof RouteOrCargoContact>
 
   /**
    * * Query scopes
@@ -140,6 +147,7 @@ export default class Route extends BaseModel {
     query
       .preload('car')
       .preload('user')
+      .preload('contacts')
   }
 
   /**

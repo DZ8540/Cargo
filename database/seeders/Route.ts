@@ -6,7 +6,7 @@ export default class extends BaseSeeder {
   public async run () {
 
     try {
-      await RouteFactory.createMany(50)
+      await RouteFactory.with('contacts', 2).createMany(50)
     } catch (err: any) {
       Logger.error(err)
     }

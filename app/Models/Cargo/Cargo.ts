@@ -8,6 +8,7 @@ import type { HasMany, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import CargoItem from './CargoItem'
 import CargoLoading from './CargoLoading'
 import CargoUnloading from './CargoUnloading'
+import RouteOrCargoContact from '../RouteOrCargoContact'
 import { BaseModel, column, hasMany, scope } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Cargo extends BaseModel {
@@ -84,6 +85,9 @@ export default class Cargo extends BaseModel {
   @column()
   public prepayment?: number
 
+  @column()
+  public note?: string
+
   /**
    * * Foreign keys
    */
@@ -116,6 +120,9 @@ export default class Cargo extends BaseModel {
 
   @hasMany(() => CargoItem)
   public items: HasMany<typeof CargoItem>
+
+  @hasMany(() => RouteOrCargoContact)
+  public contacts: HasMany<typeof RouteOrCargoContact>
 
   /**
    * * Query scopes
@@ -153,6 +160,7 @@ export default class Cargo extends BaseModel {
     await those.load('loadings')
     await those.load('unloadings')
     await those.load('items')
+    await those.load('contacts')
 
     return those
   }

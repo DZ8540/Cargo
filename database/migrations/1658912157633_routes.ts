@@ -1,5 +1,5 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
-import { TABLES_NAMES } from 'Config/database'
+import { ROUTE_NOTE_MAX_LENGTH, TABLES_NAMES } from 'Config/database'
 
 export default class extends BaseSchema {
   protected tableName = TABLES_NAMES.ROUTES
@@ -42,6 +42,7 @@ export default class extends BaseSchema {
       table.integer('vatPrice').unsigned().nullable()
       table.integer('noVatPrice').unsigned().nullable()
       table.integer('prepayment').unsigned().nullable().comment('В процентах от 0 до 100')
+      table.string('note', ROUTE_NOTE_MAX_LENGTH).nullable()
 
       /**
        * * Foreign keys

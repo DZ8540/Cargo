@@ -37,12 +37,14 @@ export default class extends BaseSchema {
       table
         .integer('cargoItemType_id')
         .unsigned()
+        .nullable()
         .references(`${TABLES_NAMES.CARGOS_ITEMS_TYPES}.id`)
         .onDelete('CASCADE')
 
       table
         .integer('cargoItemPackageType_id')
         .unsigned()
+        .nullable()
         .references(`${TABLES_NAMES.CARGOS_ITEMS_PACKAGE_TYPES}.id`)
         .onDelete('CASCADE')
 

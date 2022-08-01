@@ -9,6 +9,7 @@ import CarBodyType from 'App/Models/Car/CarBodyType'
 import CargoLoading from 'App/Models/Cargo/CargoLoading'
 import CargoItemType from 'App/Models/Cargo/CargoItemType'
 import CargoUnloading from 'App/Models/Cargo/CargoUnloading'
+import RouteOrCargoContact from 'App/Models/RouteOrCargoContact'
 import CargoItemPackageType from 'App/Models/Cargo/CargoItemPackageType'
 import { DateTime } from 'luxon'
 import { ROLES_NAMES } from 'Config/shield'
@@ -75,8 +76,20 @@ export const RouteFactory = Factory
       loadingRadius: faker.datatype.number(),
       unloadingRadius: faker.datatype.number(),
 
+      note: faker.random.words(10),
+
       carId: faker.datatype.number({ min: 1, max: 20 }),
       userId: faker.datatype.number({ min: 1, max: 20 }),
+    }
+  })
+  .relation('contacts', () => RouteOrCargoContactFactory)
+  .build()
+
+export const RouteOrCargoContactFactory = Factory
+  .define(RouteOrCargoContact, ({ faker }) => {
+    return {
+      phone: faker.phone.number(),
+      firstName: faker.name.firstName(),
     }
   })
   .build()
@@ -110,12 +123,15 @@ export const CargoFactory = Factory
       noVatPrice: faker.datatype.number(),
       prepayment: faker.datatype.number(),
 
+      note: faker.random.words(10),
+
       carBodyTypeId: faker.datatype.number({ min: 1, max: 10 }),
       userId: faker.datatype.number({ min: 1, max: 20 }),
     }
   })
   .relation('loadings', () => CargoLoadingFactory)
   .relation('unloadings', () => CargoUnloadingFactory)
+  .relation('contacts', () => RouteOrCargoContactFactory)
   .build()
 
 export const CargoLoadingFactory = Factory

@@ -14,6 +14,8 @@ export enum ResponseMessages {
   SUCCESS = 'Успешно!',
   ERROR = 'Что-то пошло не так, повторите попытку еще раз!',
 
+  CARGO_ID_OR_ROUTE_ID_NOT_FOUND = 'Идентификационный номер маршрута или груза не найден!',
+
   /**
    * * Auth
    */

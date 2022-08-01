@@ -4,7 +4,10 @@ import type { Rule } from '@ioc:Adonis/Core/Validator'
 
 import { rules } from '@ioc:Adonis/Core/Validator'
 import { RoutesDatePeriodTypes } from 'Config/route'
-import { ROUTE_ROUTE_MAX_LENGTH, ROUTE_ROUTE_MIN_LENGTH } from 'Config/database'
+import {
+  ROUTE_NOTE_MAX_LENGTH, ROUTE_NOTE_MIN_LENGTH,
+  ROUTE_ROUTE_MAX_LENGTH, ROUTE_ROUTE_MIN_LENGTH
+} from 'Config/database'
 
 export function getRouteFromRouteRules(): Rule[] {
   return [
@@ -42,4 +45,11 @@ export function getRouteDatePeriodTypeRules(): Rule[] {
 
 export function getRoutePriceRules(): Rule[] {
   return [ rules.unsigned() ]
+}
+
+export function getRouteNoteRules(): Rule[] {
+  return [
+    rules.minLength(ROUTE_NOTE_MIN_LENGTH),
+    rules.maxLength(ROUTE_NOTE_MAX_LENGTH),
+  ]
 }

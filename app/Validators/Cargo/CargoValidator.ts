@@ -6,12 +6,11 @@ import type { CustomMessages } from '@ioc:Adonis/Core/Validator'
 import IndexValidator from '../IndexValidator'
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
-import { getUserIdRules } from '../Rules/User/user'
+import { getUserFirstNameRules, getUserIdRules, getUserPhoneRules } from '../Rules/User/user'
 import { getCarBodyTypeIdRules } from '../Rules/Car/carBodyType'
 import {
-  getCargoFromTemperatureRules,
-  getCargoPriceRules,
-  getCargoToTemperatureRules,
+  getCargoFromTemperatureRules, getCargoNoteRules,
+  getCargoPriceRules, getCargoToTemperatureRules,
 } from '../Rules/Cargo/cargo'
 import {
   getCargoUnloadingAddressRules, getCargoUnloadingTownRules,
@@ -138,6 +137,12 @@ export default class CargoValidator extends IndexValidator {
     vatPrice: schema.number.optional(getCargoPriceRules()),
     noVatPrice: schema.number.optional(getCargoPriceRules()),
     prepayment: schema.number.optional(getCargoPriceRules()),
+
+    note: schema.string.optional({ trim: true }, getCargoNoteRules()),
+    contacts: schema.array.optional().members(schema.object().members({
+      phone: schema.string.optional({ trim: true }, getUserPhoneRules()),
+      firstName: schema.string.optional({ trim: true }, getUserFirstNameRules()),
+    })),
 
     carBodyTypeId: schema.number.optional(getCarBodyTypeIdRules()),
   })
