@@ -56,7 +56,7 @@ export default class AuthService {
     }
   }
 
-  public static async registerViaAPI(payload: RegisterValidator['schema']['props']): Promise<User> {
+  public static async registerViaAPI(payload: RegisterValidator['schema']['props'], headers: AuthHeaders): Promise<LoginViaAPIReturnData> {
     const userPayload: Partial<ModelAttributes<User>> = {
       email: payload.email,
       roleId: payload.roleId,
@@ -65,9 +65,14 @@ export default class AuthService {
 
     try {
       await this.codeVerify(payload)
-
       await RedisService.remove(RedisKeys.EMAIL_VERIFY, payload.email) // @ts-ignore
-      return await UserService.create(userPayload)
+
+      const user: User = await UserService.create(userPayload)
+      const tokens: Tokens = this.createTokens(user)
+
+      await TokenService.createUserTokenSession(user.id, tokens.refresh, headers)
+
+      return { user, tokens }
     } catch (err: Err | any) {
       throw err
     }
@@ -95,17 +100,13 @@ export default class AuthService {
     }
   }
 
-  public static async refreshToken(userId: User['id'], token: string, headers: AuthHeaders): Promise<Tokens> {
+  public static async refreshToken(token: string, headers: AuthHeaders): Promise<LoginViaAPIReturnData> {
     let user: User
     let tokenData: UserTokenPayload
 
     try {
-      user = await UserService.get(userId)
       tokenData = TokenService.verifyToken(token, authConfig.refresh.key)
-
-
-      if (userId != tokenData.id)
-        throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.TOKEN_ERROR } as Err
+      user = await UserService.get(tokenData.id)
     } catch (err: Err | any) {
       throw err
     }
@@ -115,7 +116,7 @@ export default class AuthService {
 
       await TokenService.updateUserTokenSession(token, tokens.refresh, headers)
 
-      return tokens
+      return { user, tokens }
     } catch (err: Err | any) {
       throw err
     }
@@ -133,6 +134,16 @@ export default class AuthService {
 
     if (user.roleId != roleToArrIndex)
       throw { code: ResponseCodes.SERVER_ERROR, message: ResponseMessages.USER_NOT_FOUND } as Err
+  }
+
+  public static async logoutViaAPI(token: string, headers: AuthHeaders): Promise<void> {
+    try {
+      TokenService.verifyToken(token, authConfig.refresh.key)
+
+      await TokenService.deleteUserTokenSession(token, headers)
+    } catch (err: Err | any) {
+      throw err
+    }
   }
 
   /**

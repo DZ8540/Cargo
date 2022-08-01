@@ -1,7 +1,6 @@
 // * Types
 import type User from 'App/Models/User/User'
 import type { Err } from 'Contracts/response'
-import type { Tokens } from 'Contracts/token'
 import type { AuthHeaders } from 'Contracts/auth'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
@@ -54,8 +53,7 @@ export default class AuthController {
     }
   }
 
-  public async refreshToken({ request, params, response }: HttpContextContract) {
-    const userId: User['id'] = params.userId
+  public async refreshToken({ request, response }: HttpContextContract) {
     const token: string = request.cookie(COOKIE_REFRESH_TOKEN_KEY)
     const headers: AuthHeaders = {
       fingerprint: request.header('User-Fingerprint')!,
@@ -64,11 +62,35 @@ export default class AuthController {
     }
 
     try {
-      const tokens: Tokens = await AuthService.refreshToken(userId, token, headers)
+      const data = await AuthService.refreshToken(token, headers)
 
-      response.cookie(COOKIE_REFRESH_TOKEN_KEY, tokens.refresh, COOKIE_REFRESH_TOKEN_CONFIG)
+      response.cookie(COOKIE_REFRESH_TOKEN_KEY, data.tokens.refresh, COOKIE_REFRESH_TOKEN_CONFIG)
 
-      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, tokens.access))
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, {
+        user: data.user,
+        token: data.tokens.access
+      }))
+    } catch (err: Err | any) {
+      response.clearCookie(COOKIE_REFRESH_TOKEN_KEY)
+
+      throw new ExceptionService(err)
+    }
+  }
+
+  public async logout({ request, response }: HttpContextContract) {
+    const token: string = request.cookie(COOKIE_REFRESH_TOKEN_KEY)
+    const headers: AuthHeaders = {
+      fingerprint: request.header('User-Fingerprint')!,
+      userAgent: request.header('User-Agent')!,
+      ip: request.ip(),
+    }
+
+    try {
+      await AuthService.logoutViaAPI(token, headers)
+
+      response.clearCookie(COOKIE_REFRESH_TOKEN_KEY)
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
     } catch (err: Err | any) {
       response.clearCookie(COOKIE_REFRESH_TOKEN_KEY)
 
@@ -82,6 +104,11 @@ export default class AuthController {
 
   public async register({ request, response }: HttpContextContract) {
     let payload: RegisterValidator['schema']['props']
+    const headers: AuthHeaders = {
+      fingerprint: request.header('User-Fingerprint')!,
+      userAgent: request.header('User-Agent')!,
+      ip: request.ip(),
+    }
 
     try {
       payload = await request.validate(RegisterValidator)
@@ -94,10 +121,17 @@ export default class AuthController {
     }
 
     try {
-      const user: User = await AuthService.registerViaAPI(payload)
+      const data = await AuthService.registerViaAPI(payload, headers)
 
-      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, user))
+      response.cookie(COOKIE_REFRESH_TOKEN_KEY, data.tokens.refresh, COOKIE_REFRESH_TOKEN_CONFIG)
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, {
+        user: data.user,
+        token: data.tokens.access,
+      }))
     } catch (err: Err | any) {
+      response.clearCookie(COOKIE_REFRESH_TOKEN_KEY)
+
       throw new ExceptionService(err)
     }
   }

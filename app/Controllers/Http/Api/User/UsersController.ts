@@ -11,6 +11,18 @@ import ExceptionService from 'App/Services/ExceptionService'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class UsersController {
+  public async get({ response, params }: HttpContextContract) {
+    const id: User['id'] = params.id
+
+    try {
+      const user: User = await UserService.get(id)
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, user))
+    } catch (err: Err | any) {
+      throw new ExceptionService(err)
+    }
+  }
+
   public async update({ request, response, params }: HttpContextContract) {
     let payload: UserValidator['schema']['props']
     const id: User['id'] = params.id

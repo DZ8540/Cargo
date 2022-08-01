@@ -10,17 +10,13 @@ Route.group(() => {
 
     Route.post('/login', 'Api/AuthController.login').middleware('CheckAuthHeaders')
 
-    Route
-      .post('/refreshToken/:userId', 'Api/AuthController.refreshToken')
-      .middleware(['CheckAuthHeaders', 'CheckRefreshToken'])
-      .where('userId', {
-        match: /^[0-9]+$/,
-        cast: (id) => Number(id),
-      })
+    Route.get('/logout', 'Api/AuthController.logout').middleware(['CheckAuthHeaders', 'CheckRefreshToken'])
+
+    Route.get('/refreshToken', 'Api/AuthController.refreshToken').middleware(['CheckAuthHeaders', 'CheckRefreshToken'])
 
     Route.group(() => {
 
-      Route.post('/', 'Api/AuthController.register')
+      Route.post('/', 'Api/AuthController.register').middleware('CheckAuthHeaders')
       Route.post('/emailVerify', 'Api/AuthController.emailVerify')
       Route.post('/codeVerify', 'Api/AuthController.codeVerify')
 
@@ -43,6 +39,11 @@ Route.group(() => {
   Route.group(() => {
 
     Route.get('/accountTypes', 'Api/User/RolesController.getAll')
+
+    Route.get('/:id', 'Api/User/UsersController.get').where('id', {
+      match: /^[0-9]+$/,
+      cast: (id) => Number(id),
+    })
 
     Route
       .patch('/:id', 'Api/User/UsersController.update')

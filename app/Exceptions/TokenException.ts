@@ -14,6 +14,6 @@ import { ResponseCodes } from 'Config/response'
 |
 */
 export default class TokenException extends IndexException {
-  status: number = 401
+  status: number = 403
   code: ResponseCodes = ResponseCodes.TOKEN_EXPIRED
 }
