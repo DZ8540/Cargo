@@ -21,6 +21,7 @@ export default class RouteService {
     try {
       const routes: JSONPaginate = (await Route
         .query()
+        .withScopes((scopes) => scopes.notTemplate())
         .withScopes((scopes) => scopes.notInArchive())
         .withScopes((scopes) => scopes.getByCity(city))
         .getViaPaginate(config))
@@ -39,6 +40,7 @@ export default class RouteService {
     try {
       const routes: JSONPaginate = (await Route
         .query()
+        .withScopes((scopes) => scopes.notTemplate())
         .withScopes((scopes) => scopes.notInArchive())
         .withScopes((scopes) => scopes.getByUserId(userId))
         .getViaPaginate(config))
@@ -57,6 +59,7 @@ export default class RouteService {
     try {
       const routes: JSONPaginate = (await Route
         .query()
+        .withScopes((scopes) => scopes.notTemplate())
         .withScopes((scopes) => scopes.inArchive())
         .withScopes((scopes) => scopes.getByUserId(userId))
         .getViaPaginate(config))
@@ -87,10 +90,12 @@ export default class RouteService {
     return item
   }
 
-  public static async create(payload: RouteValidator['schema']['props']): Promise<Route> {
+  public static async create(payload: RouteValidator['schema']['props'], { trx }: ServiceConfig<Route> = {}): Promise<Route> {
     let id: Route['id']
-    const trx: TransactionClientContract = await Database.transaction()
     const contactsPayload: Partial<ModelAttributes<RouteOrCargoContact>>[] | undefined = payload.contacts
+
+    if (!trx)
+      trx = await Database.transaction()
 
     try {
       id = (await Route.create(payload, { client: trx })).id
@@ -173,6 +178,7 @@ export default class RouteService {
     try {
       const routes = await Route
         .query()
+        .withScopes((scopes) => scopes.notTemplate())
         .withScopes((scopes) => scopes.notInArchive())
         .count('* as total')
 
@@ -201,7 +207,10 @@ export default class RouteService {
   }
 
   public static async search(payload: RouteSearchValidator['schema']['props']): Promise<JSONPaginate> {
-    let query = Route.query()
+    let query = Route
+      .query()
+      .withScopes((scopes) => scopes.notTemplate())
+      .withScopes((scopes) => scopes.notInArchive())
     const config: PaginateConfig<Route> = {
       page: payload.page,
       limit: payload.limit,

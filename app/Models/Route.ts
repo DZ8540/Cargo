@@ -1,16 +1,17 @@
 // * Types
 import type CarBodyType from './Car/CarBodyType'
 import type { DateTime } from 'luxon'
-import { BelongsTo, HasMany, hasMany, ModelObject, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import type { BelongsTo, HasMany, ModelObject, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
 import Car from './Car/Car'
 import User from './User/User'
+import Template from './Template'
 import RouteOrCargoContact from './RouteOrCargoContact'
 import CarBodyTypeService from 'App/Services/Car/CarBodyTypeService'
 import {
   BaseModel, beforeFetch, beforeFind,
-  belongsTo, column, scope
+  belongsTo, column, scope, hasMany,
 } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Route extends BaseModel {
@@ -19,7 +20,7 @@ export default class Route extends BaseModel {
     'dateType', 'bargainType', 'calculateType', 'loadingRadius',
     'unloadingRadius', 'date', 'dateDays', 'datePeriodType',
     'vatPrice', 'noVatPrice', 'prepayment', 'userId',
-    'carId', 'createdAt', 'updatedAt',
+    'carId', 'templateId', 'createdAt', 'updatedAt',
   ] as const
 
   /**
@@ -84,6 +85,9 @@ export default class Route extends BaseModel {
   @column({ columnName: 'car_id' })
   public carId: Car['id']
 
+  @column({ columnName: 'template_id' })
+  public templateId?: Template['id']
+
   /**
    * * Timestamps
    */
@@ -104,12 +108,19 @@ export default class Route extends BaseModel {
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
 
+  @belongsTo(() => Template)
+  public template: BelongsTo<typeof Template>
+
   @hasMany(() => RouteOrCargoContact)
   public contacts: HasMany<typeof RouteOrCargoContact>
 
   /**
    * * Query scopes
    */
+
+  public static notTemplate = scope((query) => {
+    query.whereNull('template_id')
+  })
 
   public static inArchive = scope((query) => {
     query.where('isArchive', true)

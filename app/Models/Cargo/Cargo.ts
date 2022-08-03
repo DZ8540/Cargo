@@ -1,5 +1,6 @@
 // * Types
 import type User from '../User/User'
+import type Template from '../Template'
 import type CarBodyType from '../Car/CarBodyType'
 import type { DateTime } from 'luxon'
 import type { HasMany, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
@@ -18,7 +19,8 @@ export default class Cargo extends BaseModel {
     'adr7', 'adr8', 'adr9', 'tir',
     'ekmt', 'bargainType', 'calculateType', 'fromTemperature',
     'toTemperature', 'vatPrice', 'noVatPrice', 'prepayment',
-    'carBodyTypeId', 'userId', 'createdAt', 'updatedAt',
+    'carBodyTypeId', 'userId', 'templateId',
+    'createdAt', 'updatedAt',
   ] as const
 
   /**
@@ -98,6 +100,9 @@ export default class Cargo extends BaseModel {
   @column({ columnName: 'user_id' })
   public userId: User['id']
 
+  @column({ columnName: 'template_id' })
+  public templateId?: Template['id']
+
   /**
    * * Timestamps
    */
@@ -127,6 +132,10 @@ export default class Cargo extends BaseModel {
   /**
    * * Query scopes
    */
+
+  public static notTemplate = scope((query) => {
+    query.whereNull('template_id')
+  })
 
   public static inArchive = scope((query) => {
     query.where('isArchive', true)

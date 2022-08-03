@@ -3,6 +3,7 @@ import Car from 'App/Models/Car/Car'
 import Route from 'App/Models/Route'
 import User from 'App/Models/User/User'
 import Cargo from 'App/Models/Cargo/Cargo'
+import Template from 'App/Models/Template'
 import Factory from '@ioc:Adonis/Lucid/Factory'
 import CargoItem from 'App/Models/Cargo/CargoItem'
 import CarBodyType from 'App/Models/Car/CarBodyType'
@@ -52,6 +53,17 @@ export const NewsFactory = Factory
   })
   .build()
 
+export const TemplateFactory = Factory
+  .define(Template, ({ faker }) => {
+    return {
+      name: faker.random.word(),
+      note: faker.lorem.sentence(),
+
+      userId: faker.datatype.number({ min: 1, max: 20 }),
+    }
+  })
+  .build()
+
 export const RouteFactory = Factory
   .define(Route, ({ faker }) => {
     return {
@@ -80,6 +92,7 @@ export const RouteFactory = Factory
 
       carId: faker.datatype.number({ min: 1, max: 20 }),
       userId: faker.datatype.number({ min: 1, max: 20 }),
+      templateId: faker.datatype.number({ min: 1, max: 20 }),
     }
   })
   .relation('contacts', () => RouteOrCargoContactFactory)
@@ -125,8 +138,9 @@ export const CargoFactory = Factory
 
       note: faker.random.words(10),
 
-      carBodyTypeId: faker.datatype.number({ min: 1, max: 10 }),
       userId: faker.datatype.number({ min: 1, max: 20 }),
+      templateId: faker.datatype.number({ min: 1, max: 20 }),
+      carBodyTypeId: faker.datatype.number({ min: 1, max: 10 }),
     }
   })
   .relation('loadings', () => CargoLoadingFactory)

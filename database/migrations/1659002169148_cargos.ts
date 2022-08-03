@@ -49,6 +49,13 @@ export default class extends BaseSchema {
        */
 
       table
+        .integer('user_id')
+        .unsigned()
+        .notNullable()
+        .references(`${TABLES_NAMES.USERS}.id`)
+        .onDelete('CASCADE')
+
+      table
         .integer('carBodyType_id')
         .unsigned()
         .nullable()
@@ -56,10 +63,10 @@ export default class extends BaseSchema {
         .onDelete('CASCADE')
 
       table
-        .integer('user_id')
+        .integer('template_id')
         .unsigned()
-        .notNullable()
-        .references(`${TABLES_NAMES.USERS}.id`)
+        .nullable()
+        .references(`${TABLES_NAMES.TEMPLATES}.id`)
         .onDelete('CASCADE')
 
       /**

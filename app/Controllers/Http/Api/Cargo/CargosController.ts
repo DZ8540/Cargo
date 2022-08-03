@@ -38,7 +38,7 @@ export default class CargosController {
     }
   }
 
-  public async paginateUserRoutes({ request, response, params }: HttpContextContract) {
+  public async paginateUserCargos({ request, response, params }: HttpContextContract) {
     let payload: ApiValidator['schema']['props']
     const userId: User['id'] = params.userId
 
@@ -61,7 +61,7 @@ export default class CargosController {
     }
   }
 
-  public async paginateArchiveUserRoutes({ request, response, params }: HttpContextContract) {
+  public async paginateArchiveUserCargos({ request, response, params }: HttpContextContract) {
     let payload: ApiValidator['schema']['props']
     const userId: User['id'] = params.userId
 

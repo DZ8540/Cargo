@@ -1,11 +1,13 @@
 // * Types
 import type { DateTime } from 'luxon'
+import type { HasMany } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
+import Template from '../Template'
 import Hash from '@ioc:Adonis/Core/Hash'
 import { RolesNames } from 'Config/shield'
 import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
-import { BaseModel, beforeSave, column, computed } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeSave, column, computed, hasMany } from '@ioc:Adonis/Lucid/Orm'
 
 export default class User extends BaseModel {
   public static readonly columns = [
@@ -120,6 +122,17 @@ export default class User extends BaseModel {
   public get isBlockedForUser(): string {
     return Number(this.isBlocked) ? 'Да' : 'Нет'
   }
+
+  /**
+   * * Relations
+   */
+
+  @hasMany(() => Template, {
+    onQuery(query) {
+      query.whereNotNull('route_id')
+    },
+  })
+  public routesTemplates: HasMany<typeof Template>
 
   /**
    * * Hooks

@@ -1,11 +1,12 @@
 // * Types
 import type User from '../User/User'
-import type CarBodyType from './CarBodyType'
 import type { DateTime } from 'luxon'
+import type { BelongsTo, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
+import CarBodyType from './CarBodyType'
 import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
-import { BaseModel, column, computed, scope } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeFetch, beforeFind, belongsTo, column, computed, scope } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Car extends BaseModel {
   public static readonly columns = [
@@ -90,6 +91,13 @@ export default class Car extends BaseModel {
   }
 
   /**
+   * * Relations
+   */
+
+  @belongsTo(() => CarBodyType)
+  public bodyType: BelongsTo<typeof CarBodyType>
+
+  /**
    * * Query scopes
    */
 
@@ -132,4 +140,14 @@ export default class Car extends BaseModel {
   public static lessThanCapacity = scope((query, value: number) => {
     query.where('capacity', '<=', value)
   })
+
+  /**
+   * * Hooks
+   */
+
+  @beforeFind()
+  @beforeFetch()
+  public static preloadAndAggregateModels(query: ModelQueryBuilderContract<typeof Car>) {
+    query.preload('bodyType')
+  }
 }

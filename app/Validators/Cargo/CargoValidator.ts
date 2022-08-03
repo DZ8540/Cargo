@@ -27,7 +27,7 @@ import {
 } from '../Rules/Cargo/cargoItem'
 
 export default class CargoValidator extends IndexValidator {
-  private readonly loadingSchema = {
+  protected readonly loadingSchema = {
     type: schema.boolean(),
     isAllDay: schema.boolean(),
     town: schema.string({ trim: true }, getCargoLoadingTownRules()),
@@ -44,7 +44,7 @@ export default class CargoValidator extends IndexValidator {
     timeTo: schema.date.optional({ format: 'HH:mm' }),
   }
 
-  private readonly unloadingSchema = {
+  protected readonly unloadingSchema = {
     isAllDay: schema.boolean(),
     town: schema.string({ trim: true }, getCargoUnloadingTownRules()),
     address: schema.string({ trim: true }, getCargoUnloadingAddressRules()),
@@ -65,7 +65,7 @@ export default class CargoValidator extends IndexValidator {
     timeTo: schema.date.optional({ format: 'HH:mm' }),
   }
 
-  private readonly itemSchema = {
+  protected readonly itemSchema = {
     weight: schema.number(getCargoItemWeightRules()),
     capacity: schema.number(getCargoItemCapacityRules()),
 
@@ -83,34 +83,7 @@ export default class CargoValidator extends IndexValidator {
     cargoItemPackageTypeId: schema.number.optional(getCargoItemPackageTypeIdRules()),
   }
 
-  constructor(protected ctx: HttpContextContract) {
-    super()
-  }
-
-  /**
-   * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
-   *
-   * For example:
-   * 1. The username must be of data type string. But then also, it should
-   *    not contain special characters or numbers.
-   *    ```
-   *     schema.string({}, [ rules.alpha() ])
-   *    ```
-   *
-   * 2. The email must be of data type string, formatted as a valid
-   *    email. But also, not used by any other user.
-   *    ```
-   *     schema.string({}, [
-   *       rules.email(),
-   *       rules.unique({ table: 'users', column: 'email' }),
-   *     ])
-   *    ```
-   */
-  public schema = schema.create({
-    loadings: schema.array().members(schema.object().members({ ...this.loadingSchema })),
-    unloadings: schema.array().members(schema.object().members({ ...this.unloadingSchema })),
-    items: schema.array().members(schema.object().members({ ...this.itemSchema })),
-
+  protected readonly preParsedSchema = {
     adr1: schema.boolean(),
     adr2: schema.boolean(),
     adr3: schema.boolean(),
@@ -145,6 +118,36 @@ export default class CargoValidator extends IndexValidator {
     })),
 
     carBodyTypeId: schema.number.optional(getCarBodyTypeIdRules()),
+  }
+
+  constructor(protected ctx: HttpContextContract) {
+    super()
+  }
+
+  /**
+   * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
+   *
+   * For example:
+   * 1. The username must be of data type string. But then also, it should
+   *    not contain special characters or numbers.
+   *    ```
+   *     schema.string({}, [ rules.alpha() ])
+   *    ```
+   *
+   * 2. The email must be of data type string, formatted as a valid
+   *    email. But also, not used by any other user.
+   *    ```
+   *     schema.string({}, [
+   *       rules.email(),
+   *       rules.unique({ table: 'users', column: 'email' }),
+   *     ])
+   *    ```
+   */
+  public schema = schema.create({
+    loadings: schema.array().members(schema.object().members({ ...this.loadingSchema })),
+    unloadings: schema.array().members(schema.object().members({ ...this.unloadingSchema })),
+    items: schema.array().members(schema.object().members({ ...this.itemSchema })),
+    ...this.preParsedSchema,
   })
 
   /**

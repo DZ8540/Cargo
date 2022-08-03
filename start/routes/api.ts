@@ -123,8 +123,8 @@ Route.group(() => {
     Route.get('/count', 'Api/Cargo/CargosController.count')
     Route.post('/search', 'Api/Cargo/CargosController.search')
     Route.post('/paginate/:city', 'Api/Cargo/CargosController.paginate')
-    Route.post('/notArchive/:userId', 'Api/Cargo/CargosController.paginateUserRoutes').middleware('CheckAccessToken')
-    Route.post('/archive/:userId', 'Api/Cargo/CargosController.paginateArchiveUserRoutes').middleware('CheckAccessToken')
+    Route.post('/notArchive/:userId', 'Api/Cargo/CargosController.paginateUserCargos').middleware('CheckAccessToken')
+    Route.post('/archive/:userId', 'Api/Cargo/CargosController.paginateArchiveUserCargos').middleware('CheckAccessToken')
     Route.post('/unArchive/:id', 'Api/Cargo/CargosController.unArchive').middleware('CheckAccessToken')
 
     Route.get('/:id', 'Api/Cargo/CargosController.get')
@@ -133,5 +133,43 @@ Route.group(() => {
     Route.post('/', 'Api/Cargo/CargosController.create').middleware('CheckAccessToken')
 
   }).prefix('cargo')
+
+  /**
+   * * Template
+   */
+
+  Route.group(() => {
+
+    Route.group(() => {
+
+      Route.post('/', 'Api/TemplatesController.createRouteTemplate')
+      Route.post('/:userId', 'Api/TemplatesController.paginateForRoutes').where('userId', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+    }).prefix('route')
+
+    Route.group(() => {
+
+      Route.post('/', 'Api/TemplatesController.createCargoTemplate')
+      Route.post('/:userId', 'Api/TemplatesController.paginateForCargos').where('userId', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+    }).prefix('cargo')
+
+    Route.patch('/:id', 'Api/TemplatesController.update').where('userId', {
+      match: /^[0-9]+$/,
+      cast: (id) => Number(id),
+    })
+
+    Route.delete('/:id', 'Api/TemplatesController.delete').where('userId', {
+      match: /^[0-9]+$/,
+      cast: (id) => Number(id),
+    })
+
+  }).prefix('template').middleware('CheckAccessToken')
 
 }).prefix('api')

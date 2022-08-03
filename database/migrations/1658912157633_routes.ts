@@ -62,6 +62,13 @@ export default class extends BaseSchema {
         .references(`${TABLES_NAMES.CARS}.id`)
         .onDelete('CASCADE')
 
+      table
+        .integer('template_id')
+        .unsigned()
+        .nullable()
+        .references(`${TABLES_NAMES.TEMPLATES}.id`)
+        .onDelete('CASCADE')
+
       /**
        * * Timestamps
        */

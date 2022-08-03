@@ -15,30 +15,7 @@ import {
 } from '../Rules/route'
 
 export default class RouteValidator extends IndexValidator {
-  constructor(protected ctx: HttpContextContract) {
-    super()
-  }
-
-  /**
-   * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
-   *
-   * For example:
-   * 1. The username must be of data type string. But then also, it should
-   *    not contain special characters or numbers.
-   *    ```
-   *     schema.string({}, [ rules.alpha() ])
-   *    ```
-   *
-   * 2. The email must be of data type string, formatted as a valid
-   *    email. But also, not used by any other user.
-   *    ```
-   *     schema.string({}, [
-   *       rules.email(),
-   *       rules.unique({ table: 'users', column: 'email' }),
-   *     ])
-   *    ```
-   */
-  public schema = schema.create({
+  protected readonly preParsedSchema = {
     dateType: schema.boolean(),
     bargainType: schema.boolean(),
     calculateType: schema.boolean(),
@@ -69,7 +46,32 @@ export default class RouteValidator extends IndexValidator {
       phone: schema.string.optional({ trim: true }, getUserPhoneRules()),
       firstName: schema.string.optional({ trim: true }, getUserFirstNameRules()),
     })),
-  })
+  }
+
+  constructor(protected ctx: HttpContextContract) {
+    super()
+  }
+
+  /**
+   * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
+   *
+   * For example:
+   * 1. The username must be of data type string. But then also, it should
+   *    not contain special characters or numbers.
+   *    ```
+   *     schema.string({}, [ rules.alpha() ])
+   *    ```
+   *
+   * 2. The email must be of data type string, formatted as a valid
+   *    email. But also, not used by any other user.
+   *    ```
+   *     schema.string({}, [
+   *       rules.email(),
+   *       rules.unique({ table: 'users', column: 'email' }),
+   *     ])
+   *    ```
+   */
+  public schema = schema.create(this.preParsedSchema)
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`

@@ -20,6 +20,7 @@ export default class IndexSeeder extends BaseSeeder {
      * * Other
      */
 
+    await this.runSeeder(await import('../Template'))
     await this.runSeeder(await import('../News'))
     await this.runSeeder(await import('../CarBodyType'))
     await this.runSeeder(await import('../Route'))

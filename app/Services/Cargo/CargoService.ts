@@ -24,6 +24,7 @@ export default class CargoService {
     try {
       const cargos: JSONPaginate = (await Cargo
         .query()
+        .withScopes((scopes) => scopes.notTemplate())
         .withScopes((scopes) => scopes.notInArchive())
         .withScopes((scopes) => scopes.getByCity(city))
         .getViaPaginate(config))
@@ -42,6 +43,7 @@ export default class CargoService {
     try {
       const cargos: JSONPaginate = (await Cargo
         .query()
+        .withScopes((scopes) => scopes.notTemplate())
         .withScopes((scopes) => scopes.notInArchive())
         .withScopes((scopes) => scopes.getByUserId(userId))
         .getViaPaginate(config))
@@ -61,6 +63,7 @@ export default class CargoService {
       const cargos: JSONPaginate = (await Cargo
         .query()
         .withScopes((scopes) => scopes.inArchive())
+        .withScopes((scopes) => scopes.notTemplate())
         .withScopes((scopes) => scopes.getByUserId(userId))
         .getViaPaginate(config))
         .toJSON()
@@ -90,9 +93,8 @@ export default class CargoService {
     return await item.getForUser()
   }
 
-  public static async create(payload: CargoValidator['schema']['props']): Promise<Cargo> {
+  public static async create(payload: CargoValidator['schema']['props'], { trx }: ServiceConfig<Cargo> = {}): Promise<Cargo> {
     let id: Cargo['id']
-    const trx: TransactionClientContract = await Database.transaction()
     const contactsPayload: Partial<ModelAttributes<RouteOrCargoContact>>[] | undefined = payload.contacts
     const cargoPayload: Partial<ModelAttributes<Cargo>> = {
       adr1: payload.adr1,
@@ -116,6 +118,9 @@ export default class CargoService {
       carBodyTypeId: payload.carBodyTypeId,
       userId: payload.userId,
     }
+
+    if (!trx)
+      trx = await Database.transaction()
 
     try {
       id = (await Cargo.create(cargoPayload, { client: trx })).id
@@ -245,6 +250,7 @@ export default class CargoService {
     try {
       const routes = await Cargo
         .query()
+        .withScopes((scopes) => scopes.notTemplate())
         .withScopes((scopes) => scopes.notInArchive())
         .count('* as total')
 
@@ -256,7 +262,10 @@ export default class CargoService {
   }
 
   public static async search(payload: CargoSearchValidator['schema']['props']): Promise<JSONPaginate> {
-    let query = Cargo.query()
+    let query = Cargo
+      .query()
+      .withScopes((scopes) => scopes.notTemplate())
+      .withScopes((scopes) => scopes.notInArchive())
     const config: PaginateConfig<Cargo> = {
       page: payload.page,
       limit: payload.limit,
