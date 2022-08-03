@@ -97,17 +97,6 @@ export default class CargoService {
     let id: Cargo['id']
     const contactsPayload: Partial<ModelAttributes<RouteOrCargoContact>>[] | undefined = payload.contacts
     const cargoPayload: Partial<ModelAttributes<Cargo>> = {
-      adr1: payload.adr1,
-      adr2: payload.adr2,
-      adr3: payload.adr3,
-      adr4: payload.adr4,
-      adr5: payload.adr5,
-      adr6: payload.adr6,
-      adr7: payload.adr7,
-      adr8: payload.adr8,
-      adr9: payload.adr9,
-      tir: payload.tir,
-      ekmt: payload.ekmt,
       bargainType: payload.bargainType,
       calculateType: payload.calculateType,
       fromTemperature: payload.fromTemperature,
@@ -158,17 +147,6 @@ export default class CargoService {
     let item: Cargo
     const trx: TransactionClientContract = await Database.transaction()
     const cargoPayload: Partial<ModelAttributes<Cargo>> = {
-      adr1: payload.adr1,
-      adr2: payload.adr2,
-      adr3: payload.adr3,
-      adr4: payload.adr4,
-      adr5: payload.adr5,
-      adr6: payload.adr6,
-      adr7: payload.adr7,
-      adr8: payload.adr8,
-      adr9: payload.adr9,
-      tir: payload.tir,
-      ekmt: payload.ekmt,
       bargainType: payload.bargainType,
       calculateType: payload.calculateType,
       fromTemperature: payload.fromTemperature,
