@@ -17,8 +17,7 @@ import {
 export default class RouteValidator extends IndexValidator {
   protected readonly preParsedSchema = {
     dateType: schema.boolean(),
-    bargainType: schema.boolean(),
-    calculateType: schema.boolean(),
+    prepayment: schema.number(getRoutePriceRules()),
 
     toRoute: schema.string({ trim: true }, getRouteToRouteRules()),
     fromRoute: schema.string({ trim: true }, getRouteFromRouteRules()),
@@ -30,9 +29,11 @@ export default class RouteValidator extends IndexValidator {
      * * Optional schemes
      */
 
+    bargainType: schema.boolean.optional(),
+    calculateType: schema.boolean.optional(),
+
     vatPrice: schema.number.optional(getRoutePriceRules()),
     noVatPrice: schema.number.optional(getRoutePriceRules()),
-    prepayment: schema.number.optional(getRoutePriceRules()),
 
     dateDays: schema.number.optional(getRouteDateDaysRules()),
     datePeriodType: schema.number.optional(getRouteDatePeriodTypeRules()),

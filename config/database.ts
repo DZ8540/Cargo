@@ -21,6 +21,8 @@ export const TABLES_NAMES = {
   CARGOS: 'cargos',
 
   CARGOS_LOADINGS: 'cargosLoadings',
+  CARGOS_LOADINGS_TYPES: 'cargosLoadingsTypes',
+
   CARGOS_UNLOADINGS: 'cargosUnloadings',
 
   CARGOS_ITEMS: 'cargosItems',

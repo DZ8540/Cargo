@@ -16,19 +16,20 @@ export default class extends BaseSchema {
       table.string('fromRoute').notNullable()
       table.string('toRoute').notNullable()
       table.boolean('dateType').notNullable()
-      table.boolean('bargainType').notNullable().comment(`
-        0 - Возможен торг
-        1 - Без торга
-      `)
-      table.boolean('calculateType').notNullable().comment(`
-        0 - Наличный расчет
-        1 - Перевод по карте
-      `)
+      table.integer('prepayment').unsigned().notNullable().comment('В процентах от 0 до 100')
 
       /**
        * * Nullable columns
        */
 
+      table.boolean('bargainType').nullable().comment(`
+        0 - Возможен торг
+        1 - Без торга
+      `)
+      table.boolean('calculateType').nullable().comment(`
+        0 - Наличный расчет
+        1 - Перевод по карте
+      `)
       table.integer('loadingRadius').unsigned().nullable()
       table.integer('unloadingRadius').unsigned().nullable()
       table.date('date').nullable()
@@ -41,7 +42,6 @@ export default class extends BaseSchema {
       `)
       table.integer('vatPrice').unsigned().nullable()
       table.integer('noVatPrice').unsigned().nullable()
-      table.integer('prepayment').unsigned().nullable().comment('В процентах от 0 до 100')
       table.string('note', ROUTE_NOTE_MAX_LENGTH).nullable()
 
       /**

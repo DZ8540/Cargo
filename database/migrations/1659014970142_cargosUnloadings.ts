@@ -36,6 +36,13 @@ export default class extends BaseSchema {
         .references(`${TABLES_NAMES.CARGOS}.id`)
         .onDelete('CASCADE')
 
+      table
+        .integer('cargoLoadingType_id')
+        .unsigned()
+        .nullable()
+        .references(`${TABLES_NAMES.CARGOS_LOADINGS_TYPES}.id`)
+        .onDelete('CASCADE')
+
       /**
        * * Timestamps
        */

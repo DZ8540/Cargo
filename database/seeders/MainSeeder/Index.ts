@@ -31,6 +31,7 @@ export default class IndexSeeder extends BaseSeeder {
      */
 
     await this.runSeeder(await import('../Cargo/Cargo'))
+    await this.runSeeder(await import('../Cargo/CargoLoadingType'))
     await this.runSeeder(await import('../Cargo/CargoItemPackageType'))
     await this.runSeeder(await import('../Cargo/CargoItemType'))
   }

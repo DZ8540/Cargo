@@ -11,6 +11,7 @@ import CargoLoading from 'App/Models/Cargo/CargoLoading'
 import CargoItemType from 'App/Models/Cargo/CargoItemType'
 import CargoUnloading from 'App/Models/Cargo/CargoUnloading'
 import RouteOrCargoContact from 'App/Models/RouteOrCargoContact'
+import CargoLoadingType from 'App/Models/Cargo/CargoLoadingType'
 import CargoItemPackageType from 'App/Models/Cargo/CargoItemPackageType'
 import { DateTime } from 'luxon'
 import { ROLES_NAMES } from 'Config/shield'
@@ -114,18 +115,6 @@ export const RouteOrCargoContactFactory = Factory
 export const CargoFactory = Factory
   .define(Cargo, ({ faker }) => {
     return {
-      adr1: faker.datatype.boolean(),
-      adr2: faker.datatype.boolean(),
-      adr3: faker.datatype.boolean(),
-      adr4: faker.datatype.boolean(),
-      adr5: faker.datatype.boolean(),
-      adr6: faker.datatype.boolean(),
-      adr7: faker.datatype.boolean(),
-      adr8: faker.datatype.boolean(),
-      adr9: faker.datatype.boolean(),
-      tir: faker.datatype.boolean(),
-      ekmt: faker.datatype.boolean(),
-
       bargainType: faker.datatype.boolean(),
       calculateType: faker.datatype.boolean(),
 
@@ -148,6 +137,14 @@ export const CargoFactory = Factory
   .relation('contacts', () => RouteOrCargoContactFactory)
   .build()
 
+export const CargoLoadingTypeFactory = Factory
+  .define(CargoLoadingType, ({ faker }) => {
+    return { name: faker.unique(faker.random.word) }
+  })
+  .relation('loadings', () => CargoLoadingFactory)
+  .relation('unLoadings', () => CargoUnloadingFactory)
+  .build()
+
 export const CargoLoadingFactory = Factory
   .define(CargoLoading, ({ faker }) => {
     return {
@@ -165,6 +162,9 @@ export const CargoLoadingFactory = Factory
         min: CargosLoadingPeriodTypes.WEEKDAYS,
         max: CargosLoadingPeriodTypes.IN_ONE_DAY,
       }),
+      transportationType: faker.datatype.boolean(),
+
+      cargoId: faker.datatype.number({ min: 1, max: 50 }),
     }
   })
   .build()
@@ -180,6 +180,8 @@ export const CargoUnloadingFactory = Factory
       dateTo: DateTime.fromJSDate(faker.date.future()),
       timeFrom: DateTime.now().toFormat('HH:mm'),
       timeTo: DateTime.now().plus({ days: 10 }).toFormat('HH:mm'),
+
+      cargoId: faker.datatype.number({ min: 1, max: 50 }),
     }
   })
   .build()
@@ -200,6 +202,18 @@ export const CargoItemPackageTypeFactory = Factory
 export const CargoItemFactory = Factory
   .define(CargoItem, ({ faker }) => {
     return {
+      adr1: faker.datatype.boolean(),
+      adr2: faker.datatype.boolean(),
+      adr3: faker.datatype.boolean(),
+      adr4: faker.datatype.boolean(),
+      adr5: faker.datatype.boolean(),
+      adr6: faker.datatype.boolean(),
+      adr7: faker.datatype.boolean(),
+      adr8: faker.datatype.boolean(),
+      adr9: faker.datatype.boolean(),
+      tir: faker.datatype.boolean(),
+      ekmt: faker.datatype.boolean(),
+
       weight: faker.datatype.number(),
       capacity: faker.datatype.number(),
       width: faker.datatype.number(),

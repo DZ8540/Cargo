@@ -43,10 +43,13 @@ export default class Route extends BaseModel {
   public dateType: boolean
 
   @column()
-  public bargainType: boolean
+  public prepayment: number
 
   @column()
-  public calculateType: boolean
+  public bargainType?: boolean
+
+  @column()
+  public calculateType?: boolean
 
   @column()
   public loadingRadius?: number
@@ -68,9 +71,6 @@ export default class Route extends BaseModel {
 
   @column()
   public noVatPrice?: number
-
-  @column()
-  public prepayment?: number
 
   @column()
   public note?: string

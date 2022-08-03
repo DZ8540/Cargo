@@ -30,9 +30,6 @@ export default class Car extends BaseModel {
   public name: string
 
   @column()
-  public additionalConfiguration: number
-
-  @column()
   public carrying: number
 
   @column()
@@ -46,6 +43,9 @@ export default class Car extends BaseModel {
 
   @column()
   public length: number
+
+  @column()
+  public additionalConfiguration?: number
 
   @column()
   public sts?: string

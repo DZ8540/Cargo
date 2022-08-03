@@ -1,10 +1,12 @@
 // * Types
 import type Cargo from './Cargo'
 import type { DateTime } from 'luxon'
+import type { BelongsTo, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
+import CargoLoadingType from './CargoLoadingType'
 import { TABLES_NAMES } from 'Config/database'
-import { BaseModel, column, scope } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeFetch, beforeFind, belongsTo, column, scope } from '@ioc:Adonis/Lucid/Orm'
 
 export default class CargoLoading extends BaseModel {
   public static readonly table: string = TABLES_NAMES.CARGOS_LOADINGS
@@ -49,12 +51,18 @@ export default class CargoLoading extends BaseModel {
   @column()
   public timeTo?: string
 
+  @column()
+  public transportationType?: boolean
+
   /**
    * * Foreign keys
    */
 
   @column({ columnName: 'cargo_id' })
   public cargoId: Cargo['id']
+
+  @column({ columnName: 'cargoLoadingType_id' })
+  public cargoLoadingTypeId?: CargoLoadingType['id']
 
   /**
    * * Timestamps
@@ -67,6 +75,13 @@ export default class CargoLoading extends BaseModel {
   public updatedAt: DateTime
 
   /**
+   * * Relations
+   */
+
+  @belongsTo(() => CargoLoadingType)
+  public loadingType: BelongsTo<typeof CargoLoadingType>
+
+  /**
    * * Query scopes
    */
 
@@ -77,4 +92,14 @@ export default class CargoLoading extends BaseModel {
   public static getByCargoId = scope((query, cargoId: Cargo['id']) => {
     query.where('cargo_id', cargoId)
   })
+
+  /**
+   * * Hooks
+   */
+
+  @beforeFind()
+  @beforeFetch()
+  public static async preloadRelations(query: ModelQueryBuilderContract<typeof CargoLoading>) {
+    query.preload('loadingType')
+  }
 }

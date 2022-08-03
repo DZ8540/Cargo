@@ -13,35 +13,24 @@ export default class extends BaseSchema {
        */
 
       table.boolean('isArchive').defaultTo(0).notNullable()
-      table.boolean('adr1').defaultTo(0).notNullable().comment('Разрешения груза')
-      table.boolean('adr2').defaultTo(0).notNullable().comment('Разрешения груза')
-      table.boolean('adr3').defaultTo(0).notNullable().comment('Разрешения груза')
-      table.boolean('adr4').defaultTo(0).notNullable().comment('Разрешения груза')
-      table.boolean('adr5').defaultTo(0).notNullable().comment('Разрешения груза')
-      table.boolean('adr6').defaultTo(0).notNullable().comment('Разрешения груза')
-      table.boolean('adr7').defaultTo(0).notNullable().comment('Разрешения груза')
-      table.boolean('adr8').defaultTo(0).notNullable().comment('Разрешения груза')
-      table.boolean('adr9').defaultTo(0).notNullable().comment('Разрешения груза')
-      table.boolean('tir').defaultTo(0).notNullable().comment('Разрешения груза')
-      table.boolean('ekmt').defaultTo(0).notNullable().comment('Разрешения груза')
-      table.boolean('bargainType').notNullable().comment(`
-        0 - Возможен торг
-        1 - Без торга
-      `)
-      table.boolean('calculateType').notNullable().comment(`
-        0 - Наличный расчет
-        1 - Перевод по карте
-      `)
+      table.integer('prepayment').unsigned().notNullable().comment('В процентах от 0 до 100')
 
       /**
        * * Nullable columns
        */
 
+      table.boolean('bargainType').nullable().comment(`
+        0 - Возможен торг
+        1 - Без торга
+      `)
+      table.boolean('calculateType').nullable().comment(`
+        0 - Наличный расчет
+        1 - Перевод по карте
+      `)
       table.integer('fromTemperature').unsigned().nullable()
       table.integer('toTemperature').unsigned().nullable()
       table.integer('vatPrice').unsigned().nullable()
       table.integer('noVatPrice').unsigned().nullable()
-      table.integer('prepayment').unsigned().nullable().comment('В процентах от 0 до 100')
       table.string('note', CARGO_NOTE_MAX_LENGTH).nullable()
 
       /**

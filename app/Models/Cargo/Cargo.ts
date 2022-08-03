@@ -34,43 +34,13 @@ export default class Cargo extends BaseModel {
   public isArchive: boolean
 
   @column()
-  public adr1: boolean
+  public prepayment: number
 
   @column()
-  public adr2: boolean
+  public bargainType?: boolean
 
   @column()
-  public adr3: boolean
-
-  @column()
-  public adr4: boolean
-
-  @column()
-  public adr5: boolean
-
-  @column()
-  public adr6: boolean
-
-  @column()
-  public adr7: boolean
-
-  @column()
-  public adr8: boolean
-
-  @column()
-  public adr9: boolean
-
-  @column()
-  public tir: boolean
-
-  @column()
-  public ekmt: boolean
-
-  @column()
-  public bargainType: boolean
-
-  @column()
-  public calculateType: boolean
+  public calculateType?: boolean
 
   @column()
   public fromTemperature?: number
@@ -83,9 +53,6 @@ export default class Cargo extends BaseModel {
 
   @column()
   public noVatPrice?: number
-
-  @column()
-  public prepayment?: number
 
   @column()
   public note?: string

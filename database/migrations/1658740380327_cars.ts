@@ -18,11 +18,6 @@ export default class extends BaseSchema {
         Верификация идет из админки
       `)
       table.string('name').notNullable()
-      table.integer('additionalConfiguration').unsigned().notNullable().comment(`
-        0 - грузовик
-        1 - полуприцеп
-        2 - сцепка
-      `)
       table.integer('carrying').unsigned().notNullable()
       table.integer('capacity').unsigned().notNullable()
       table.integer('width').unsigned().notNullable()
@@ -33,6 +28,11 @@ export default class extends BaseSchema {
        * * Nullable columns
        */
 
+      table.integer('additionalConfiguration').unsigned().nullable().comment(`
+        0 - грузовик
+        1 - полуприцеп
+        2 - сцепка
+      `)
       table.string('sts').unique().nullable().comment('СТС')
       table.string('vin').unique().nullable().comment('VIN код')
       table.string('pts').unique().nullable().comment('ПТС')

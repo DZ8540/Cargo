@@ -33,6 +33,39 @@ export default class CargoItem extends BaseModel {
   public capacity: number
 
   @column()
+  public adr1: boolean
+
+  @column()
+  public adr2: boolean
+
+  @column()
+  public adr3: boolean
+
+  @column()
+  public adr4: boolean
+
+  @column()
+  public adr5: boolean
+
+  @column()
+  public adr6: boolean
+
+  @column()
+  public adr7: boolean
+
+  @column()
+  public adr8: boolean
+
+  @column()
+  public adr9: boolean
+
+  @column()
+  public tir: boolean
+
+  @column()
+  public ekmt: boolean
+
+  @column()
   public packageCount?: number
 
   @column()

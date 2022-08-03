@@ -31,6 +31,11 @@ export default class extends BaseSchema {
       `)
       table.time('timeFrom').nullable()
       table.time('timeTo').nullable()
+      table.boolean('transportationType').nullable().comment(`
+        Тип перевозки
+        0 - отдельной машиной
+        1 - отдельной машиной или догрузом
+      `)
 
       /**
        * * Foreign keys
@@ -41,6 +46,13 @@ export default class extends BaseSchema {
         .unsigned()
         .notNullable()
         .references(`${TABLES_NAMES.CARGOS}.id`)
+        .onDelete('CASCADE')
+
+      table
+        .integer('cargoLoadingType_id')
+        .unsigned()
+        .nullable()
+        .references(`${TABLES_NAMES.CARGOS_LOADINGS_TYPES}.id`)
         .onDelete('CASCADE')
 
       /**

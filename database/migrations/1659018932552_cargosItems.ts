@@ -14,6 +14,17 @@ export default class extends BaseSchema {
 
       table.integer('weight').unsigned().notNullable()
       table.integer('capacity').unsigned().notNullable()
+      table.boolean('adr1').defaultTo(0).notNullable().comment('Разрешения груза')
+      table.boolean('adr2').defaultTo(0).notNullable().comment('Разрешения груза')
+      table.boolean('adr3').defaultTo(0).notNullable().comment('Разрешения груза')
+      table.boolean('adr4').defaultTo(0).notNullable().comment('Разрешения груза')
+      table.boolean('adr5').defaultTo(0).notNullable().comment('Разрешения груза')
+      table.boolean('adr6').defaultTo(0).notNullable().comment('Разрешения груза')
+      table.boolean('adr7').defaultTo(0).notNullable().comment('Разрешения груза')
+      table.boolean('adr8').defaultTo(0).notNullable().comment('Разрешения груза')
+      table.boolean('adr9').defaultTo(0).notNullable().comment('Разрешения груза')
+      table.boolean('tir').defaultTo(0).notNullable().comment('Разрешения груза')
+      table.boolean('ekmt').defaultTo(0).notNullable().comment('Разрешения груза')
 
       /**
        * * Nullable columns

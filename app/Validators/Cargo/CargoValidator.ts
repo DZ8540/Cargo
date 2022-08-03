@@ -25,11 +25,13 @@ import {
   getCargoItemNoteTypesRules, getCargoItemPackageCountRules, getCargoItemPackageTypeIdRules,
   getCargoItemTypeIdRules, getCargoItemWeightRules, getCargoItemWidthRules
 } from '../Rules/Cargo/cargoItem'
+import { getCargoLoadingTypeIdRules } from '../Rules/Cargo/cargoLoadingType'
 
 export default class CargoValidator extends IndexValidator {
   protected readonly loadingSchema = {
     type: schema.boolean(),
     isAllDay: schema.boolean(),
+
     town: schema.string({ trim: true }, getCargoLoadingTownRules()),
     address: schema.string({ trim: true }, getCargoLoadingAddressRules()),
 
@@ -40,8 +42,13 @@ export default class CargoValidator extends IndexValidator {
     date: schema.date.optional({ format: GLOBAL_DATETIME_FORMAT }, getCargoLoadingDateRules()),
     days: schema.number.optional(getCargoLoadingDaysRules()),
     periodType: schema.number.optional(getCargoLoadingPeriodTypeRules()),
+
     timeFrom: schema.date.optional({ format: 'HH:mm' }),
     timeTo: schema.date.optional({ format: 'HH:mm' }),
+
+    transportationType: schema.boolean.optional(),
+
+    cargoLoadingTypeId: schema.number.optional(getCargoLoadingTypeIdRules()),
   }
 
   protected readonly unloadingSchema = {
@@ -63,11 +70,25 @@ export default class CargoValidator extends IndexValidator {
     ),
     timeFrom: schema.date.optional({ format: 'HH:mm' }),
     timeTo: schema.date.optional({ format: 'HH:mm' }),
+
+    cargoLoadingTypeId: schema.number.optional(getCargoLoadingTypeIdRules()),
   }
 
   protected readonly itemSchema = {
     weight: schema.number(getCargoItemWeightRules()),
     capacity: schema.number(getCargoItemCapacityRules()),
+
+    adr1: schema.boolean(),
+    adr2: schema.boolean(),
+    adr3: schema.boolean(),
+    adr4: schema.boolean(),
+    adr5: schema.boolean(),
+    adr6: schema.boolean(),
+    adr7: schema.boolean(),
+    adr8: schema.boolean(),
+    adr9: schema.boolean(),
+    tir: schema.boolean(),
+    ekmt: schema.boolean(),
 
     /**
      * * Optional schemes
@@ -84,32 +105,21 @@ export default class CargoValidator extends IndexValidator {
   }
 
   protected readonly preParsedSchema = {
-    adr1: schema.boolean(),
-    adr2: schema.boolean(),
-    adr3: schema.boolean(),
-    adr4: schema.boolean(),
-    adr5: schema.boolean(),
-    adr6: schema.boolean(),
-    adr7: schema.boolean(),
-    adr8: schema.boolean(),
-    adr9: schema.boolean(),
-    tir: schema.boolean(),
-    ekmt: schema.boolean(),
-    bargainType: schema.boolean(),
-    calculateType: schema.boolean(),
-
+    prepayment: schema.number(getCargoPriceRules()),
     userId: schema.number(getUserIdRules()),
 
     /**
      * * Optional schemes
      */
 
+    bargainType: schema.boolean.optional(),
+    calculateType: schema.boolean.optional(),
+
     fromTemperature: schema.number.optional(getCargoFromTemperatureRules('toTemperature')),
     toTemperature: schema.number.optional(getCargoToTemperatureRules('fromTemperature')),
 
     vatPrice: schema.number.optional(getCargoPriceRules()),
     noVatPrice: schema.number.optional(getCargoPriceRules()),
-    prepayment: schema.number.optional(getCargoPriceRules()),
 
     note: schema.string.optional({ trim: true }, getCargoNoteRules()),
     contacts: schema.array.optional().members(schema.object().members({
