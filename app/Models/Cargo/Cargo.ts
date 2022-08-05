@@ -1,10 +1,10 @@
 // * Types
-import type User from '../User/User'
 import type Template from '../Template'
 import type { DateTime } from 'luxon'
 import type { BelongsTo, HasMany, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
+import User from '../User/User'
 import Report from '../Report'
 import CargoItem from './CargoItem'
 import CargoLoading from './CargoLoading'
@@ -88,6 +88,9 @@ export default class Cargo extends BaseModel {
   @belongsTo(() => CarBodyType)
   public carBodyType: BelongsTo<typeof CarBodyType>
 
+  @belongsTo(() => User)
+  public user: BelongsTo<typeof User>
+
   @hasMany(() => CargoLoading)
   public loadings: HasMany<typeof CargoLoading>
 
@@ -145,6 +148,7 @@ export default class Cargo extends BaseModel {
     await those.load('unloadings')
     await those.load('items')
     await those.load('contacts')
+    await those.load('user')
 
     return those
   }
