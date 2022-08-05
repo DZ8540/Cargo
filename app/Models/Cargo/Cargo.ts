@@ -1,16 +1,17 @@
 // * Types
 import type User from '../User/User'
 import type Template from '../Template'
-import type CarBodyType from '../Car/CarBodyType'
 import type { DateTime } from 'luxon'
-import type { HasMany, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import type { BelongsTo, HasMany, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
+import Report from '../Report'
 import CargoItem from './CargoItem'
 import CargoLoading from './CargoLoading'
+import CarBodyType from '../Car/CarBodyType'
 import CargoUnloading from './CargoUnloading'
 import RouteOrCargoContact from '../RouteOrCargoContact'
-import { BaseModel, column, hasMany, scope } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, hasMany, scope, belongsTo } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Cargo extends BaseModel {
   public static readonly columns = [
@@ -84,6 +85,9 @@ export default class Cargo extends BaseModel {
    * * Relations
    */
 
+  @belongsTo(() => CarBodyType)
+  public carBodyType: BelongsTo<typeof CarBodyType>
+
   @hasMany(() => CargoLoading)
   public loadings: HasMany<typeof CargoLoading>
 
@@ -95,6 +99,9 @@ export default class Cargo extends BaseModel {
 
   @hasMany(() => RouteOrCargoContact)
   public contacts: HasMany<typeof RouteOrCargoContact>
+
+  @hasMany(() => Report)
+  public reports: HasMany<typeof Report>
 
   /**
    * * Query scopes
@@ -133,6 +140,7 @@ export default class Cargo extends BaseModel {
   public async getForUser(): Promise<Cargo> {
     const those: Cargo = this
 
+    await those.load('carBodyType')
     await those.load('loadings')
     await those.load('unloadings')
     await those.load('items')

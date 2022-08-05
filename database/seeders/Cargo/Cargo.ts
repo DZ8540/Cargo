@@ -6,7 +6,10 @@ export default class extends BaseSeeder {
   public async run () {
 
     try {
-      await CargoFactory.with('contacts', 2).createMany(50)
+      await CargoFactory
+        .with('reports', 2)
+        .with('contacts', 2)
+        .createMany(50)
     } catch (err: any) {
       Logger.error(err)
     }

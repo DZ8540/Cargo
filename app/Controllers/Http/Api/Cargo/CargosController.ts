@@ -17,7 +17,7 @@ import { ResponseCodes, ResponseMessages } from 'Config/response'
 export default class CargosController {
   public async paginate({ request, response, params }: HttpContextContract) {
     let payload: ApiValidator['schema']['props']
-    const city: string = params.city
+    const city: string = decodeURIComponent(params.city)
 
     try {
       payload = await request.validate(ApiValidator)

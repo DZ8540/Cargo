@@ -1,6 +1,7 @@
 // * Types
 import type Cargo from './Cargo'
 import type { DateTime } from 'luxon'
+import type { CargosLoadingPeriodTypes } from 'Config/cargo'
 import type { BelongsTo, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
@@ -43,7 +44,7 @@ export default class CargoLoading extends BaseModel {
   public days?: number
 
   @column()
-  public periodType?: number
+  public periodType?: CargosLoadingPeriodTypes
 
   @column()
   public timeFrom?: string

@@ -73,7 +73,19 @@ Route.group(() => {
     Route.post('/random', 'Api/NewsController.random')
     Route.get('/:slug', 'Api/NewsController.get')
 
-  }).prefix('/news')
+  }).prefix('news')
+
+  /**
+   * * Report
+   */
+
+  Route.group(() => {
+
+    Route.post('/route', 'Api/ReportsController.createRouteReport')
+    Route.post('/cargo', 'Api/ReportsController.createCargoReport')
+    Route.post('/user', 'Api/ReportsController.createUserReport')
+
+  }).prefix('report').middleware('CheckAccessToken')
 
   /**
    * * Car
@@ -89,7 +101,7 @@ Route.group(() => {
     Route.delete('/:id', 'Api/Car/CarsController.delete')
     Route.post('/', 'Api/Car/CarsController.create')
 
-  }).prefix('car').middleware('CheckAccessToken')
+  }).prefix('car').middleware(['CheckAccessToken', 'CheckCarrierRole'])
 
   /**
    * * Route
@@ -100,14 +112,14 @@ Route.group(() => {
     Route.get('/count', 'Api/RoutesController.count')
     Route.post('/search', 'Api/RoutesController.search')
     Route.post('/paginate/:city', 'Api/RoutesController.paginate')
-    Route.post('/notArchive/:userId', 'Api/RoutesController.paginateUserRoutes').middleware('CheckAccessToken')
-    Route.post('/archive/:userId', 'Api/RoutesController.paginateArchiveUserRoutes').middleware('CheckAccessToken')
-    Route.post('/unArchive/:id', 'Api/RoutesController.unArchive').middleware('CheckAccessToken')
+    Route.post('/notArchive/:userId', 'Api/RoutesController.paginateUserRoutes').middleware(['CheckAccessToken', 'CheckCarrierRole'])
+    Route.post('/archive/:userId', 'Api/RoutesController.paginateArchiveUserRoutes').middleware(['CheckAccessToken', 'CheckCarrierRole'])
+    Route.post('/unArchive/:id', 'Api/RoutesController.unArchive').middleware(['CheckAccessToken', 'CheckCarrierRole'])
 
     Route.get('/:id', 'Api/RoutesController.get')
-    Route.patch('/:id', 'Api/RoutesController.update').middleware('CheckAccessToken')
-    Route.delete('/:id', 'Api/RoutesController.delete').middleware('CheckAccessToken')
-    Route.post('/', 'Api/RoutesController.create').middleware('CheckAccessToken')
+    Route.patch('/:id', 'Api/RoutesController.update').middleware(['CheckAccessToken', 'CheckCarrierRole'])
+    Route.delete('/:id', 'Api/RoutesController.delete').middleware(['CheckAccessToken', 'CheckCarrierRole'])
+    Route.post('/', 'Api/RoutesController.create').middleware(['CheckAccessToken', 'CheckCarrierRole'])
 
   }).prefix('route')
 
@@ -117,20 +129,20 @@ Route.group(() => {
 
   Route.group(() => {
 
-    Route.get('/itemTypes', 'Api/Cargo/CargosItemsTypesController.getAll').middleware('CheckAccessToken')
-    Route.get('/packageTypes', 'Api/Cargo/CargosItemsPackageTypesController.getAll').middleware('CheckAccessToken')
+    Route.get('/itemTypes', 'Api/Cargo/CargosItemsTypesController.getAll').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
+    Route.get('/packageTypes', 'Api/Cargo/CargosItemsPackageTypesController.getAll').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
 
     Route.get('/count', 'Api/Cargo/CargosController.count')
     Route.post('/search', 'Api/Cargo/CargosController.search')
     Route.post('/paginate/:city', 'Api/Cargo/CargosController.paginate')
-    Route.post('/notArchive/:userId', 'Api/Cargo/CargosController.paginateUserCargos').middleware('CheckAccessToken')
-    Route.post('/archive/:userId', 'Api/Cargo/CargosController.paginateArchiveUserCargos').middleware('CheckAccessToken')
-    Route.post('/unArchive/:id', 'Api/Cargo/CargosController.unArchive').middleware('CheckAccessToken')
+    Route.post('/notArchive/:userId', 'Api/Cargo/CargosController.paginateUserCargos').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
+    Route.post('/archive/:userId', 'Api/Cargo/CargosController.paginateArchiveUserCargos').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
+    Route.post('/unArchive/:id', 'Api/Cargo/CargosController.unArchive').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
 
     Route.get('/:id', 'Api/Cargo/CargosController.get')
-    Route.patch('/:id', 'Api/Cargo/CargosController.update').middleware('CheckAccessToken')
-    Route.delete('/:id', 'Api/Cargo/CargosController.delete').middleware('CheckAccessToken')
-    Route.post('/', 'Api/Cargo/CargosController.create').middleware('CheckAccessToken')
+    Route.patch('/:id', 'Api/Cargo/CargosController.update').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
+    Route.delete('/:id', 'Api/Cargo/CargosController.delete').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
+    Route.post('/', 'Api/Cargo/CargosController.create').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
 
   }).prefix('cargo')
 
@@ -148,7 +160,7 @@ Route.group(() => {
         cast: (id) => Number(id),
       })
 
-    }).prefix('route')
+    }).prefix('route').middleware('CheckCarrierRole')
 
     Route.group(() => {
 
@@ -158,7 +170,7 @@ Route.group(() => {
         cast: (id) => Number(id),
       })
 
-    }).prefix('cargo')
+    }).prefix('cargo').middleware('CheckCargoOwnerRole')
 
     Route.patch('/:id', 'Api/TemplatesController.update').where('userId', {
       match: /^[0-9]+$/,

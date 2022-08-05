@@ -1,19 +1,22 @@
 // * Types
 import type CarBodyType from './Car/CarBodyType'
 import type { DateTime } from 'luxon'
+import type { RoutesDatePeriodTypes } from 'Config/route'
 import type { BelongsTo, HasMany, ModelObject, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
 import Car from './Car/Car'
+import Report from './Report'
 import User from './User/User'
 import Template from './Template'
 import RouteOrCargoContact from './RouteOrCargoContact'
 import CarBodyTypeService from 'App/Services/Car/CarBodyTypeService'
+import { ROUTES_DATE_PERIOD_TYPES } from 'Config/route'
 import {
   BaseModel, beforeFetch, beforeFind,
   belongsTo, column, scope, hasMany,
+  computed,
 } from '@ioc:Adonis/Lucid/Orm'
-
 export default class Route extends BaseModel {
   public readonly columns = [
     'id', 'isArchive', 'fromRoute', 'toRoute',
@@ -64,7 +67,7 @@ export default class Route extends BaseModel {
   public dateDays?: number
 
   @column()
-  public datePeriodType?: number
+  public datePeriodType?: RoutesDatePeriodTypes
 
   @column()
   public vatPrice?: number
@@ -99,6 +102,15 @@ export default class Route extends BaseModel {
   public updatedAt: DateTime
 
   /**
+   * * Computed properties
+   */
+
+  @computed()
+  public get datePeriodTypeForUser(): typeof ROUTES_DATE_PERIOD_TYPES[number] | 'Нет' {
+    return this.datePeriodType !== undefined ? ROUTES_DATE_PERIOD_TYPES[this.datePeriodType] : 'Нет'
+  }
+
+  /**
    * * Relations
    */
 
@@ -113,6 +125,9 @@ export default class Route extends BaseModel {
 
   @hasMany(() => RouteOrCargoContact)
   public contacts: HasMany<typeof RouteOrCargoContact>
+
+  @hasMany(() => Report)
+  public reports: HasMany<typeof Report>
 
   /**
    * * Query scopes

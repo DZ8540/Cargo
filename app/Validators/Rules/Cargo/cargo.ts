@@ -3,7 +3,14 @@ import { Rule } from '@ioc:Adonis/Core/Validator'
 // * Types
 
 import { rules } from '@ioc:Adonis/Core/Validator'
-import { CARGO_NOTE_MAX_LENGTH, CARGO_NOTE_MIN_LENGTH } from 'Config/database'
+import { CARGO_NOTE_MAX_LENGTH, CARGO_NOTE_MIN_LENGTH, TABLES_NAMES } from 'Config/database'
+
+export function getCargoIdRules(table: string = TABLES_NAMES.CARGOS): Rule[] {
+  return [
+    rules.unsigned(),
+    rules.exists({ table, column: 'id' })
+  ]
+}
 
 export function getCargoFromTemperatureRules(fieldName: string): Rule[] {
   return [

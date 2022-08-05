@@ -42,8 +42,20 @@ Server.middleware.register([
 |
 */
 Server.middleware.registerNamed({
+  CheckAdminPanelAccess: () => import('App/Middleware/CheckAdminPanelAccess'),
+
+  /**
+   * * Auth
+   */
+
   CheckAuthHeaders: () => import('App/Middleware/CheckAuthHeaders'),
   CheckAccessToken: () => import('App/Middleware/CheckAccessToken'),
   CheckRefreshToken: () => import('App/Middleware/CheckRefreshToken'),
-  CheckAdminPanelAccess: () => import('App/Middleware/CheckAdminPanelAccess'),
+
+  /**
+   * * Role
+   */
+
+  CheckCarrierRole: () => import('App/Middleware/Role/CheckCarrierRole'),
+  CheckCargoOwnerRole: () => import('App/Middleware/Role/CheckCargoOwnerRole'),
 })

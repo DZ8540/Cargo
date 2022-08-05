@@ -1,14 +1,15 @@
 // * Types
 import type Cargo from './Cargo'
 import type { DateTime } from 'luxon'
+import type { CargosItemsNoteTypes } from 'Config/cargo'
 import type { BelongsTo, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
 import CargoItemType from './CargoItemType'
 import CargoItemPackageType from './CargoItemPackageType'
 import { TABLES_NAMES } from 'Config/database'
-import { CargosItemsNoteTypes } from 'Config/cargo'
-import { BaseModel, beforeFetch, beforeFind, belongsTo, column, scope } from '@ioc:Adonis/Lucid/Orm'
+import { CARGOS_ITEMS_NOTE_TYPES } from 'Config/cargo'
+import { BaseModel, beforeFetch, beforeFind, belongsTo, column, scope, computed } from '@ioc:Adonis/Lucid/Orm'
 
 export default class CargoItem extends BaseModel {
   public static readonly table: string = TABLES_NAMES.CARGOS_ITEMS
@@ -78,7 +79,7 @@ export default class CargoItem extends BaseModel {
   public height?: number
 
   @column()
-  public noteType?: number
+  public noteType?: CargosItemsNoteTypes
 
   /**
    * * Foreign keys
@@ -102,6 +103,15 @@ export default class CargoItem extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  /**
+   * * Computed properties
+   */
+
+  @computed()
+  public get noteTypeForUser(): typeof CARGOS_ITEMS_NOTE_TYPES[number] | 'Нет' {
+    return this.noteType !== undefined ? CARGOS_ITEMS_NOTE_TYPES[this.noteType] : 'Нет'
+  }
 
   /**
    * * Relations

@@ -25,6 +25,7 @@ export enum ResponseMessages {
   TOKEN_ERROR = 'Токен верификации пользователя не найден или просрочен!',
   MISS_AUTH_HEADERS = 'Не найдены необходимые заголовки для авторизации!',
   CODE_VERIFICATION_ALREADY_EXISTS = 'Верификационный код уже был отправлен вам на почту!',
+  NOT_ACCESS = 'Недостаточно прав для текущей роли!',
 
   /**
    * * User

@@ -1,6 +1,7 @@
 import News from 'App/Models/News'
 import Car from 'App/Models/Car/Car'
 import Route from 'App/Models/Route'
+import Report from 'App/Models/Report'
 import User from 'App/Models/User/User'
 import Cargo from 'App/Models/Cargo/Cargo'
 import Template from 'App/Models/Template'
@@ -96,6 +97,7 @@ export const RouteFactory = Factory
       templateId: faker.datatype.number({ min: 1, max: 20 }),
     }
   })
+  .relation('reports', () => ReportFactory)
   .relation('contacts', () => RouteOrCargoContactFactory)
   .build()
 
@@ -104,6 +106,15 @@ export const RouteOrCargoContactFactory = Factory
     return {
       phone: faker.phone.number(),
       firstName: faker.name.firstName(),
+    }
+  })
+  .build()
+
+export const ReportFactory = Factory
+  .define(Report, ({ faker }) => {
+    return {
+      content: faker.lorem.paragraph(),
+      fromId: faker.datatype.number({ min: 1, max: 20 }),
     }
   })
   .build()
@@ -132,6 +143,7 @@ export const CargoFactory = Factory
       carBodyTypeId: faker.datatype.number({ min: 1, max: 10 }),
     }
   })
+  .relation('reports', () => ReportFactory)
   .relation('loadings', () => CargoLoadingFactory)
   .relation('unloadings', () => CargoUnloadingFactory)
   .relation('contacts', () => RouteOrCargoContactFactory)

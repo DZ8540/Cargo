@@ -6,8 +6,16 @@ import { rules } from '@ioc:Adonis/Core/Validator'
 import { RoutesDatePeriodTypes } from 'Config/route'
 import {
   ROUTE_NOTE_MAX_LENGTH, ROUTE_NOTE_MIN_LENGTH,
-  ROUTE_ROUTE_MAX_LENGTH, ROUTE_ROUTE_MIN_LENGTH
+  ROUTE_ROUTE_MAX_LENGTH, ROUTE_ROUTE_MIN_LENGTH,
+  TABLES_NAMES,
 } from 'Config/database'
+
+export function getRouteIdRules(table: string = TABLES_NAMES.ROUTES): Rule[] {
+  return [
+    rules.unsigned(),
+    rules.exists({ table, column: 'id' })
+  ]
+}
 
 export function getRouteFromRouteRules(): Rule[] {
   return [

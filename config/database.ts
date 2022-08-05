@@ -13,6 +13,7 @@ export const TABLES_NAMES = {
   ROUTES: 'routes',
   ROUTES_OR_CARGOS_CONTACTS: 'routesOrCargosContacts',
   TEMPLATES: 'templates',
+  REPORTS: 'reports',
 
   /**
    * * Cargo
@@ -44,6 +45,13 @@ export const TABLES_NAMES = {
   USERS: 'users',
   SESSIONS: 'sessions',
 } as const
+
+/**
+ * * Report
+ */
+
+ export const REPORT_CONTENT_MIN_LENGTH: number = 5
+ export const REPORT_CONTENT_MAX_LENGTH: number = 1024
 
 /**
  * * Template

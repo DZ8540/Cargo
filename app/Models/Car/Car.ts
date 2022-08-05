@@ -1,6 +1,7 @@
 // * Types
 import type User from '../User/User'
 import type { DateTime } from 'luxon'
+import type { CarsAdditionalConfigurations } from 'Config/car'
 import type { BelongsTo, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
@@ -45,7 +46,7 @@ export default class Car extends BaseModel {
   public length: number
 
   @column()
-  public additionalConfiguration?: number
+  public additionalConfiguration?: CarsAdditionalConfigurations
 
   @column()
   public sts?: string

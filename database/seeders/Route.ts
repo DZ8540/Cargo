@@ -7,6 +7,7 @@ export default class extends BaseSeeder {
 
     try {
       await RouteFactory
+        .with('reports', 2)
         .with('contacts', 2)
         .createMany(50)
     } catch (err: any) {
