@@ -90,7 +90,26 @@ export default class CargoService {
     if (!item)
       throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.ERROR } as Err
 
-    return await item.getForUser()
+    try {
+      return await item.getForUser()
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.SERVER_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
+
+  public static async getUserCargosIds(userId: User['id']): Promise<Cargo['id'][]> {
+    try {
+      const cargos: Cargo[] = await Cargo
+        .query()
+        .select('id')
+        .withScopes((scopes) => scopes.getByUserId(userId))
+
+      return cargos.map((item: Cargo) => item.id)
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
   }
 
   public static async create(payload: CargoValidator['schema']['props'], { trx }: ServiceConfig<Cargo> = {}): Promise<Cargo> {
@@ -218,21 +237,6 @@ export default class CargoService {
 
     try {
       await item.merge({ isArchive: false }).save()
-    } catch (err: any) {
-      Logger.error(err)
-      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
-    }
-  }
-
-  public static async getCount(): Promise<number> {
-    try {
-      const routes = await Cargo
-        .query()
-        .withScopes((scopes) => scopes.notTemplate())
-        .withScopes((scopes) => scopes.notInArchive())
-        .count('* as total')
-
-      return routes[0].$extras.total
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err

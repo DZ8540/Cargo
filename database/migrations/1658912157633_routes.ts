@@ -37,8 +37,9 @@ export default class extends BaseSchema {
       table.integer('datePeriodType').unsigned().nullable().comment(`
         Тип единожды
         0 - по рабочим дням
-        1 - ежедневно
-        2 - через день
+        1 - по выходным
+        2 - ежедневно
+        3 - через день
       `)
       table.integer('vatPrice').unsigned().nullable()
       table.integer('noVatPrice').unsigned().nullable()

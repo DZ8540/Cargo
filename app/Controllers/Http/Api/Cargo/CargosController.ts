@@ -1,6 +1,7 @@
 // * Types
 import type User from 'App/Models/User/User'
 import type Cargo from 'App/Models/Cargo/Cargo'
+import type CargoLoadingType from 'App/Models/Cargo/CargoLoadingType'
 import type { Err } from 'Contracts/response'
 import type { JSONPaginate } from 'Contracts/database'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
@@ -11,6 +12,7 @@ import CargoService from 'App/Services/Cargo/CargoService'
 import ResponseService from 'App/Services/ResponseService'
 import ExceptionService from 'App/Services/ExceptionService'
 import CargoValidator from 'App/Validators/Cargo/CargoValidator'
+import CargoLoadingService from 'App/Services/Cargo/CargoLoadingService'
 import CargoSearchValidator from 'App/Validators/Cargo/CargoSearchValidator'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
@@ -167,7 +169,7 @@ export default class CargosController {
 
   public async count({ response }: HttpContextContract) {
     try {
-      const count: number = await CargoService.getCount()
+      const count: number = await ResponseService.getCompletedCargoResponsesCount()
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, count))
     } catch (err: Err | any) {
@@ -193,6 +195,16 @@ export default class CargosController {
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, routes))
     } catch (err: Error | any) {
+      throw new ExceptionService(err)
+    }
+  }
+
+  public async getAllLoadingTypes({ response }: HttpContextContract) {
+    try {
+      const types: CargoLoadingType[] = await CargoLoadingService.getAllLoadingTypes()
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, types))
+    } catch (err: Err | any) {
       throw new ExceptionService(err)
     }
   }

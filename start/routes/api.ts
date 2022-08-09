@@ -131,6 +131,7 @@ Route.group(() => {
 
     Route.get('/itemTypes', 'Api/Cargo/CargosItemsTypesController.getAll').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
     Route.get('/packageTypes', 'Api/Cargo/CargosItemsPackageTypesController.getAll').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
+    Route.get('/loadingTypes', 'Api/Cargo/CargosController.getAllLoadingTypes').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
 
     Route.get('/count', 'Api/Cargo/CargosController.count')
     Route.post('/search', 'Api/Cargo/CargosController.search')
@@ -183,5 +184,48 @@ Route.group(() => {
     })
 
   }).prefix('template').middleware('CheckAccessToken')
+
+  /**
+   * * Response
+   */
+
+  Route.group(() => {
+
+    Route.group(() => {
+
+      Route.post('/route/:userId', 'Api/ResponsesController.paginateIncomingsRoutesResponses').middleware('CheckCarrierRole')
+
+      Route.post('/cargo/:userId', 'Api/ResponsesController.paginateIncomingsCargoResponses').middleware('CheckCargoOwnerRole')
+
+    }).prefix('incomings')
+
+    Route.group(() => {
+
+      Route.post('/route/:userId', 'Api/ResponsesController.paginateOutgoingsRoutesResponses').middleware('CheckCarrierRole')
+
+      Route.post('/cargo/:userId', 'Api/ResponsesController.paginateOutgoingsCargoResponses').middleware('CheckCargoOwnerRole')
+
+    }).prefix('outgoings')
+
+    Route.group(() => {
+
+      Route.post('/route/:userId', 'Api/ResponsesController.paginateInProcessRoutesResponses').middleware('CheckCarrierRole')
+
+      Route.post('/cargo/:userId', 'Api/ResponsesController.paginateInProcessCargoResponses').middleware('CheckCargoOwnerRole')
+
+    }).prefix('inProcess')
+
+    Route.group(() => {
+
+      Route.post('/route/:userId', 'Api/ResponsesController.paginateCompletedRoutesResponses').middleware('CheckCarrierRole')
+
+      Route.post('/cargo/:userId', 'Api/ResponsesController.paginateCompletedCargoResponses').middleware('CheckCargoOwnerRole')
+
+    }).prefix('completed')
+
+    Route.patch('/accept/:id', 'Api/ResponsesController.accept')
+    Route.delete('/:id', 'Api/ResponsesController.reject')
+
+  }).prefix('response').middleware('CheckAccessToken')
 
 }).prefix('api')

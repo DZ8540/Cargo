@@ -40,6 +40,10 @@ export default class CargoSearchValidator extends ApiValidator {
   public schema = schema.create({
     ...this.preSchema,
 
+    /**
+     * * Optional schemes
+     */
+
     width: schema.number.optional(getCarWidthRules()),
     length: schema.number.optional(getCarLengthRules()),
     height: schema.number.optional(getCarHeightRules()),

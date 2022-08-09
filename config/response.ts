@@ -33,3 +33,10 @@ export enum ResponseMessages {
 
   USER_NOT_FOUND = 'Пользователь не найден!',
 }
+
+export const RESPONSES_STATUS_TYPES = ['На рассмотрении', 'Выполняется', 'Выполнен'] as const
+export enum ResponsesStatusTypes {
+  UNDER_CONSIDERATION = 0,
+  IN_PROCESS = 1,
+  COMPLETED = 2,
+}

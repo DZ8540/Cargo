@@ -1,6 +1,6 @@
 // * Types
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import type { CustomMessages } from '@ioc:Adonis/Core/Validator'
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
 
 import IndexValidator from '../IndexValidator'
@@ -62,11 +62,11 @@ export default class CargoValidator extends IndexValidator {
 
     dateFrom: schema.date.optional(
       { format: GLOBAL_DATETIME_FORMAT },
-      getCargoUnloadingDateFromRules('dateTo'),
+      getCargoUnloadingDateFromRules(),
     ),
     dateTo: schema.date.optional(
       { format: GLOBAL_DATETIME_FORMAT },
-      getCargoUnloadingDateToRules('dateFrom'),
+      getCargoUnloadingDateToRules(),
     ),
     timeFrom: schema.date.optional({ format: 'HH:mm' }),
     timeTo: schema.date.optional({ format: 'HH:mm' }),
@@ -115,8 +115,8 @@ export default class CargoValidator extends IndexValidator {
     bargainType: schema.boolean.optional(),
     calculateType: schema.boolean.optional(),
 
-    fromTemperature: schema.number.optional(getCargoFromTemperatureRules('toTemperature')),
-    toTemperature: schema.number.optional(getCargoToTemperatureRules('fromTemperature')),
+    fromTemperature: schema.number.optional(getCargoFromTemperatureRules()),
+    toTemperature: schema.number.optional(getCargoToTemperatureRules()),
 
     vatPrice: schema.number.optional(getCargoPriceRules()),
     noVatPrice: schema.number.optional(getCargoPriceRules()),

@@ -8,9 +8,19 @@ import type { ModelAttributes } from '@ioc:Adonis/Lucid/Orm'
 
 import Logger from '@ioc:Adonis/Core/Logger'
 import CargoLoading from 'App/Models/Cargo/CargoLoading'
+import CargoLoadingType from 'App/Models/Cargo/CargoLoadingType'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class CargoLoadingService {
+  public static async getAllLoadingTypes(): Promise<CargoLoadingType[]> {
+    try {
+      return CargoLoadingType.all()
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
+
   public static async createMany(cargoId: Cargo['id'], payload: CargoValidator['schema']['props']['loadings'], { trx }: ServiceConfig<CargoLoading> = {}): Promise<void> {
     const payloadWithCargoId: Partial<ModelAttributes<CargoLoading>>[] = payload.map((item) => {
       const timeFrom: string | undefined = item.timeFrom?.toFormat('HH:mm')

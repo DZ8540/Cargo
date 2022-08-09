@@ -12,18 +12,12 @@ export function getCargoIdRules(table: string = TABLES_NAMES.CARGOS): Rule[] {
   ]
 }
 
-export function getCargoFromTemperatureRules(fieldName: string): Rule[] {
-  return [
-    rules.unsigned(),
-    rules.beforeField(fieldName),
-  ]
+export function getCargoFromTemperatureRules(): Rule[] {
+  return [ rules.unsigned() ]
 }
 
-export function getCargoToTemperatureRules(fieldName: string): Rule[] {
-  return [
-    rules.unsigned(),
-    rules.afterField(fieldName),
-  ]
+export function getCargoToTemperatureRules(): Rule[] {
+  return [ rules.unsigned() ]
 }
 
 export function getCargoPriceRules(): Rule[] {

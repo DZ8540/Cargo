@@ -5,6 +5,7 @@ import Report from 'App/Models/Report'
 import User from 'App/Models/User/User'
 import Cargo from 'App/Models/Cargo/Cargo'
 import Template from 'App/Models/Template'
+import Response from 'App/Models/Response'
 import Factory from '@ioc:Adonis/Lucid/Factory'
 import CargoItem from 'App/Models/Cargo/CargoItem'
 import CarBodyType from 'App/Models/Car/CarBodyType'
@@ -17,6 +18,7 @@ import CargoItemPackageType from 'App/Models/Cargo/CargoItemPackageType'
 import { DateTime } from 'luxon'
 import { ROLES_NAMES } from 'Config/shield'
 import { RoutesDatePeriodTypes } from 'Config/route'
+import { ResponsesStatusTypes } from 'Config/response'
 import { CargosLoadingPeriodTypes, CargosItemsNoteTypes } from 'Config/cargo'
 
 export const UserFactory = Factory
@@ -98,6 +100,7 @@ export const RouteFactory = Factory
     }
   })
   .relation('reports', () => ReportFactory)
+  .relation('responses', () => ResponseFactory)
   .relation('contacts', () => RouteOrCargoContactFactory)
   .build()
 
@@ -115,6 +118,18 @@ export const ReportFactory = Factory
     return {
       content: faker.lorem.paragraph(),
       fromId: faker.datatype.number({ min: 1, max: 20 }),
+    }
+  })
+  .build()
+
+export const ResponseFactory = Factory
+  .define(Response, ({ faker }) => {
+    return {
+      status: faker.datatype.number({
+        min: ResponsesStatusTypes.UNDER_CONSIDERATION,
+        max: ResponsesStatusTypes.COMPLETED
+      }),
+      userId: faker.datatype.number({ min: 1, max: 20 }),
     }
   })
   .build()
@@ -147,6 +162,7 @@ export const CargoFactory = Factory
   .relation('loadings', () => CargoLoadingFactory)
   .relation('unloadings', () => CargoUnloadingFactory)
   .relation('contacts', () => RouteOrCargoContactFactory)
+  .relation('responses', () => ResponseFactory)
   .build()
 
 export const CargoLoadingTypeFactory = Factory

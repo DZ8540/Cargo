@@ -3,8 +3,9 @@ import { ROUTES_DATE_PERIOD_TYPES } from './route'
 export const CARGOS_LOADING_PERIOD_TYPES = ROUTES_DATE_PERIOD_TYPES
 export enum CargosLoadingPeriodTypes {
   WEEKDAYS = 0,
-  EVERYDAY = 1,
-  IN_ONE_DAY = 2,
+  WEEKENDS = 1,
+  EVERYDAY = 2,
+  IN_ONE_DAY = 3,
 }
 
 export const CARGOS_ITEMS_NOTE_TYPES = ['Холод', 'Хрупкое', 'Габаритное'] as const

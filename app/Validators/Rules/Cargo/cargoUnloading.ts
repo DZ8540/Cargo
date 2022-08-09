@@ -22,16 +22,10 @@ export function getCargoUnloadingAddressRules(): Rule[] {
   ]
 }
 
-export function getCargoUnloadingDateFromRules(fieldName: string): Rule[] {
-  return [
-    rules.after('today'),
-    rules.beforeField(fieldName),
-  ]
+export function getCargoUnloadingDateFromRules(): Rule[] {
+  return [ rules.after('today') ]
 }
 
-export function getCargoUnloadingDateToRules(fieldName: string): Rule[] {
-  return [
-    rules.after('today'),
-    rules.afterField(fieldName),
-  ]
+export function getCargoUnloadingDateToRules(): Rule[] {
+  return [ rules.after('today') ]
 }

@@ -9,6 +9,7 @@ import Car from './Car/Car'
 import Report from './Report'
 import User from './User/User'
 import Template from './Template'
+import Response from './Response'
 import RouteOrCargoContact from './RouteOrCargoContact'
 import CarBodyTypeService from 'App/Services/Car/CarBodyTypeService'
 import { ROUTES_DATE_PERIOD_TYPES } from 'Config/route'
@@ -128,6 +129,9 @@ export default class Route extends BaseModel {
 
   @hasMany(() => Report)
   public reports: HasMany<typeof Report>
+
+  @hasMany(() => Response)
+  public responses: HasMany<typeof Response>
 
   /**
    * * Query scopes

@@ -79,7 +79,7 @@ export default class RouteService {
 
     try {
       item = await Route.find(id, { client: trx })
-    } catch (err: Err | any) {
+    } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
     }
@@ -88,6 +88,20 @@ export default class RouteService {
       throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.ERROR } as Err
 
     return item
+  }
+
+  public static async getUserRoutesIds(userId: User['id']): Promise<Route['id'][]> {
+    try {
+      const routes: Route[] = await Route
+        .query()
+        .select(['id', 'car_id', 'user_id']) // car_id and user_id for preload (not needed, because it throw error) relations
+        .withScopes((scopes) => scopes.getByUserId(userId))
+
+      return routes.map((item: Route) => item.id)
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
   }
 
   public static async create(payload: RouteValidator['schema']['props'], { trx }: ServiceConfig<Route> = {}): Promise<Route> {

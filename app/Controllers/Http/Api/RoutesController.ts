@@ -88,9 +88,9 @@ export default class RoutesController {
     const id: Route['id'] = params.id
 
     try {
-      const item: Route = await RouteService.get(id)
+      await RouteService.get(id)
 
-      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, item))
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
     } catch (err: Error | any) {
       throw new ExceptionService(err)
     }
@@ -110,9 +110,9 @@ export default class RoutesController {
     }
 
     try {
-      const item: Route = await RouteService.create(payload)
+      await RouteService.create(payload)
 
-      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, item))
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
     } catch (err: Err | any) {
       throw new ExceptionService(err)
     }
@@ -133,9 +133,9 @@ export default class RoutesController {
     }
 
     try {
-      const item: Route = await RouteService.update(id, payload)
+      await RouteService.update(id, payload)
 
-      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, item))
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
     } catch (err: Err | any) {
       throw new ExceptionService(err)
     }

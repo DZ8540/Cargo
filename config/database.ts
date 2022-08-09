@@ -14,6 +14,7 @@ export const TABLES_NAMES = {
   ROUTES_OR_CARGOS_CONTACTS: 'routesOrCargosContacts',
   TEMPLATES: 'templates',
   REPORTS: 'reports',
+  RESPONSES: 'responses',
 
   /**
    * * Cargo

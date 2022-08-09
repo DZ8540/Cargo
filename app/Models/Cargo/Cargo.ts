@@ -6,6 +6,7 @@ import type { BelongsTo, HasMany, ModelQueryBuilderContract } from '@ioc:Adonis/
 
 import User from '../User/User'
 import Report from '../Report'
+import Response from '../Response'
 import CargoItem from './CargoItem'
 import CargoLoading from './CargoLoading'
 import CarBodyType from '../Car/CarBodyType'
@@ -105,6 +106,9 @@ export default class Cargo extends BaseModel {
 
   @hasMany(() => Report)
   public reports: HasMany<typeof Report>
+
+  @hasMany(() => Response)
+  public responses: HasMany<typeof Response>
 
   /**
    * * Query scopes
