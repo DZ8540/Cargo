@@ -12,7 +12,7 @@ import CargoLoading from './CargoLoading'
 import CarBodyType from '../Car/CarBodyType'
 import CargoUnloading from './CargoUnloading'
 import RouteOrCargoContact from '../RouteOrCargoContact'
-import { BaseModel, column, hasMany, scope, belongsTo } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, hasMany, scope, belongsTo, beforeFetch, beforeFind } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Cargo extends BaseModel {
   public static readonly columns = [
@@ -139,6 +139,22 @@ export default class Cargo extends BaseModel {
   public static getByUserId = scope((query, userId: User['id']) => {
     query.where('user_id', userId)
   })
+
+  /**
+   * * Hooks
+   */
+
+  @beforeFind()
+  @beforeFetch()
+  public static async preloadRelations(query: ModelQueryBuilderContract<typeof Cargo>) {
+    query
+      .preload('user')
+      .preload('items')
+      .preload('loadings')
+      .preload('contacts')
+      .preload('unloadings')
+      .preload('carBodyType')
+  }
 
   /**
    * * Other

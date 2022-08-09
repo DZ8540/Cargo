@@ -125,6 +125,7 @@ export default class CargoService {
       prepayment: payload.prepayment,
       carBodyTypeId: payload.carBodyTypeId,
       userId: payload.userId,
+      templateId: payload.templateId
     }
 
     if (!trx)

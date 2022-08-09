@@ -128,6 +128,7 @@ export default class CargoValidator extends IndexValidator {
     })),
 
     carBodyTypeId: schema.number.optional(getCarBodyTypeIdRules()),
+    templateId: schema.number.optional(getCarBodyTypeIdRules()),
   }
 
   constructor(protected ctx: HttpContextContract) {

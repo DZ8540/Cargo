@@ -88,9 +88,9 @@ export default class RoutesController {
     const id: Route['id'] = params.id
 
     try {
-      await RouteService.get(id)
+      const item: Route = await RouteService.get(id)
 
-      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, item))
     } catch (err: Error | any) {
       throw new ExceptionService(err)
     }

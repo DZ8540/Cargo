@@ -88,7 +88,7 @@ export default class ResponseService {
 
   public static async getCompletedCargoResponsesCount(): Promise<number> {
     try {
-      const routes: any[] = await Response
+      const routes: { total: number }[] = await Response
         .query()
         .withScopes((scopes) => scopes.getCargo())
         .withScopes((scopes) => scopes.getByStatus(ResponsesStatusTypes.COMPLETED))

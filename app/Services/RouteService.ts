@@ -190,13 +190,14 @@ export default class RouteService {
 
   public static async getCount(): Promise<number> {
     try {
-      const routes = await Route
+      const routes: { total: number }[] = await Route
         .query()
         .withScopes((scopes) => scopes.notTemplate())
         .withScopes((scopes) => scopes.notInArchive())
         .count('* as total')
+        .pojo()
 
-      return routes[0].$extras.total
+      return routes[0].total
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
