@@ -106,7 +106,7 @@ export default class ResponseService {
    * * Incomings
    */
 
-  public static async paginateIncomingsRoutesResponses(userId: User['id'], payload: ApiValidator['schema']['props']): Promise<ModelPaginatorContract<Response>> {
+  public static async paginateIncumingsRoutesResponses(userId: User['id'], payload: ApiValidator['schema']['props']): Promise<ModelPaginatorContract<Response>> {
     let routesIds: Route['id'][]
 
     try {
@@ -127,7 +127,7 @@ export default class ResponseService {
     }
   }
 
-  public static async paginateIncomingsCargoResponses(userId: User['id'], payload: ApiValidator['schema']['props']): Promise<ModelPaginatorContract<Response>> {
+  public static async paginateIncumingsCargoResponses(userId: User['id'], payload: ApiValidator['schema']['props']): Promise<ModelPaginatorContract<Response>> {
     let cargoIds: Cargo['id'][]
 
     try {

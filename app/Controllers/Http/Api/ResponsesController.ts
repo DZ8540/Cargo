@@ -40,7 +40,7 @@ export default class ResponsesController {
    * * Incomings
    */
 
-  public async paginateIncomingsRoutesResponses({ request, response, params }: HttpContextContract) {
+  public async paginateIncumingsRoutesResponses({ request, response, params }: HttpContextContract) {
     let payload: ApiValidator['schema']['props']
     const userId: User['id'] = params.userId
 
@@ -55,7 +55,7 @@ export default class ResponsesController {
     }
 
     try {
-      const responses: ModelPaginatorContract<Response> = await ResponseService.paginateIncomingsRoutesResponses(userId, payload)
+      const responses: ModelPaginatorContract<Response> = await ResponseService.paginateIncumingsRoutesResponses(userId, payload)
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, responses))
     } catch (err: Err | any) {
@@ -63,7 +63,7 @@ export default class ResponsesController {
     }
   }
 
-  public async paginateIncomingsCargoResponses({ request, response, params }: HttpContextContract) {
+  public async paginateIncumingsCargoResponses({ request, response, params }: HttpContextContract) {
     let payload: ApiValidator['schema']['props']
     const userId: User['id'] = params.userId
 
@@ -78,7 +78,7 @@ export default class ResponsesController {
     }
 
     try {
-      const responses: ModelPaginatorContract<Response> = await ResponseService.paginateIncomingsCargoResponses(userId, payload)
+      const responses: ModelPaginatorContract<Response> = await ResponseService.paginateIncumingsCargoResponses(userId, payload)
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, responses))
     } catch (err: Err | any) {

@@ -195,11 +195,11 @@ Route.group(() => {
 
     Route.group(() => {
 
-      Route.post('/route/:userId', 'Api/ResponsesController.paginateIncomingsRoutesResponses').middleware('CheckCarrierRole')
+      Route.post('/route/:userId', 'Api/ResponsesController.paginateIncumingsRoutesResponses').middleware('CheckCarrierRole')
 
-      Route.post('/cargo/:userId', 'Api/ResponsesController.paginateIncomingsCargoResponses').middleware('CheckCargoOwnerRole')
+      Route.post('/cargo/:userId', 'Api/ResponsesController.paginateIncumingsCargoResponses').middleware('CheckCargoOwnerRole')
 
-    }).prefix('incomings')
+    }).prefix('incumings')
 
     Route.group(() => {
 
