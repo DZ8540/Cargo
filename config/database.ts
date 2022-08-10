@@ -15,6 +15,7 @@ export const TABLES_NAMES = {
   TEMPLATES: 'templates',
   REPORTS: 'reports',
   RESPONSES: 'responses',
+  QUESTIONS: 'questions',
 
   /**
    * * Topic
@@ -56,6 +57,13 @@ export const TABLES_NAMES = {
   USERS: 'users',
   SESSIONS: 'sessions',
 } as const
+
+/**
+ * * Question
+ */
+
+export const QUESTION_DESCRIPTION_MIN_LENGTH: number = 5
+export const QUESTION_DESCRIPTION_MAX_LENGTH: number = 1024
 
 /**
  * * Topic
