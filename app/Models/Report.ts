@@ -2,6 +2,8 @@
 import type Route from './Route'
 import type User from './User/User'
 import type Cargo from './Cargo/Cargo'
+import type Topic from './Topic/Topic'
+import type TopicMessage from './Topic/TopicMessage'
 import type { DateTime } from 'luxon'
 // * Types
 
@@ -38,6 +40,12 @@ export default class Report extends BaseModel {
 
   @column({ columnName: 'to_id' })
   public toId?: Cargo['id']
+
+  @column({ columnName: 'topic_id' })
+  public topicId?: Topic['id']
+
+  @column({ columnName: 'topicMessage_id' })
+  public topicMessageId?: TopicMessage['id']
 
   /**
    * * Timestamps

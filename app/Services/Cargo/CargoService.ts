@@ -104,6 +104,7 @@ export default class CargoService {
         .query()
         .select('id')
         .withScopes((scopes) => scopes.getByUserId(userId))
+        .pojo()
 
       return cargos.map((item: Cargo) => item.id)
     } catch (err: any) {

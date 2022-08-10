@@ -46,6 +46,20 @@ export default class extends BaseSchema {
         .references(`${TABLES_NAMES.USERS}.id`)
         .onDelete('CASCADE')
 
+      table
+        .integer('topic_id')
+        .unsigned()
+        .nullable()
+        .references(`${TABLES_NAMES.TOPICS}.id`)
+        .onDelete('CASCADE')
+
+      table
+        .integer('topicMessage_id')
+        .unsigned()
+        .nullable()
+        .references(`${TABLES_NAMES.TOPICS_MESSAGES}.id`)
+        .onDelete('CASCADE')
+
       /**
        * * Timestamps
        */

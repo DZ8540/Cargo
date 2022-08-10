@@ -84,6 +84,8 @@ Route.group(() => {
     Route.post('/route', 'Api/ReportsController.createRouteReport')
     Route.post('/cargo', 'Api/ReportsController.createCargoReport')
     Route.post('/user', 'Api/ReportsController.createUserReport')
+    Route.post('/topic', 'Api/ReportsController.createTopicReport')
+    Route.post('/topicMessage', 'Api/ReportsController.createTopicMessageReport')
 
   }).prefix('report').middleware('CheckAccessToken')
 

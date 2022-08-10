@@ -94,8 +94,9 @@ export default class RouteService {
     try {
       const routes: Route[] = await Route
         .query()
-        .select(['id', 'car_id', 'user_id']) // car_id and user_id for preload (not needed, because it throw error) relations
+        .select(['id']) // car_id and user_id for preload (not needed, because it throw error) relations
         .withScopes((scopes) => scopes.getByUserId(userId))
+        .pojo()
 
       return routes.map((item: Route) => item.id)
     } catch (err: any) {
