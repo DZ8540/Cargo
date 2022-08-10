@@ -6,10 +6,12 @@ import User from 'App/Models/User/User'
 import Cargo from 'App/Models/Cargo/Cargo'
 import Template from 'App/Models/Template'
 import Response from 'App/Models/Response'
+import Topic from 'App/Models/Topic/Topic'
 import Factory from '@ioc:Adonis/Lucid/Factory'
 import CargoItem from 'App/Models/Cargo/CargoItem'
 import CarBodyType from 'App/Models/Car/CarBodyType'
 import CargoLoading from 'App/Models/Cargo/CargoLoading'
+import TopicMessage from 'App/Models/Topic/TopicMessage'
 import CargoItemType from 'App/Models/Cargo/CargoItemType'
 import CargoUnloading from 'App/Models/Cargo/CargoUnloading'
 import RouteOrCargoContact from 'App/Models/RouteOrCargoContact'
@@ -129,6 +131,30 @@ export const ResponseFactory = Factory
         min: ResponsesStatusTypes.UNDER_CONSIDERATION,
         max: ResponsesStatusTypes.COMPLETED
       }),
+      userId: faker.datatype.number({ min: 1, max: 20 }),
+    }
+  })
+  .build()
+
+/**
+ * * Topic
+ */
+
+export const TopicFactory = Factory
+  .define(Topic, ({ faker }) => {
+    return {
+      title: faker.lorem.words(2),
+      description: faker.lorem.paragraph(),
+      userId: faker.datatype.number({ min: 1, max: 20 }),
+    }
+  })
+  .relation('messages', () => TopicMessageFactory)
+  .build()
+
+export const TopicMessageFactory = Factory
+  .define(TopicMessage, ({ faker }) => {
+    return {
+      description: faker.lorem.paragraph(),
       userId: faker.datatype.number({ min: 1, max: 20 }),
     }
   })

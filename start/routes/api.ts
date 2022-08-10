@@ -93,7 +93,7 @@ Route.group(() => {
 
   Route.group(() => {
 
-    Route.get('/bodyTypes', 'Api/Car/CarBodyTypesController.getAll')
+    Route.get('/bodyTypes', 'Api/Car/BodyTypesController.getAll')
     Route.post('/user/:userId', 'Api/Car/CarsController.paginate')
 
     Route.get('/:id', 'Api/Car/CarsController.get')
@@ -129,8 +129,8 @@ Route.group(() => {
 
   Route.group(() => {
 
-    Route.get('/itemTypes', 'Api/Cargo/CargosItemsTypesController.getAll').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
-    Route.get('/packageTypes', 'Api/Cargo/CargosItemsPackageTypesController.getAll').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
+    Route.get('/itemTypes', 'Api/Cargo/ItemsTypesController.getAll').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
+    Route.get('/packageTypes', 'Api/Cargo/PackageTypesController.getAll').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
     Route.get('/loadingTypes', 'Api/Cargo/CargosController.getAllLoadingTypes').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
 
     Route.get('/count', 'Api/Cargo/CargosController.count')
@@ -223,9 +223,40 @@ Route.group(() => {
 
     }).prefix('completed')
 
-    Route.patch('/accept/:id', 'Api/ResponsesController.accept')
+    Route.patch('/:id', 'Api/ResponsesController.accept')
     Route.delete('/:id', 'Api/ResponsesController.reject')
 
   }).prefix('response').middleware('CheckAccessToken')
+
+  /**
+   * * Topic
+   */
+
+  Route.group(() => {
+
+    Route.post('/paginate', 'Api/Topic/TopicsController.paginate')
+
+    Route.post('/search', 'Api/Topic/TopicsController.search')
+
+    Route.get('/statistics', 'Api/Topic/TopicsController.getStatistics')
+
+    Route.post('/user/:userId', 'Api/Topic/TopicsController.paginateUserTopics').middleware('CheckAccessToken')
+
+    Route.post('/like', 'Api/Topic/TopicsController.createLike').middleware('CheckAccessToken')
+
+    Route.group(() => {
+
+      Route.post('/like', 'Api/Topic/MessagesController.createLike').middleware('CheckAccessToken')
+
+      Route.post('/:topicId/:userId?', 'Api/Topic/MessagesController.paginate')
+
+      Route.post('/', 'Api/Topic/MessagesController.create').middleware('CheckAccessToken')
+
+    }).prefix('message')
+
+    Route.get('/:id/:userId?', 'Api/Topic/TopicsController.get')
+    Route.post('/', 'Api/Topic/TopicsController.create').middleware('CheckAccessToken')
+
+  }).prefix('topic')
 
 }).prefix('api')

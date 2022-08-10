@@ -9,7 +9,7 @@ import ExceptionService from 'App/Services/ExceptionService'
 import CarBodyTypeService from 'App/Services/Car/CarBodyTypeService'
 import { ResponseMessages } from 'Config/response'
 
-export default class CarBodyTypesController {
+export default class BodyTypesController {
   public async getAll({ response }: HttpContextContract) {
     try {
       const bodyTypes: CarBodyType[] = await CarBodyTypeService.getAll()

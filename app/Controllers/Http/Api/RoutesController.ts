@@ -91,7 +91,7 @@ export default class RoutesController {
       const item: Route = await RouteService.get(id)
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, item))
-    } catch (err: Error | any) {
+    } catch (err: Err | any) {
       throw new ExceptionService(err)
     }
   }

@@ -1,13 +1,13 @@
 // * Types
 import type { DateTime } from 'luxon'
-import type { HasMany } from '@ioc:Adonis/Lucid/Orm'
+import type { HasMany, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
-import Template from '../Template'
+import Topic from '../Topic/Topic'
 import Hash from '@ioc:Adonis/Core/Hash'
 import { RolesNames } from 'Config/shield'
 import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
-import { BaseModel, beforeSave, column, computed, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeSave, column, computed, hasMany, scope } from '@ioc:Adonis/Lucid/Orm'
 
 export default class User extends BaseModel {
   public static readonly columns = [
@@ -127,12 +127,16 @@ export default class User extends BaseModel {
    * * Relations
    */
 
-  @hasMany(() => Template, {
-    onQuery(query) {
-      query.whereNotNull('route_id')
-    },
+  @hasMany(() => Topic)
+  public topics: HasMany<typeof Topic>
+
+  /**
+   * * Query scopes
+   */
+
+  public static withTopics = scope((query: ModelQueryBuilderContract<typeof User>) => {
+    query.has('topics')
   })
-  public routesTemplates: HasMany<typeof Template>
 
   /**
    * * Hooks

@@ -145,4 +145,19 @@ export default class UserService {
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
     }
   }
+
+  public static async getUsersWithTopicsCount(): Promise<number> {
+    try {
+      const users: { total: number }[] = await User
+        .query()
+        .withScopes((scopes) => scopes.withTopics())
+        .count('* as total')
+        .pojo()
+
+      return users[0].total
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
 }

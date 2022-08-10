@@ -9,7 +9,7 @@ import ExceptionService from 'App/Services/ExceptionService'
 import CargoItemTypeService from 'App/Services/Cargo/CargoItemTypeService'
 import { ResponseMessages } from 'Config/response'
 
-export default class CargosItemsPackageTypesController {
+export default class ItemsPackageTypesController {
   public async getAll({ response }: HttpContextContract) {
     try {
       const types: CargoItemType[] = await CargoItemTypeService.getAll()

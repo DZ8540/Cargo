@@ -8,22 +8,19 @@ import { schema } from '@ioc:Adonis/Core/Validator'
 import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
 import { getUserFirstNameRules, getUserIdRules, getUserPhoneRules } from '../Rules/User/user'
 import { getCarBodyTypeIdRules } from '../Rules/Car/carBodyType'
+import { getCargoUnloadingAddressRules, getCargoUnloadingTownRules } from '../Rules/Cargo/cargoUnloading'
 import {
   getCargoFromTemperatureRules, getCargoNoteRules,
   getCargoPriceRules, getCargoToTemperatureRules,
 } from '../Rules/Cargo/cargo'
 import {
-  getCargoUnloadingAddressRules, getCargoUnloadingTownRules,
-  getCargoUnloadingDateFromRules, getCargoUnloadingDateToRules,
-} from '../Rules/Cargo/cargoUnloading'
-import {
-  getCargoLoadingAddressRules, getCargoLoadingTownRules, getCargoLoadingDaysRules,
-  getCargoLoadingDateRules, getCargoLoadingPeriodTypeRules
+  getCargoLoadingAddressRules, getCargoLoadingTownRules,
+  getCargoLoadingDaysRules, getCargoLoadingPeriodTypeRules,
 } from '../Rules/Cargo/cargoLoading'
 import {
   getCargoItemCapacityRules, getCargoItemHeightRules, getCargoItemLengthRules,
   getCargoItemNoteTypesRules, getCargoItemPackageCountRules, getCargoItemPackageTypeIdRules,
-  getCargoItemTypeIdRules, getCargoItemWeightRules, getCargoItemWidthRules
+  getCargoItemTypeIdRules, getCargoItemWeightRules, getCargoItemWidthRules,
 } from '../Rules/Cargo/cargoItem'
 import { getCargoLoadingTypeIdRules } from '../Rules/Cargo/cargoLoadingType'
 
@@ -39,7 +36,7 @@ export default class CargoValidator extends IndexValidator {
      * * Optional schemes
      */
 
-    date: schema.date.optional({ format: GLOBAL_DATETIME_FORMAT }, getCargoLoadingDateRules()),
+    date: schema.date.optional({ format: GLOBAL_DATETIME_FORMAT }),
     days: schema.number.optional(getCargoLoadingDaysRules()),
     periodType: schema.number.optional(getCargoLoadingPeriodTypeRules()),
 
@@ -60,14 +57,8 @@ export default class CargoValidator extends IndexValidator {
      * * Optional schemes
      */
 
-    dateFrom: schema.date.optional(
-      { format: GLOBAL_DATETIME_FORMAT },
-      getCargoUnloadingDateFromRules(),
-    ),
-    dateTo: schema.date.optional(
-      { format: GLOBAL_DATETIME_FORMAT },
-      getCargoUnloadingDateToRules(),
-    ),
+    dateFrom: schema.date.optional({ format: GLOBAL_DATETIME_FORMAT }),
+    dateTo: schema.date.optional({ format: GLOBAL_DATETIME_FORMAT }),
     timeFrom: schema.date.optional({ format: 'HH:mm' }),
     timeTo: schema.date.optional({ format: 'HH:mm' }),
 

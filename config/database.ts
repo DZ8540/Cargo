@@ -17,6 +17,16 @@ export const TABLES_NAMES = {
   RESPONSES: 'responses',
 
   /**
+   * * Topic
+   */
+
+  TOPICS: 'topics',
+  TOPICS_LIKES: 'topicsLikes',
+
+  TOPICS_MESSAGES: 'topicsMessages',
+  TOPICS_MESSAGES_LIKES: 'topicsMessagesLikes',
+
+  /**
    * * Cargo
    */
 
@@ -48,11 +58,24 @@ export const TABLES_NAMES = {
 } as const
 
 /**
+ * * Topic
+ */
+
+export const TOPIC_TITLE_MIN_LENGTH: number = 2
+export const TOPIC_TITLE_MAX_LENGTH: number = 50
+
+export const TOPIC_DESCRIPTION_MIN_LENGTH: number = 2
+export const TOPIC_DESCRIPTION_MAX_LENGTH: number = 4096
+
+export const TOPIC_MESSAGES_DESCRIPTION_MIN_LENGTH: number = 1
+export const TOPIC_MESSAGES_DESCRIPTION_MAX_LENGTH: number = 2048
+
+/**
  * * Report
  */
 
- export const REPORT_CONTENT_MIN_LENGTH: number = 5
- export const REPORT_CONTENT_MAX_LENGTH: number = 1024
+export const REPORT_CONTENT_MIN_LENGTH: number = 5
+export const REPORT_CONTENT_MAX_LENGTH: number = 1024
 
 /**
  * * Template
