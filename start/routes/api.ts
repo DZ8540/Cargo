@@ -227,8 +227,9 @@ Route.group(() => {
 
     }).prefix('completed')
 
-    Route.post('/:id', 'Api/ResponsesController.complete')
-    Route.patch('/:id', 'Api/ResponsesController.accept')
+    Route.post('/', 'Api/ResponsesController.create')
+    Route.patch('/accept/:id', 'Api/ResponsesController.accept')
+    Route.patch('/complete/:id', 'Api/ResponsesController.complete')
     Route.delete('/:id', 'Api/ResponsesController.reject')
 
   }).prefix('response').middleware('CheckAccessToken')
@@ -250,6 +251,8 @@ Route.group(() => {
     Route.post('/like', 'Api/Topic/TopicsController.createLike').middleware('CheckAccessToken')
 
     Route.group(() => {
+
+      Route.post('/paginateLastMessages', 'Api/Topic/MessagesController.paginateLastMessages')
 
       Route.post('/like', 'Api/Topic/MessagesController.createLike').middleware('CheckAccessToken')
 

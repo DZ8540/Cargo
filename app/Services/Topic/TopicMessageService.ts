@@ -23,6 +23,15 @@ export default class TopicMessageService {
     }
   }
 
+  public static async paginateLastMessages(config: ApiValidator['schema']['props']): Promise<ModelPaginatorContract<TopicMessage>> {
+    try {
+      return await TopicMessage.query().getViaPaginate(config)
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
+
   public static async create(payload: TopicMessageValidator['schema']['props']): Promise<TopicMessage> {
     let id: TopicMessage['id']
 

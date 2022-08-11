@@ -3,8 +3,9 @@ import type Route from 'App/Models/Route'
 import type User from 'App/Models/User/User'
 import type Cargo from 'App/Models/Cargo/Cargo'
 import type ApiValidator from 'App/Validators/ApiValidator'
+import type ResponseValidator from 'App/Validators/ResponseValidator'
 import type { Err } from 'Contracts/response'
-import type { ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
+import type { ModelAttributes, ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
 import RouteService from './RouteService'
@@ -55,6 +56,25 @@ export default class ResponseService {
         .withScopes((scopes) => scopes.getByUserId(userId))
         .withScopes((scopes) => scopes.getByStatus(config.statusType))
         .getViaPaginate(payload)
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
+
+  public static async create(payload: ResponseValidator['schema']['props']): Promise<Response> {
+    const responsePayload: Partial<ModelAttributes<Response>> = {
+      userId: payload.userId,
+      status: ResponsesStatusTypes.UNDER_CONSIDERATION,
+    }
+
+    if (payload.routeId)
+      responsePayload.routeId = payload.routeId
+    else
+      responsePayload.cargoId = payload.cargoId
+
+    try {
+      return await Response.create(responsePayload)
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err

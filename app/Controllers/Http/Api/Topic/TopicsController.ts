@@ -21,6 +21,7 @@ type Statistics = {
   topicCount: number,
   messagesCount: number,
   usersWithTopics: number,
+  lastTopicTitle: Topic['title'],
 }
 
 export default class TopicsController {
@@ -157,12 +158,21 @@ export default class TopicsController {
       topicCount: 0,
       messagesCount: 0,
       usersWithTopics: 0,
+      lastTopicTitle: '',
     }
 
     try {
+      const lastTopic: Topic = (await TopicService.paginate({
+        page: 1,
+        limit: 1,
+        orderBy: 'desc',
+        orderByColumn: undefined
+      }))[0]
+
       statistics.topicCount = await TopicService.getCount()
       statistics.messagesCount = await TopicMessageService.getCount()
       statistics.usersWithTopics = await UserService.getUsersWithTopicsCount()
+      statistics.lastTopicTitle = lastTopic.title
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, statistics))
     } catch (err: Err | any) {

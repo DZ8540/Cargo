@@ -9,9 +9,32 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ApiValidator from 'App/Validators/ApiValidator'
 import ResponseService from 'App/Services/ResponseService'
 import ExceptionService from 'App/Services/ExceptionService'
+import ResponseValidator from 'App/Validators/ResponseValidator'
 import { ResponseCodes, ResponseMessages, ResponsesStatusTypes } from 'Config/response'
 
 export default class ResponsesController {
+  public async create({ request, response }: HttpContextContract) {
+    let payload: ResponseValidator['schema']['props']
+
+    try {
+      payload = await request.validate(ResponseValidator)
+    } catch (err: any) {
+      throw new ExceptionService({
+        code: ResponseCodes.VALIDATION_ERROR,
+        message: ResponseMessages.VALIDATION_ERROR,
+        body: err.messages,
+      })
+    }
+
+    try {
+      await ResponseService.create(payload)
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
+    } catch (err: Err | any) {
+      throw new ExceptionService(err)
+    }
+  }
+
   public async complete({ response, params }: HttpContextContract) {
     const id: Response['id'] = params.id
 

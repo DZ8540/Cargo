@@ -48,6 +48,28 @@ export default class MessagesController {
     }
   }
 
+  public async paginateLastMessages({ request, response }: HttpContextContract) {
+    let payload: ApiValidator['schema']['props']
+
+    try {
+      payload = await request.validate(ApiValidator)
+    } catch (err: any) {
+      throw new ExceptionService({
+        code: ResponseCodes.VALIDATION_ERROR,
+        message: ResponseMessages.VALIDATION_ERROR,
+        body: err.messages,
+      })
+    }
+
+    try {
+      let messages: ModelPaginatorContract<TopicMessage> | JSONPaginate = await TopicMessageService.paginateLastMessages(payload)
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, messages))
+    } catch (err: Err | any) {
+      throw new ExceptionService(err)
+    }
+  }
+
   public async create({ request, response }: HttpContextContract) {
     let payload: TopicMessageValidator['schema']['props']
 
