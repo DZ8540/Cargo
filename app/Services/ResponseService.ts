@@ -61,6 +61,14 @@ export default class ResponseService {
     }
   }
 
+  public static async complete(id: Response['id']): Promise<Response> {
+    try {
+      return await this.update(id, ResponsesStatusTypes.COMPLETED)
+    } catch (err: Err | any) {
+      throw err
+    }
+  }
+
   public static async accept(id: Response['id']): Promise<Response> {
     try {
       return await this.update(id, ResponsesStatusTypes.IN_PROCESS)

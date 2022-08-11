@@ -227,6 +227,7 @@ Route.group(() => {
 
     }).prefix('completed')
 
+    Route.post('/:id', 'Api/ResponsesController.complete')
     Route.patch('/:id', 'Api/ResponsesController.accept')
     Route.delete('/:id', 'Api/ResponsesController.reject')
 

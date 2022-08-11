@@ -12,6 +12,18 @@ import ExceptionService from 'App/Services/ExceptionService'
 import { ResponseCodes, ResponseMessages, ResponsesStatusTypes } from 'Config/response'
 
 export default class ResponsesController {
+  public async complete({ response, params }: HttpContextContract) {
+    const id: Response['id'] = params.id
+
+    try {
+      await ResponseService.complete(id)
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
+    } catch (err: Err | any) {
+      throw new ExceptionService(err)
+    }
+  }
+
   public async accept({ response, params }: HttpContextContract) {
     const id: Response['id'] = params.id
 
