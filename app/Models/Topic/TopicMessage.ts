@@ -1,10 +1,10 @@
 // * Types
-import type Topic from './Topic'
 import type { DateTime } from 'luxon'
 import type { Err } from 'Contracts/response'
 import type { BelongsTo, HasMany, ModelObject, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
+import Topic from './Topic'
 import User from '../User/User'
 import TopicMessageLike from './TopicMessageLike'
 import TopicMessageLikeService from 'App/Services/Topic/TopicMessageLikeService'
@@ -68,6 +68,9 @@ export default class TopicMessage extends BaseModel {
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
+
+  @belongsTo(() => Topic)
+  public topic: BelongsTo<typeof Topic>
 
   @belongsTo(() => TopicMessage)
   public message: BelongsTo<typeof TopicMessage>

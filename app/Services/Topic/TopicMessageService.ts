@@ -25,7 +25,10 @@ export default class TopicMessageService {
 
   public static async paginateLastMessages(config: ApiValidator['schema']['props']): Promise<ModelPaginatorContract<TopicMessage>> {
     try {
-      return await TopicMessage.query().getViaPaginate(config)
+      return await TopicMessage
+        .query()
+        .preload('topic')
+        .getViaPaginate(config)
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err

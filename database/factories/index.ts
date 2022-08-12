@@ -129,7 +129,7 @@ export const ResponseFactory = Factory
     return {
       status: faker.datatype.number({
         min: ResponsesStatusTypes.UNDER_CONSIDERATION,
-        max: ResponsesStatusTypes.COMPLETED
+        max: ResponsesStatusTypes.COMPLETED,
       }),
       userId: faker.datatype.number({ min: 1, max: 20 }),
     }
