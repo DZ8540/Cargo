@@ -73,7 +73,7 @@ export default class TopicMessage extends BaseModel {
   public topic: BelongsTo<typeof Topic>
 
   @belongsTo(() => TopicMessage)
-  public message: BelongsTo<typeof TopicMessage>
+  public reply: BelongsTo<typeof TopicMessage>
 
   @hasMany(() => TopicMessageLike, {
     onQuery(query) {
@@ -106,7 +106,7 @@ export default class TopicMessage extends BaseModel {
   public static async preloadRelations(query: ModelQueryBuilderContract<typeof TopicMessage>) {
     query
       .preload('user')
-      .preload('message')
+      .preload('reply')
       .withCount('likes')
       .withCount('dislikes')
   }
