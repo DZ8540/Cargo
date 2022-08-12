@@ -106,9 +106,7 @@ export default class TopicMessage extends BaseModel {
   public static async preloadRelations(query: ModelQueryBuilderContract<typeof TopicMessage>) {
     query
       .preload('user')
-      .preload('reply', (query) => {
-        query.pojo() // For not preload nesting replies
-      })
+      .preload('reply')
       .withCount('likes')
       .withCount('dislikes')
   }
