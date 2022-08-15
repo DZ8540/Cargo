@@ -131,7 +131,7 @@ export default class ResponseService {
   }
 
   /**
-   * * Incomings
+   * * Incumings
    */
 
   public static async paginateIncumingsRoutesResponses(userId: User['id'], payload: ApiValidator['schema']['props']): Promise<ModelPaginatorContract<Response>> {

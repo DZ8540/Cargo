@@ -10,6 +10,25 @@ import TopicLike from 'App/Models/Topic/TopicLike'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class TopicLikeService {
+  public static async get(userId: User['id'], topicId: Topic['id']): Promise<TopicLike> {
+    let item: TopicLike | null
+
+    try {
+      item = await TopicLike
+        .query()
+        .withScopes((scopes) => scopes.getByUserIdAndTopicId(userId, topicId))
+        .first()
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+
+    if (!item)
+      throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.ERROR } as Err
+
+    return item
+  }
+
   public static async create(payload: TopicLikeValidator['schema']['props']): Promise<void> {
     let isNotExists: boolean = false
 
@@ -29,23 +48,21 @@ export default class TopicLikeService {
     }
   }
 
-  public static async get(userId: User['id'], topicId: Topic['id']): Promise<TopicLike> {
-    let item: TopicLike | null
+  public static async delete({ userId, topicId }: TopicLikeValidator['schema']['props']): Promise<void> {
+    let item: TopicLike
 
     try {
-      item = await TopicLike
-        .query()
-        .withScopes((scopes) => scopes.getByUserIdAndTopicId(userId, topicId))
-        .first()
+      item = await this.get(userId, topicId)
+    } catch (err: Err | any) {
+      throw err
+    }
+
+    try {
+      await item.delete()
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
     }
-
-    if (!item)
-      throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.ERROR } as Err
-
-    return item
   }
 
   /**

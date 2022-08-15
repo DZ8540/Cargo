@@ -92,6 +92,10 @@ export default class MessagesController {
     }
   }
 
+  /**
+   * * Like
+   */
+
   public async createLike({ request, response }: HttpContextContract) {
     let payload: TopicMessageLikeValidator['schema']['props']
 
@@ -107,6 +111,28 @@ export default class MessagesController {
 
     try {
       await TopicMessageLikeService.create(payload)
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
+    } catch (err: Err | any) {
+      throw new ExceptionService(err)
+    }
+  }
+
+  public async deleteLike({ request, response }: HttpContextContract) {
+    let payload: TopicMessageLikeValidator['schema']['props']
+
+    try {
+      payload = await request.validate(TopicMessageLikeValidator)
+    } catch (err: any) {
+      throw new ExceptionService({
+        code: ResponseCodes.VALIDATION_ERROR,
+        message: ResponseMessages.VALIDATION_ERROR,
+        body: err.messages,
+      })
+    }
+
+    try {
+      await TopicMessageLikeService.delete(payload)
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
     } catch (err: Err | any) {

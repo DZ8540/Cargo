@@ -248,17 +248,27 @@ Route.group(() => {
 
     Route.post('/user/:userId', 'Api/Topic/TopicsController.paginateUserTopics').middleware('CheckAccessToken')
 
-    Route.post('/like', 'Api/Topic/TopicsController.createLike').middleware('CheckAccessToken')
+    Route.group(() => {
+
+      Route.post('/', 'Api/Topic/TopicsController.createLike').middleware('CheckAccessToken')
+      Route.delete('/', 'Api/Topic/TopicsController.deleteLike').middleware('CheckAccessToken')
+
+    }).prefix('like')
 
     Route.group(() => {
 
       Route.post('/paginateLastMessages', 'Api/Topic/MessagesController.paginateLastMessages')
 
-      Route.post('/like', 'Api/Topic/MessagesController.createLike').middleware('CheckAccessToken')
+      Route.group(() => {
+
+        Route.post('/', 'Api/Topic/MessagesController.createLike').middleware('CheckAccessToken')
+        Route.delete('/', 'Api/Topic/MessagesController.deleteLike').middleware('CheckAccessToken')
+
+      }).prefix('like')
 
       Route.post('/:topicId/:userId?', 'Api/Topic/MessagesController.paginate')
 
-      Route.post('/', 'Api/Topic/MessagesController.create').middleware('CheckAccessToken')
+      Route.post('/create', 'Api/Topic/MessagesController.create').middleware('CheckAccessToken')
 
     }).prefix('message')
 

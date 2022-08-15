@@ -108,28 +108,6 @@ export default class TopicsController {
     }
   }
 
-  public async createLike({ request, response }: HttpContextContract) {
-    let payload: TopicLikeValidator['schema']['props']
-
-    try {
-      payload = await request.validate(TopicLikeValidator)
-    } catch (err: any) {
-      throw new ExceptionService({
-        code: ResponseCodes.VALIDATION_ERROR,
-        message: ResponseMessages.VALIDATION_ERROR,
-        body: err.messages,
-      })
-    }
-
-    try {
-      await TopicLikeService.create(payload)
-
-      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
-    } catch (err: Err | any) {
-      throw new ExceptionService(err)
-    }
-  }
-
   public async search({ request, response }: HttpContextContract) {
     let payload: ApiValidator['schema']['props']
     const query: string = request.input('query', '')
@@ -175,6 +153,54 @@ export default class TopicsController {
       statistics.lastTopicTitle = lastTopic.title
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, statistics))
+    } catch (err: Err | any) {
+      throw new ExceptionService(err)
+    }
+  }
+
+  /**
+   * * Like
+   */
+
+  public async createLike({ request, response }: HttpContextContract) {
+    let payload: TopicLikeValidator['schema']['props']
+
+    try {
+      payload = await request.validate(TopicLikeValidator)
+    } catch (err: any) {
+      throw new ExceptionService({
+        code: ResponseCodes.VALIDATION_ERROR,
+        message: ResponseMessages.VALIDATION_ERROR,
+        body: err.messages,
+      })
+    }
+
+    try {
+      await TopicLikeService.create(payload)
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
+    } catch (err: Err | any) {
+      throw new ExceptionService(err)
+    }
+  }
+
+  public async deleteLike({ request, response }: HttpContextContract) {
+    let payload: TopicLikeValidator['schema']['props']
+
+    try {
+      payload = await request.validate(TopicLikeValidator)
+    } catch (err: any) {
+      throw new ExceptionService({
+        code: ResponseCodes.VALIDATION_ERROR,
+        message: ResponseMessages.VALIDATION_ERROR,
+        body: err.messages,
+      })
+    }
+
+    try {
+      await TopicLikeService.delete(payload)
+
+      return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
     } catch (err: Err | any) {
       throw new ExceptionService(err)
     }
