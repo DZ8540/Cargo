@@ -259,6 +259,8 @@ Route.group(() => {
 
       Route.post('/paginateLastMessages', 'Api/Topic/MessagesController.paginateLastMessages')
 
+      Route.post('/create', 'Api/Topic/MessagesController.create').middleware('CheckAccessToken')
+
       Route.group(() => {
 
         Route.post('/', 'Api/Topic/MessagesController.createLike').middleware('CheckAccessToken')
@@ -267,8 +269,6 @@ Route.group(() => {
       }).prefix('like')
 
       Route.post('/:topicId/:userId?', 'Api/Topic/MessagesController.paginate')
-
-      Route.post('/create', 'Api/Topic/MessagesController.create').middleware('CheckAccessToken')
 
     }).prefix('message')
 
