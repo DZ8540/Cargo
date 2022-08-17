@@ -5,7 +5,7 @@ import type { HasMany, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 
 import Topic from '../Topic/Topic'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { RolesNames } from 'Config/shield'
+import { ROLES_NAMES } from 'Config/shield'
 import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
 import { BaseModel, beforeSave, column, computed, hasMany, scope } from '@ioc:Adonis/Lucid/Orm'
 
@@ -95,22 +95,7 @@ export default class User extends BaseModel {
   public get roleForUser(): string {
     const roleToArrIndex: number = this.roleId - 1
 
-    switch (roleToArrIndex) {
-      case RolesNames.ADMIN:
-        return 'Админ'
-
-      case RolesNames.CARGO_OWNER:
-        return 'Грузовладелец'
-
-      case RolesNames.CARRIER:
-        return 'Перевозчик'
-
-      case RolesNames.CARRIER_CARGO_OWNER:
-        return 'Грузовладелец - перевозчик'
-
-      default:
-        return 'Неизвестно'
-    }
+    return ROLES_NAMES[roleToArrIndex]
   }
 
   @computed()

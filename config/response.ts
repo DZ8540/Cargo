@@ -16,6 +16,8 @@ export enum ResponseMessages {
 
   CARGO_ID_OR_ROUTE_ID_NOT_FOUND = 'Идентификационный номер маршрута или груза не найден!',
 
+  CITY_UNDEFINED = 'Город пустой!',
+
   /**
    * * Auth
    */

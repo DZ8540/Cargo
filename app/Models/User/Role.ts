@@ -2,8 +2,8 @@
 import type { DateTime } from 'luxon'
 // * Types
 
-import { BaseModel, beforeSave, column, scope } from '@ioc:Adonis/Lucid/Orm'
 import { RolesNames } from 'Config/shield'
+import { BaseModel, beforeSave, column, scope } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Role extends BaseModel {
   public static readonly columns = [

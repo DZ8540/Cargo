@@ -2,6 +2,8 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
 
+  Route.get('/cities', 'Api/CitiesController.getAll')
+
   Route.post('/question', 'Api/QuestionsController.create')
 
   /**

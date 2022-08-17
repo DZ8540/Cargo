@@ -8,7 +8,7 @@
 import Env from '@ioc:Adonis/Core/Env'
 import { ShieldConfig } from '@ioc:Adonis/Addons/Shield'
 
-export const ROLES_NAMES = ['admin', 'cargo owner', 'carrier', 'carrier - cargo owner'] as const
+export const ROLES_NAMES = ['админ', 'грузовладелец', 'перевозчик', 'перевозчик - грузовладелец'] as const
 export enum RolesNames {
   ADMIN = 0,
   CARGO_OWNER = 1,
