@@ -78,7 +78,6 @@ export default class CarsController {
     try {
       payload = await request.validate(CarValidator)
     } catch (err: any) {
-      console.log(err)
       throw new ExceptionService({
         code: ResponseCodes.VALIDATION_ERROR,
         message: ResponseMessages.VALIDATION_ERROR,

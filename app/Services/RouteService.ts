@@ -4,16 +4,19 @@ import type RouteValidator from 'App/Validators/Route/RouteValidator'
 import type RouteOrCargoContact from 'App/Models/RouteOrCargoContact'
 import type RouteSearchValidator from 'App/Validators/Route/RouteSearchValidator'
 import type { Err } from 'Contracts/response'
+import type { ArchivingConfig } from 'Contracts/app'
 import type { JSONPaginate } from 'Contracts/database'
-import type { ModelAttributes } from '@ioc:Adonis/Lucid/Orm'
 import type { PaginateConfig, ServiceConfig } from 'Contracts/services'
 import type { TransactionClientContract } from '@ioc:Adonis/Lucid/Database'
+import type { ModelAttributes, ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
+import ms from 'ms'
 import Route from 'App/Models/Route'
 import Logger from '@ioc:Adonis/Core/Logger'
 import Database from '@ioc:Adonis/Lucid/Database'
 import RouteOrCargoContactService from './RouteOrCargoContactService'
+import { DateTime } from 'luxon'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class RouteService {
@@ -323,6 +326,62 @@ export default class RouteService {
       routes.data = await Promise.all(routes.data.map(async (item: Route) => item.getForUser()))
 
       return routes
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
+
+  public static async archiveOldRows(expire: NonNullable<ArchivingConfig['routes']>): Promise<void> {
+    let lastPage: number = 1
+    const page: number = 1
+    const limit: number = 30
+
+    try {
+      const testQuery: ModelPaginatorContract<Route> = await this.paginateOldRows({ page, limit }, expire)
+      lastPage = testQuery.lastPage
+    } catch (err: Err | any) {
+      throw err
+    }
+
+    for (let i = page; i <= lastPage; i++) {
+      let routes: ModelPaginatorContract<Route>
+      const config: PaginateConfig<Route> = {
+        limit,
+        page: i,
+      }
+
+      try {
+        routes = await this.paginateOldRows(config, expire)
+      } catch (err: Err | any) {
+        throw err
+      }
+
+      try {
+        await Promise.all(routes.map(async (item: Route) => {
+          await item.merge({ isArchive: true }).save()
+        }))
+      } catch (err: any) {
+        Logger.error(err)
+        throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+      }
+    }
+  }
+
+  /**
+   * * Private methods
+   */
+
+  private static async paginateOldRows(config: PaginateConfig<Route>, expire: NonNullable<ArchivingConfig['routes']>): Promise<ModelPaginatorContract<Route>> {
+    const expirationDate: DateTime = DateTime.now().minus(ms(expire))
+
+    try {
+      return await Route
+        .query()
+        .withScopes((scopes) => scopes.notTemplate())
+        .withScopes((scopes) => scopes.notInArchive())
+        .withScopes((scopes) => scopes.getMoreThanCreatedAt(expirationDate))
+        .getViaPaginate(config)
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err

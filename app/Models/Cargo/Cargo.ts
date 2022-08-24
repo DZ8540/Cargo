@@ -114,18 +114,6 @@ export default class Cargo extends BaseModel {
    * * Query scopes
    */
 
-  public static notTemplate = scope((query) => {
-    query.whereNull('template_id')
-  })
-
-  public static inArchive = scope((query) => {
-    query.where('isArchive', true)
-  })
-
-  public static notInArchive = scope((query) => {
-    query.where('isArchive', false)
-  })
-
   public static getByCity = scope((query: ModelQueryBuilderContract<typeof Cargo>, city: string) => {
     query
       .whereHas('loadings', (query) => {
@@ -138,6 +126,22 @@ export default class Cargo extends BaseModel {
 
   public static getByUserId = scope((query, userId: User['id']) => {
     query.where('user_id', userId)
+  })
+
+  public static getMoreThanCreatedAt = scope((query, date: DateTime) => {
+    query.where('createdAt', '>=', date.toSQLDate())
+  })
+
+  public static notTemplate = scope((query) => {
+    query.whereNull('template_id')
+  })
+
+  public static inArchive = scope((query) => {
+    query.where('isArchive', true)
+  })
+
+  public static notInArchive = scope((query) => {
+    query.where('isArchive', false)
   })
 
   /**

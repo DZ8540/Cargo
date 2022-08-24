@@ -7,6 +7,7 @@
 
 import proxyAddr from 'proxy-addr'
 import Env from '@ioc:Adonis/Core/Env'
+import { ArchivingConfig } from 'Contracts/app'
 import { ServerConfig } from '@ioc:Adonis/Core/Server'
 import { LoggerConfig } from '@ioc:Adonis/Core/Logger'
 import { ProfilerConfig } from '@ioc:Adonis/Core/Profiler'
@@ -216,4 +217,14 @@ export const profiler: ProfilerConfig = {
 |
 */
 export const validator: ValidatorConfig = {
+}
+
+/*
+|--------------------------------------------------------------------------
+| Rows archiving
+|--------------------------------------------------------------------------
+*/
+export const archiving: ArchivingConfig = {
+  cargo: Env.get('ARCHIVE_CARGO_EXPIRE'),
+  routes: Env.get('ARCHIVE_ROUTES_EXPIRE'),
 }

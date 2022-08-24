@@ -20,7 +20,8 @@
     "./start/kernel",
     "./start/database",
     "./start/validator",
-    "./start/view"
+    "./start/view",
+    "./start/cron"
   ],
   "providers": [
     "./providers/AppProvider",

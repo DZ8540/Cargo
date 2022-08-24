@@ -4,12 +4,14 @@ import type CargoValidator from 'App/Validators/Cargo/CargoValidator'
 import type RouteOrCargoContact from 'App/Models/RouteOrCargoContact'
 import type CargoSearchValidator from 'App/Validators/Cargo/CargoSearchValidator'
 import type { Err } from 'Contracts/response'
+import type { ArchivingConfig } from 'Contracts/app'
 import type { JSONPaginate } from 'Contracts/database'
-import type { ModelAttributes } from '@ioc:Adonis/Lucid/Orm'
 import type { PaginateConfig, ServiceConfig } from 'Contracts/services'
 import type { TransactionClientContract } from '@ioc:Adonis/Lucid/Database'
+import type { ModelAttributes, ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
+import ms from 'ms'
 import Cargo from 'App/Models/Cargo/Cargo'
 import Logger from '@ioc:Adonis/Core/Logger'
 import Database from '@ioc:Adonis/Lucid/Database'
@@ -17,6 +19,7 @@ import CargoItemService from './CargoItemService'
 import CargoLoadingService from './CargoLoadingService'
 import CargoUnloadingService from './CargoUnloadingService'
 import RouteOrCargoContactService from '../RouteOrCargoContactService'
+import { DateTime } from 'luxon'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class CargoService {
@@ -353,6 +356,63 @@ export default class CargoService {
       cargos.data = await Promise.all(cargos.data.map(async (item: Cargo) => item.getForUser()))
 
       return cargos
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
+
+  public static async archiveOldRows(expire: NonNullable<ArchivingConfig['cargo']>): Promise<void> {
+    let lastPage: number = 1
+    const page: number = 1
+    const limit: number = 30
+
+    try {
+      const testQuery: ModelPaginatorContract<Cargo> = await this.paginateOldRows({ page, limit }, expire)
+
+      lastPage = testQuery.lastPage
+    } catch (err: Err | any) {
+      throw err
+    }
+
+    for (let i = page; i <= lastPage; i++) {
+      let cargos: ModelPaginatorContract<Cargo>
+      const config: PaginateConfig<Cargo> = {
+        limit,
+        page: i,
+      }
+
+      try {
+        cargos = await this.paginateOldRows(config, expire)
+      } catch (err: Err | any) {
+        throw err
+      }
+
+      try {
+        await Promise.all(cargos.map(async (item: Cargo) => {
+          await item.merge({ isArchive: true }).save()
+        }))
+      } catch (err: any) {
+        Logger.error(err)
+        throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+      }
+    }
+  }
+
+  /**
+   * * Private methods
+   */
+
+  private static async paginateOldRows(config: PaginateConfig<Cargo>, expire: NonNullable<ArchivingConfig['cargo']>): Promise<ModelPaginatorContract<Cargo>> {
+    const expirationDate: DateTime = DateTime.now().minus(ms(expire))
+
+    try {
+      return await Cargo
+        .query()
+        .withScopes((scopes) => scopes.notTemplate())
+        .withScopes((scopes) => scopes.notInArchive())
+        .withScopes((scopes) => scopes.getMoreThanCreatedAt(expirationDate))
+        .getViaPaginate(config)
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err

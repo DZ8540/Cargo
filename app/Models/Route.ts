@@ -18,6 +18,7 @@ import {
   belongsTo, column, scope, hasMany,
   computed,
 } from '@ioc:Adonis/Lucid/Orm'
+
 export default class Route extends BaseModel {
   public readonly columns = [
     'id', 'isArchive', 'fromRoute', 'toRoute',
@@ -137,22 +138,14 @@ export default class Route extends BaseModel {
    * * Query scopes
    */
 
-  public static notTemplate = scope((query) => {
-    query.whereNull('template_id')
-  })
-
-  public static inArchive = scope((query) => {
-    query.where('isArchive', true)
-  })
-
-  public static notInArchive = scope((query) => {
-    query.where('isArchive', false)
-  })
-
   public static getByCity = scope((query, city: string) => {
     query
       .where('fromRoute', 'ILIKE', `${city}%`)
       .orWhere('toRoute', 'ILIKE', `${city}%`)
+  })
+
+  public static getMoreThanCreatedAt = scope((query, date: DateTime) => {
+    query.where('createdAt', '>=', date.toSQLDate())
   })
 
   public static getByFromRoute = scope((query, city: string) => {
@@ -165,6 +158,18 @@ export default class Route extends BaseModel {
 
   public static getByUserId = scope((query, userId: User['id']) => {
     query.where('user_id', userId)
+  })
+
+  public static notTemplate = scope((query) => {
+    query.whereNull('template_id')
+  })
+
+  public static inArchive = scope((query) => {
+    query.where('isArchive', true)
+  })
+
+  public static notInArchive = scope((query) => {
+    query.where('isArchive', false)
   })
 
   /**

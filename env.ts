@@ -23,6 +23,8 @@ export default Env.rules({
 	SESSION_DRIVER: Env.schema.string(),
   DRIVE_DISK: Env.schema.enum(['local'] as const),
 	NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
+  ARCHIVE_ROUTES_EXPIRE: Env.schema.string.optional(),
+  ARCHIVE_CARGO_EXPIRE: Env.schema.string.optional(),
 
   /**
    * * Postgres
