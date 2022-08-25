@@ -19,7 +19,9 @@ import { archiving } from 'Config/app'
 
 if (archiving.cargo || archiving.routes) {
 
-  cron.schedule('0 0 1 * *', async () => {
+  const period: string = '0 9 * * *' // Every day at 09:00 AM
+
+  cron.schedule(period, async () => {
     try {
 
       if (archiving.cargo)
@@ -28,7 +30,7 @@ if (archiving.cargo || archiving.routes) {
       if (archiving.routes)
         await RouteService.archiveOldRows(archiving.routes)
 
-    } catch (err: Err | any) {}
+    } catch (err: Err | any) {} // Catch the error, and do nothing
   })
 
 }

@@ -144,8 +144,10 @@ export default class Route extends BaseModel {
       .orWhere('toRoute', 'ILIKE', `${city}%`)
   })
 
-  public static getMoreThanCreatedAt = scope((query, date: DateTime) => {
-    query.where('createdAt', '>=', date.toSQLDate())
+  public static getForArchiving = scope((query, date: DateTime) => {
+    query
+      .where('createdAt', '>', date.minus({ day: 1 }).toSQLDate())
+      .andWhere('createdAt', '<', date.plus({ day: 1 }).toSQLDate())
   })
 
   public static getByFromRoute = scope((query, city: string) => {

@@ -128,8 +128,10 @@ export default class Cargo extends BaseModel {
     query.where('user_id', userId)
   })
 
-  public static getMoreThanCreatedAt = scope((query, date: DateTime) => {
-    query.where('createdAt', '>=', date.toSQLDate())
+  public static getForArchiving = scope((query, date: DateTime) => {
+    query
+      .where('createdAt', '>', date.minus({ day: 1 }).toSQLDate())
+      .andWhere('createdAt', '<', date.plus({ day: 1 }).toSQLDate())
   })
 
   public static notTemplate = scope((query) => {

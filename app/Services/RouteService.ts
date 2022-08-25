@@ -380,7 +380,7 @@ export default class RouteService {
         .query()
         .withScopes((scopes) => scopes.notTemplate())
         .withScopes((scopes) => scopes.notInArchive())
-        .withScopes((scopes) => scopes.getMoreThanCreatedAt(expirationDate))
+        .withScopes((scopes) => scopes.getForArchiving(expirationDate))
         .getViaPaginate(config)
     } catch (err: any) {
       Logger.error(err)
