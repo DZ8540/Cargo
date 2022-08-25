@@ -175,16 +175,23 @@ export default class CargoService {
   public static async update(id: Cargo['id'], payload: CargoValidator['schema']['props']): Promise<Cargo> {
     let item: Cargo
     const trx: TransactionClientContract = await Database.transaction()
+    const contactsPayload: Partial<ModelAttributes<RouteOrCargoContact>>[] | undefined = payload.contacts
     const cargoPayload: Partial<ModelAttributes<Cargo>> = {
       bargainType: payload.bargainType,
       calculateType: payload.calculateType,
+
       fromTemperature: payload.fromTemperature,
       toTemperature: payload.toTemperature,
+
       vatPrice: payload.vatPrice,
       noVatPrice: payload.noVatPrice,
       prepayment: payload.prepayment,
-      carBodyTypeId: payload.carBodyTypeId,
+
+      note: payload.note,
+
       userId: payload.userId,
+      templateId: payload.templateId,
+      carBodyTypeId: payload.carBodyTypeId,
     }
 
     try {
@@ -205,6 +212,14 @@ export default class CargoService {
     }
 
     try {
+      if (contactsPayload) {
+        for (const item of contactsPayload) {
+          item.cargoId = id
+        }
+
+        await RouteOrCargoContactService.createMany(contactsPayload, { trx })
+      }
+
       await CargoItemService.createMany(id, payload.items, { trx })
       await CargoLoadingService.createMany(id, payload.loadings, { trx })
       await CargoUnloadingService.createMany(id, payload.unloadings, { trx })
