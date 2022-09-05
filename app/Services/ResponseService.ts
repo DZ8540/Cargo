@@ -44,18 +44,27 @@ export default class ResponseService {
    */
 
   public static async paginateUserResponses(userId: User['id'], payload: ApiValidator['schema']['props'], config: UserResponsesConfig): Promise<ModelPaginatorContract<Response>> {
-    let query = Response.query()
-
-    if (config.type === 'route')
-      query = query.withScopes((scopes) => scopes.getRoutes())
-    else
-      query = query.withScopes((scopes) => scopes.getCargo())
+    let query = Response
+      .query()
+      .withScopes((scopes) => scopes.getByUserId(userId))
+      .withScopes((scopes) => scopes.getByStatus(config.statusType))
 
     try {
-      return await query
-        .withScopes((scopes) => scopes.getByUserId(userId))
-        .withScopes((scopes) => scopes.getByStatus(config.statusType))
-        .getViaPaginate(payload)
+      if (config.type === 'route') {
+        const userRoutesIds: Cargo['id'][] = await RouteService.getUserRoutesIds(userId)
+
+        query = query
+          .withScopes((scopes) => scopes.getRoutes())
+          .withScopes((scopes) => scopes.getByRoutesIds(userRoutesIds))
+      } else {
+        const userCargoIds: Cargo['id'][] = await CargoService.getUserCargosIds(userId)
+
+        query = query
+          .withScopes((scopes) => scopes.getCargo())
+          .withScopes((scopes) => scopes.getByCargoIds(userCargoIds))
+      }
+
+      return await query.getViaPaginate(payload)
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err

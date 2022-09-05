@@ -25,7 +25,7 @@ export default class Template extends BaseModel {
   public name: string
 
   @column()
-  public note?: string
+  public note?: string | null
 
   /**
    * * Foreign keys

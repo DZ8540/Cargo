@@ -8,7 +8,7 @@ import { schema } from '@ioc:Adonis/Core/Validator'
 import { getUserIdRules } from '../Rules/User/user'
 import { getTemplateNameRules, getTemplateNoteRules } from '../Rules/template'
 
-export default class UpdateTemplateValidator extends IndexValidator {
+export default class TemplateValidator extends IndexValidator {
   constructor(protected ctx: HttpContextContract) {
     super()
   }
@@ -40,7 +40,7 @@ export default class UpdateTemplateValidator extends IndexValidator {
      * * Optional schemes
      */
 
-    note: schema.string.optional({ trim: true }, getTemplateNoteRules()),
+    note: schema.string.nullable({ trim: true }, getTemplateNoteRules()),
   })
 
   /**

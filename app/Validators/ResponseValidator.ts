@@ -6,6 +6,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import IndexValidator from './IndexValidator'
 import { getRouteIdRules } from './Rules/route'
 import { getUserIdRules } from './Rules/User/user'
+import { getCargoIdRules } from './Rules/Cargo/cargo'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 
 export default class ResponseValidator extends IndexValidator {
@@ -44,7 +45,7 @@ export default class ResponseValidator extends IndexValidator {
       rules.requiredIfNotExists('cargoId'),
     ]),
     cargoId: schema.number.optional([
-      ...getRouteIdRules(),
+      ...getCargoIdRules(),
       rules.requiredIfNotExists('routeId'),
     ]),
   })

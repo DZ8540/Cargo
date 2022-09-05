@@ -38,7 +38,7 @@ export default class CargoTemplateValidator extends CargoValidator {
      * * Optional schemes
      */
 
-    templateNote: schema.string.optional({ trim: true }, getTemplateNoteRules()),
+    templateNote: schema.string.nullable({ trim: true }, getTemplateNoteRules()),
 
     /**
      * * Cargo

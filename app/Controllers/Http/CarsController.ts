@@ -14,6 +14,7 @@ export default class CarsController {
     const columns: typeof Car.columns[number][] = [
       'id', 'isVerified', 'name', 'carrying',
       'capacity', 'length', 'width', 'height',
+      'carBodyTypeId',
     ]
 
     try {

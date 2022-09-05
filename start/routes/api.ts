@@ -100,14 +100,14 @@ Route.group(() => {
   Route.group(() => {
 
     Route.get('/bodyTypes', 'Api/Car/BodyTypesController.getAll')
-    Route.post('/user/:userId', 'Api/Car/CarsController.paginate')
+    Route.post('/user/:userId', 'Api/Car/CarsController.paginate').middleware('CheckCarrierRole')
 
-    Route.get('/:id', 'Api/Car/CarsController.get')
-    Route.patch('/:id', 'Api/Car/CarsController.update')
-    Route.delete('/:id', 'Api/Car/CarsController.delete')
-    Route.post('/', 'Api/Car/CarsController.create')
+    Route.get('/:id', 'Api/Car/CarsController.get').middleware('CheckCarrierRole')
+    Route.patch('/:id', 'Api/Car/CarsController.update').middleware('CheckCarrierRole')
+    Route.delete('/:id', 'Api/Car/CarsController.delete').middleware('CheckCarrierRole')
+    Route.post('/', 'Api/Car/CarsController.create').middleware('CheckCarrierRole')
 
-  }).prefix('car').middleware(['CheckAccessToken', 'CheckCarrierRole'])
+  }).prefix('car').middleware('CheckAccessToken')
 
   /**
    * * Route
@@ -135,7 +135,7 @@ Route.group(() => {
 
   Route.group(() => {
 
-    Route.get('/itemTypes', 'Api/Cargo/ItemsTypesController.getAll').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
+    Route.get('/itemTypes', 'Api/Cargo/ItemsTypesController.getAll').middleware('CheckAccessToken')
     Route.get('/packageTypes', 'Api/Cargo/PackageTypesController.getAll').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
     Route.get('/loadingTypes', 'Api/Cargo/CargosController.getAllLoadingTypes').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
 
