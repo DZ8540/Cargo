@@ -5,7 +5,7 @@ import type Cargo from 'App/Models/Cargo/Cargo'
 import type ApiValidator from 'App/Validators/ApiValidator'
 import type ResponseValidator from 'App/Validators/ResponseValidator'
 import type { Err } from 'Contracts/response'
-import type { ModelAttributes, ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
+import type { ExtractScopes, ModelAttributes, ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
 import RouteService from './RouteService'
@@ -43,10 +43,9 @@ export default class ResponseService {
    * * For routes' and cargo' model
    */
 
-  public static async paginateUserResponses(userId: User['id'], payload: ApiValidator['schema']['props'], config: UserResponsesConfig): Promise<ModelPaginatorContract<Response>> {
+  public static async paginateOwnerResponses(userId: User['id'], payload: ApiValidator['schema']['props'], config: UserResponsesConfig): Promise<ModelPaginatorContract<Response>> {
     let query = Response
       .query()
-      .withScopes((scopes) => scopes.getByUserId(userId))
       .withScopes((scopes) => scopes.getByStatus(config.statusType))
 
     try {
@@ -63,8 +62,44 @@ export default class ResponseService {
           .withScopes((scopes) => scopes.getCargo())
           .withScopes((scopes) => scopes.getByCargoIds(userCargoIds))
       }
+    } catch (err: Err | any) {
+      throw err
+    }
 
+    try {
       return await query.getViaPaginate(payload)
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
+
+  public static async paginateExecutorResponses(userId: User['id'], payload: ApiValidator['schema']['props'], config: UserResponsesConfig): Promise<ModelPaginatorContract<Response>> {
+    const scopeMethod: keyof ExtractScopes<typeof Response> = config.type === 'route' ? 'getRoutes' : 'getCargo'
+
+    try {
+      return await Response
+        .query()
+        .withScopes((scopes) => scopes[scopeMethod]())
+        .withScopes((scopes) => scopes.getByUserId(userId))
+        .withScopes((scopes) => scopes.getByStatus(config.statusType))
+        .getViaPaginate(payload)
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
+
+  public static async paginateUserResponses(userId: User['id'], payload: ApiValidator['schema']['props'], config: UserResponsesConfig): Promise<ModelPaginatorContract<Response>> {
+    const scopeMethod: keyof ExtractScopes<typeof Response> = config.type === 'route' ? 'getRoutes' : 'getCargo'
+
+    try {
+      return await Response
+        .query()
+        .withScopes((scopes) => scopes[scopeMethod]())
+        .withScopes((scopes) => scopes.getByUserId(userId))
+        .withScopes((scopes) => scopes.getByStatus(config.statusType))
+        .getViaPaginate(payload)
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err

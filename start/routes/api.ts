@@ -215,9 +215,19 @@ Route.group(() => {
 
     Route.group(() => {
 
-      Route.post('/route/:userId', 'Api/ResponsesController.paginateInProcessRoutesResponses').middleware('CheckCarrierRole')
+      Route.group(() => {
 
-      Route.post('/cargo/:userId', 'Api/ResponsesController.paginateInProcessCargoResponses').middleware('CheckCargoOwnerRole')
+        Route.post('/owner/:userId', 'Api/ResponsesController.paginateInProcessOwnerRoutesResponses')
+        Route.post('/executor/:userId', 'Api/ResponsesController.paginateInProcessExecutorRoutesResponses')
+
+      }).prefix('route').middleware('CheckCarrierRole')
+
+      Route.group(() => {
+
+        Route.post('/owner/:userId', 'Api/ResponsesController.paginateInProcessOwnerCargoResponses')
+        Route.post('/executor/:userId', 'Api/ResponsesController.paginateInProcessExecutorCargoResponses')
+
+      }).prefix('cargo').middleware('CheckCargoOwnerRole')
 
     }).prefix('inProcess')
 
