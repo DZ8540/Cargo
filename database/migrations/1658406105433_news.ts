@@ -1,5 +1,5 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
-import { TABLES_NAMES } from 'Config/database'
+import { NEWS_DESCRIPTION_MAX_LENGTH, TABLES_NAMES } from 'Config/database'
 
 export default class extends BaseSchema {
   protected tableName = TABLES_NAMES.NEWS
@@ -14,7 +14,7 @@ export default class extends BaseSchema {
 
       table.string('slug').unique().notNullable()
       table.string('title').notNullable()
-      table.string('description', 8192).notNullable()
+      table.string('description', NEWS_DESCRIPTION_MAX_LENGTH).notNullable()
 
       /**
        * * Nullable columns

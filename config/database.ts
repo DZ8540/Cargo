@@ -58,6 +58,9 @@ export const TABLES_NAMES = {
   SESSIONS: 'sessions',
 } as const
 
+export const NEWS_DESCRIPTION_MIN_LENGTH: number = 5
+export const NEWS_DESCRIPTION_MAX_LENGTH: number = 8192
+
 /**
  * * Question
  */

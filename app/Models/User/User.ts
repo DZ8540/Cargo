@@ -128,7 +128,7 @@ export default class User extends BaseModel {
    */
 
   @beforeSave()
-  public static async hashPasswordAndNicknameToLowercase(item: User) {
+  public static async hashPassword(item: User) {
     if (item.$dirty.password)
       item.password = await Hash.make(item.password)
   }
