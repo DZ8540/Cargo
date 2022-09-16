@@ -36,9 +36,9 @@ export default class extends BaseSchema {
       table.integer('height').unsigned().nullable()
       table.integer('noteType').unsigned().nullable().comment(`
         Особые отметки
-        0 - холод
+        0 - режим
         1 - хрупкое
-        2 - габаритное
+        2 - негабаритные
       `)
 
       /**

@@ -47,6 +47,6 @@ export function getCargoItemPackageCountRules(): Rule[] {
 export function getCargoItemNoteTypesRules(): Rule[] {
   return [
     rules.unsigned(),
-    rules.range(CargosItemsNoteTypes.COLD, CargosItemsNoteTypes.OVERALL),
+    rules.range(CargosItemsNoteTypes.MODE, CargosItemsNoteTypes.NO_OVERALL),
   ]
 }

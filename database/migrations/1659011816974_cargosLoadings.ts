@@ -24,7 +24,7 @@ export default class extends BaseSchema {
       table.date('date').nullable()
       table.integer('days').unsigned().nullable()
       table.integer('periodType').unsigned().nullable().comment(`
-        Тип единожды
+        Тип груз готов
         0 - по рабочим дням
         1 - по выходным
         2 - ежедневно

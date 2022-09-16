@@ -89,7 +89,7 @@ export default class CargoValidator extends IndexValidator {
     length: schema.number.optional(getCargoItemLengthRules()),
     width: schema.number.optional(getCargoItemWidthRules()),
     height: schema.number.optional(getCargoItemHeightRules()),
-    noteType: schema.number.optional(getCargoItemNoteTypesRules()),
+    noteType: schema.number.nullableAndOptional(getCargoItemNoteTypesRules()),
 
     cargoItemTypeId: schema.number.optional(getCargoItemTypeIdRules()),
     cargoItemPackageTypeId: schema.number.optional(getCargoItemPackageTypeIdRules()),

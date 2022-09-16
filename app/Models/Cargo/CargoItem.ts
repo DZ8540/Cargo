@@ -79,7 +79,7 @@ export default class CargoItem extends BaseModel {
   public height?: number
 
   @column()
-  public noteType?: CargosItemsNoteTypes
+  public noteType?: CargosItemsNoteTypes | null
 
   /**
    * * Foreign keys
@@ -110,7 +110,10 @@ export default class CargoItem extends BaseModel {
 
   @computed()
   public get noteTypeForUser(): typeof CARGOS_ITEMS_NOTE_TYPES[number] | 'Нет' {
-    return this.noteType !== undefined ? CARGOS_ITEMS_NOTE_TYPES[this.noteType] : 'Нет'
+    if (this.noteType !== undefined && this.noteType !== null)
+      return CARGOS_ITEMS_NOTE_TYPES[this.noteType]
+    else
+      return 'Нет'
   }
 
   /**

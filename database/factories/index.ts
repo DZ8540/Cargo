@@ -277,8 +277,8 @@ export const CargoItemFactory = Factory
       packageCount: faker.datatype.number(10),
 
       noteType: faker.datatype.number({
-        min: CargosItemsNoteTypes.COLD,
-        max: CargosItemsNoteTypes.OVERALL,
+        min: CargosItemsNoteTypes.MODE,
+        max: CargosItemsNoteTypes.NO_OVERALL,
       }),
 
       cargoId: faker.datatype.number({ min: 1, max: 20 }),

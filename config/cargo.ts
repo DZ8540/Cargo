@@ -8,9 +8,9 @@ export enum CargosLoadingPeriodTypes {
   IN_ONE_DAY = 3,
 }
 
-export const CARGOS_ITEMS_NOTE_TYPES = ['Холод', 'Хрупкое', 'Габаритное'] as const
+export const CARGOS_ITEMS_NOTE_TYPES = ['Режим', 'Хрупкое', 'Негабаритные'] as const
 export enum CargosItemsNoteTypes {
-  COLD = 0,
+  MODE = 0,
   FRAGILE = 1,
-  OVERALL = 2,
+  NO_OVERALL = 2,
 }
