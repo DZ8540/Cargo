@@ -2,9 +2,11 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
 
-  Route.get('/cities', 'Api/CitiesController.getAll')
+  Route.get('/cities', 'Api/IndexController.getAllCities')
 
-  Route.post('/question', 'Api/QuestionsController.create')
+  Route.get('/tariffs', 'Api/IndexController.getAllTariffs')
+
+  Route.post('/question', 'Api/IndexController.createQuestion')
 
   /**
    * * Auth
@@ -120,12 +122,15 @@ Route.group(() => {
     Route.post('/paginate/:city', 'Api/RoutesController.paginate')
     Route.post('/notArchive/:userId', 'Api/RoutesController.paginateUserRoutes').middleware(['CheckAccessToken', 'CheckCarrierRole'])
     Route.post('/archive/:userId', 'Api/RoutesController.paginateArchiveUserRoutes').middleware(['CheckAccessToken', 'CheckCarrierRole'])
-    Route.post('/unArchive/:id', 'Api/RoutesController.unArchive').middleware(['CheckAccessToken', 'CheckCarrierRole'])
+    Route.post('/unArchive/:id', 'Api/RoutesController.unArchive').middleware(['CheckAccessToken', 'CheckCarrierRole', 'CheckUserTariff'])
 
-    Route.get('/:id', 'Api/RoutesController.get')
+    Route.get('/:id/:currentUserId?', 'Api/RoutesController.get').where('currentUserId', {
+      match: /^[0-9]+$/,
+      cast: (currentUserId) => Number(currentUserId),
+    })
     Route.patch('/:id', 'Api/RoutesController.update').middleware(['CheckAccessToken', 'CheckCarrierRole'])
     Route.delete('/:id', 'Api/RoutesController.delete').middleware(['CheckAccessToken', 'CheckCarrierRole'])
-    Route.post('/', 'Api/RoutesController.create').middleware(['CheckAccessToken', 'CheckCarrierRole'])
+    Route.post('/', 'Api/RoutesController.create').middleware(['CheckAccessToken', 'CheckCarrierRole', 'CheckUserTariff'])
 
   }).prefix('route')
 
@@ -144,12 +149,15 @@ Route.group(() => {
     Route.post('/paginate/:city', 'Api/Cargo/CargosController.paginate')
     Route.post('/notArchive/:userId', 'Api/Cargo/CargosController.paginateUserCargos').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
     Route.post('/archive/:userId', 'Api/Cargo/CargosController.paginateArchiveUserCargos').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
-    Route.post('/unArchive/:id', 'Api/Cargo/CargosController.unArchive').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
+    Route.post('/unArchive/:id', 'Api/Cargo/CargosController.unArchive').middleware(['CheckAccessToken', 'CheckCargoOwnerRole', 'CheckUserTariff'])
 
-    Route.get('/:id', 'Api/Cargo/CargosController.get')
+    Route.get('/:id/:currentUserId?', 'Api/Cargo/CargosController.get').where('currentUserId', {
+      match: /^[0-9]+$/,
+      cast: (currentUserId) => Number(currentUserId),
+    })
     Route.patch('/:id', 'Api/Cargo/CargosController.update').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
     Route.delete('/:id', 'Api/Cargo/CargosController.delete').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
-    Route.post('/', 'Api/Cargo/CargosController.create').middleware(['CheckAccessToken', 'CheckCargoOwnerRole'])
+    Route.post('/', 'Api/Cargo/CargosController.create').middleware(['CheckAccessToken', 'CheckCargoOwnerRole', 'CheckUserTariff'])
 
   }).prefix('cargo')
 
@@ -288,5 +296,19 @@ Route.group(() => {
     Route.post('/', 'Api/Topic/TopicsController.create').middleware('CheckAccessToken')
 
   }).prefix('topic')
+
+  /**
+   * * Payment
+   */
+
+  Route.group(() => {
+
+    Route.post('/buyTariff', 'Api/PaymentsController.buyTariffWebHook')
+    Route.post('/buyTariff/:userId', 'Api/PaymentsController.buyTariff').where('userId', {
+      match: /^[0-9]+$/,
+      cast: (userId) => Number(userId),
+    })
+
+  }).prefix('payments')
 
 }).prefix('api')

@@ -8,6 +8,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import RouteService from 'App/Services/RouteService'
 import ApiValidator from 'App/Validators/ApiValidator'
+import UserService from 'App/Services/User/UserService'
 import ResponseService from 'App/Services/ResponseService'
 import ExceptionService from 'App/Services/ExceptionService'
 import RouteValidator from 'App/Validators/Route/RouteValidator'
@@ -86,9 +87,20 @@ export default class RoutesController {
 
   public async get({ response, params }: HttpContextContract) {
     const id: Route['id'] = params.id
+    const currentUserId: User['id'] | undefined = params.currentUserId
 
     try {
       const item: Route = await RouteService.get(id)
+
+      if (!currentUserId) {
+        item.user.phone = undefined
+      } else {
+        try {
+          await UserService.checkTariff(currentUserId)
+        } catch (err: Err | any) {
+          item.user.phone = undefined
+        }
+      }
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, item))
     } catch (err: Err | any) {

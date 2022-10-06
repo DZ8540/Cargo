@@ -2,6 +2,7 @@
 import type UserValidator from 'App/Validators/UserValidator'
 import type RegisterValidator from 'App/Validators/Auth/Register/RegisterValidator'
 import type { Err } from 'Contracts/response'
+import type { TariffType } from 'Contracts/order'
 import type { PaginateConfig } from 'Contracts/services'
 import type { ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
@@ -9,7 +10,9 @@ import type { ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User/User'
 import Drive from '@ioc:Adonis/Core/Drive'
 import Logger from '@ioc:Adonis/Core/Logger'
+import { DateTime } from 'luxon'
 import { USER_PATH } from 'Config/drive'
+import { TariffTypes, TARIFF_TYPES } from 'Config/order'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class UserService {
@@ -158,6 +161,56 @@ export default class UserService {
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
+
+  /**
+   * * Tariff
+   */
+
+  public static async updateTariff(id: User['id'], tariffType: TariffTypes): Promise<User>
+  public static async updateTariff(user: User, tariffType: TariffTypes): Promise<User>
+  public static async updateTariff(idOrUser: User['id'] | User, tariffType: TariffTypes): Promise<User> {
+    let item: User
+    const tariff: TariffType = TARIFF_TYPES[tariffType]
+
+    if (typeof idOrUser !== 'object') {
+      try {
+        item = await this.get(idOrUser)
+      } catch (err: Err | any) {
+        throw err
+      }
+    } else {
+      item = idOrUser
+    }
+
+    try {
+      const tariffExpiredAt: DateTime = DateTime.now().plus(tariff.date)
+
+      await item.merge({ tariffExpiredAt }).save()
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+
+    try {
+      return await this.get(item.id)
+    } catch (err: Err | any) {
+      throw err
+    }
+  }
+
+  public static async checkTariff(id: User['id']): Promise<void> {
+    let item: User
+    const tariffError: Err = { code: ResponseCodes.TARIFF_EXPIRED, message: ResponseMessages.ERROR }
+
+    try {
+      item = await this.get(id)
+
+      if (!item.tariffExpiredAt || (DateTime.now().toMillis() > item.tariffExpiredAt.toMillis()))
+        throw tariffError
+    } catch (err: Err | any) {
+      throw err
     }
   }
 }

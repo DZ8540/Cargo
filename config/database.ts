@@ -16,6 +16,7 @@ export const TABLES_NAMES = {
   REPORTS: 'reports',
   RESPONSES: 'responses',
   QUESTIONS: 'questions',
+  ORDERS: 'orders',
 
   /**
    * * Topic

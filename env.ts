@@ -64,4 +64,11 @@ export default Env.rules({
   SMTP_PORT: Env.schema.number(),
   SMTP_USERNAME: Env.schema.string(),
   SMTP_PASSWORD: Env.schema.string(),
+
+  /**
+   * * Payment
+   */
+
+  PAYMENT_TINKOFF_API_URL: Env.schema.string({ format: 'url' }),
+  PAYMENT_TINKOFF_TERMINAL_KEY: Env.schema.string(),
 })

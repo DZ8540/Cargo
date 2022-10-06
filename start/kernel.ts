@@ -53,9 +53,10 @@ Server.middleware.registerNamed({
   CheckRefreshToken: () => import('App/Middleware/CheckRefreshToken'),
 
   /**
-   * * Role
+   * * User
    */
 
-  CheckCarrierRole: () => import('App/Middleware/Role/CheckCarrierRole'),
-  CheckCargoOwnerRole: () => import('App/Middleware/Role/CheckCargoOwnerRole'),
+  CheckUserTariff: () => import('App/Middleware/User/CheckUserTariff'),
+  CheckCarrierRole: () => import('App/Middleware/User/CheckCarrierRole'),
+  CheckCargoOwnerRole: () => import('App/Middleware/User/CheckCargoOwnerRole'),
 })

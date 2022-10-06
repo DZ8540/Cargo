@@ -8,6 +8,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
 
 import ApiValidator from 'App/Validators/ApiValidator'
+import UserService from 'App/Services/User/UserService'
 import CargoService from 'App/Services/Cargo/CargoService'
 import ResponseService from 'App/Services/ResponseService'
 import ExceptionService from 'App/Services/ExceptionService'
@@ -88,9 +89,20 @@ export default class CargosController {
 
   public async get({ response, params }: HttpContextContract) {
     const id: Cargo['id'] = params.id
+    const currentUserId: User['id'] | undefined = params.currentUserId
 
     try {
       const item: Cargo = await CargoService.get(id)
+
+      if (!currentUserId) {
+        item.user.phone = undefined
+      } else {
+        try {
+          await UserService.checkTariff(currentUserId)
+        } catch (err: Err | any) {
+          item.user.phone = undefined
+        }
+      }
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, item))
     } catch (err: Err | any) {

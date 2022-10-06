@@ -6,6 +6,7 @@ export enum ResponseCodes {
   MAILER_ERROR = 'MAILER_ERROR',
   TOKEN_EXPIRED = 'TOKEN_EXPIRED',
   DATABASE_ERROR = 'DATABASE_ERROR',
+  TARIFF_EXPIRED = 'TARIFF_EXPIRED',
   VALIDATION_ERROR = 'VALIDATION_ERROR',
   VERIFY_CODE_EXISTS = 'VERIFY_CODE_EXISTS',
 }
@@ -34,6 +35,13 @@ export enum ResponseMessages {
    */
 
   USER_NOT_FOUND = 'Пользователь не найден!',
+
+  /**
+   * * Tinkoff
+   */
+
+  TINKOFF_WEB_HOOK_STATUS_NOT_DEFINED = 'Отсутствует статус оплаты!',
+  TINKOFF_WEB_HOOK_ORDER_NOT_DEFINED = 'Отсутствует id заказа!',
 }
 
 export const RESPONSES_STATUS_TYPES = ['На рассмотрении', 'Выполняется', 'Выполнен'] as const

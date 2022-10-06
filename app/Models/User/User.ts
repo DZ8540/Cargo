@@ -14,7 +14,7 @@ export default class User extends BaseModel {
     'id', 'isBlocked', 'email', 'password',
     'firstName', 'lastName', 'phone', 'companyName',
     'taxIdentificationNumber', 'city', 'avatar', 'subject',
-    'roleId', 'createdAt', 'updatedAt', 'endAccessDate',
+    'roleId', 'createdAt', 'updatedAt', 'tariffExpiredAt',
   ] as const
 
   /**
@@ -75,7 +75,7 @@ export default class User extends BaseModel {
   public updatedAt: DateTime
 
   @column.dateTime()
-  public endAccessDate?: DateTime
+  public tariffExpiredAt?: DateTime
 
   /**
    * * Computed properties

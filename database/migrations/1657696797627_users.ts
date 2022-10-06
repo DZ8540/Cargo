@@ -53,7 +53,8 @@ export default class extends BaseSchema {
 
       table.timestamp('createdAt', { useTz: true }).notNullable()
       table.timestamp('updatedAt', { useTz: true }).notNullable()
-      table.timestamp('endAccessDate', { useTz: true }).nullable().comment('Дата конца купленного тарифа. Если отсутствует, то еще не покупал тариф')
+
+      table.timestamp('tariffExpiredAt', { useTz: true }).nullable().comment('Дата конца купленного тарифа. Если отсутствует, то еще не покупал тариф')
     })
   }
 

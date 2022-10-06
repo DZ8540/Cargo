@@ -6,6 +6,7 @@ import TokenException from 'App/Exceptions/TokenException'
 import ClientException from 'App/Exceptions/ClientException'
 import MailerException from 'App/Exceptions/MailerException'
 import ServerException from 'App/Exceptions/ServerException'
+import TariffException from 'App/Exceptions/TariffException'
 import DatabaseException from 'App/Exceptions/DatabaseException'
 import ValidationException from 'App/Exceptions/ValidationException'
 import VerifyCodeExistException from 'App/Exceptions/VerifyCodeExistException'
@@ -34,6 +35,9 @@ export default class ExceptionService {
 
       case ResponseCodes.VERIFY_CODE_EXISTS:
         return new VerifyCodeExistException(err.message, err.errors, err.body)
+
+      case ResponseCodes.TARIFF_EXPIRED:
+        return new TariffException(err.message, err.errors, err.body)
 
       default:
         break
