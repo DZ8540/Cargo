@@ -13,9 +13,19 @@ import { ResponseCodes, ResponseMessages } from 'Config/response'
 export default class UsersController {
   public async get({ response, params }: HttpContextContract) {
     const id: User['id'] = params.id
+    const currentUserId: User['id'] | undefined = params.currentUserId
 
     try {
       const user: User = await UserService.get(id)
+
+      try {
+        if (!currentUserId)
+          throw null
+
+        await UserService.checkTariff(currentUserId)
+      } catch (err: Err | any) {
+        user.phone = undefined
+      }
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, user))
     } catch (err: Err | any) {

@@ -94,14 +94,13 @@ export default class CargosController {
     try {
       const item: Cargo = await CargoService.get(id)
 
-      if (!currentUserId) {
+      try {
+        if (!currentUserId)
+          throw null
+
+        await UserService.checkTariff(currentUserId)
+      } catch (err: Err | any) {
         item.user.phone = undefined
-      } else {
-        try {
-          await UserService.checkTariff(currentUserId)
-        } catch (err: Err | any) {
-          item.user.phone = undefined
-        }
       }
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, item))

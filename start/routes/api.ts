@@ -46,7 +46,7 @@ Route.group(() => {
 
     Route.get('/accountTypes', 'Api/User/RolesController.getAll')
 
-    Route.get('/:id', 'Api/User/UsersController.get').where('id', {
+    Route.get('/:id/:currentUserId?', 'Api/User/UsersController.get').where('id', {
       match: /^[0-9]+$/,
       cast: (id) => Number(id),
     })
