@@ -185,7 +185,14 @@ export default class UserService {
     }
 
     try {
-      const tariffExpiredAt: DateTime = DateTime.now().plus(tariff.date)
+      let tariffExpiredAt: DateTime
+      const currentUserTariffExpiredAt: DateTime | undefined = item.tariffExpiredAt
+
+      // If current user tariff less than today
+      if (!currentUserTariffExpiredAt || (currentUserTariffExpiredAt.toMillis() <= DateTime.now().toMillis()))
+        tariffExpiredAt = DateTime.now().plus(tariff.date)
+      else // Increase current tariff
+        tariffExpiredAt = currentUserTariffExpiredAt.plus(tariff.date)
 
       await item.merge({ tariffExpiredAt }).save()
     } catch (err: any) {
