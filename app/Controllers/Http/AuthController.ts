@@ -1,4 +1,5 @@
 // * Types
+import type User from 'App/Models/User/User'
 import type { Err } from 'Contracts/response'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 // * Types
@@ -19,9 +20,9 @@ export default class AuthController {
     const payload = await request.validate(LoginValidator)
 
     try {
-      const { id } = await AuthService.login(payload)
+      const user: User = await AuthService.login(payload)
 
-      session.put(SESSION_USER_KEY, id)
+      session.put(SESSION_USER_KEY, user)
 
       return response.redirect().toRoute('home')
     } catch (err: Err | any) {

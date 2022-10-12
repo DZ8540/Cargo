@@ -12,7 +12,9 @@ import Template from './Template'
 import Response from './Response'
 import RouteOrCargoContact from './RouteOrCargoContact'
 import CarBodyTypeService from 'App/Services/Car/CarBodyTypeService'
+import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
 import { ROUTES_DATE_PERIOD_TYPES } from 'Config/route'
+import { ROUTES_BARGAIN_TYPES, ROUTES_CALCULATE_TYPES, ROUTES_LOADING_TYPE_TYPES } from 'Config/route'
 import {
   BaseModel, beforeFetch, beforeFind,
   belongsTo, column, scope, hasMany,
@@ -108,8 +110,42 @@ export default class Route extends BaseModel {
    */
 
   @computed()
+  public get dateTypeForUser(): string {
+    return ROUTES_LOADING_TYPE_TYPES[Number(this.dateType)]
+  }
+
+  @computed()
   public get datePeriodTypeForUser(): typeof ROUTES_DATE_PERIOD_TYPES[number] | 'Нет' {
-    return this.datePeriodType !== undefined ? ROUTES_DATE_PERIOD_TYPES[this.datePeriodType] : 'Нет'
+    if (this.datePeriodType !== undefined && this.datePeriodType !== null)
+      return ROUTES_DATE_PERIOD_TYPES[Number(this.datePeriodType)]
+    else
+      return 'Нет'
+  }
+
+  @computed()
+  public get dateForUser(): string {
+    return this.date ? this.date.setLocale('ru-RU').toFormat(GLOBAL_DATETIME_FORMAT) : ''
+  }
+
+  @computed()
+  public get isArchiveForUser(): string {
+    return this.isArchive ? 'Да' : 'Нет'
+  }
+
+  @computed()
+  public get bargainTypeForUser(): string {
+    if (this.bargainType !== undefined && this.bargainType !== null)
+      return ROUTES_BARGAIN_TYPES[Number(this.bargainType)]
+    else
+      return ''
+  }
+
+  @computed()
+  public get calculateTypeForUser(): string {
+    if (this.calculateType !== undefined && this.calculateType !== null)
+      return ROUTES_CALCULATE_TYPES[Number(this.calculateType)]
+    else
+      return ''
   }
 
   /**
@@ -166,12 +202,14 @@ export default class Route extends BaseModel {
     query.whereNull('template_id')
   })
 
-  public static inArchive = scope((query) => {
-    query.where('isArchive', true)
+  public static getByIsArchive = scope((query, isArchive: Route['isArchive']) => {
+    query.where('isArchive', isArchive)
   })
 
-  public static notInArchive = scope((query) => {
-    query.where('isArchive', false)
+  public static getOnlyVerified = scope((query: ModelQueryBuilderContract<typeof Route>) => {
+    query.whereHas('car', (query) => {
+      query.withScopes((scopes) => scopes.onlyVerified())
+    })
   })
 
   /**

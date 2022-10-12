@@ -93,4 +93,70 @@ Route.group(() => {
 
   }).prefix('/cars').as('cars')
 
+  /**
+   * * Cargo
+   */
+
+  Route.group(() => {
+
+    Route.get('/', 'CargoController.index').as('index')
+    Route
+      .get('/:id', 'CargoController.show')
+      .as('show')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+    Route
+      .post('/archive/:id', 'CargoController.archive')
+      .as('archive')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+    Route
+      .post('/unArchive/:id', 'CargoController.unArchive')
+      .as('unArchive')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+  }).prefix('/cargos').as('cargo')
+
+  /**
+   * * Route
+   */
+
+  Route.group(() => {
+
+    Route.get('/', 'RoutesController.index').as('index')
+    Route
+      .get('/:id', 'RoutesController.show')
+      .as('show')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+    Route
+      .post('/archive/:id', 'RoutesController.archive')
+      .as('archive')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+    Route
+      .post('/unArchive/:id', 'RoutesController.unArchive')
+      .as('unArchive')
+      .where('id', {
+        match: /^[0-9]+$/,
+        cast: (id) => Number(id),
+      })
+
+  }).prefix('/routes').as('routes')
+
 }).middleware('CheckAdminPanelAccess')

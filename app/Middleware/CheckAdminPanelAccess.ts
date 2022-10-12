@@ -10,13 +10,13 @@ import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class CheckAdminPanelAccess {
   public async handle({ session, response }: HttpContextContract, next: () => Promise<void>) {
-    const currentUserId: User['id'] | null = session.get(SESSION_USER_KEY)
+    const currentUser: User | null = session.get(SESSION_USER_KEY)
 
     try {
-      if (!currentUserId)
+      if (!currentUser)
         throw { code: ResponseCodes.CLIENT_ERROR, message: ResponseMessages.USER_NOT_FOUND } as Err
 
-      await AuthService.checkAdminAccess(currentUserId)
+      await AuthService.checkAdminAccess(currentUser.id)
     } catch (err: Err | any) {
       session.forget(SESSION_USER_KEY)
 

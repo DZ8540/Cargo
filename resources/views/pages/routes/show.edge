@@ -1,0 +1,184 @@
+@layout('layouts/index')
+
+@set('title', `Маршрут - ${item.id}`)
+
+@section('body')
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">{{ title }}</h4>
+
+        <div class="d-flex">
+          @if(item.isArchive)
+            <form action="{{ route('routes.unArchive', { id: item.id }) }}" method="POST">
+              {{ csrfField() }}
+              <button type="submit" class="btn btn-primary btn-sm">Разархивировать</button>
+            </form>
+          @else
+            <form action="{{ route('routes.archive', { id: item.id }) }}" method="POST">
+              {{ csrfField() }}
+              <button type="submit" class="btn btn-danger btn-sm">Архивировать</button>
+            </form>
+          @endif
+
+          <a href="{{ route('routes.index') }}" class="ml-3 btn btn-primary btn-sm">Назад</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="basic-form">
+
+          <div class="form-group">
+            <label class="mb-1">ID</label>
+            <input type="string" class="form-control" value="{{ item.id }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Архив</label>
+            <input type="string" class="form-control" value="{{ item.isArchiveForUser }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Примечание</label>
+            <textarea type="string" class="form-control" disabled>{{ item.note ?? '' }}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Откуда</label>
+            <input type="string" class="form-control" value="{{ item.fromRoute }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Радиус загрузки</label>
+            <input type="string" class="form-control" value="{{ item.loadingRadius ?? '' }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Куда</label>
+            <input type="string" class="form-control" value="{{ item.toRoute }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Радиус разгрузки</label>
+            <input type="string" class="form-control" value="{{ item.unloadingRadius ?? '' }}" disabled>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Дата</h4>
+      </div>
+      <div class="card-body">
+        <div class="basic-form">
+
+          <div class="form-group">
+            <label class="mb-1">Тип даты</label>
+            <input type="string" class="form-control" value="{{ item.dateTypeForUser }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Дата</label>
+            <input type="string" class="form-control" value="{{ item.dateForUser }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Дни</label>
+            <input type="string" class="form-control" value="{{ item.dateDays ?? '' }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Тип постоянной даты</label>
+            <input type="string" class="form-control" value="{{ item.datePeriodTypeForUser }}" disabled>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Машина</h4>
+      </div>
+      <div class="card-body">
+        <a href="{{ route('cars.show', { id: item.car.id }) }}" class="text-primary">{{ item.car.name }}</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Оплата</h4>
+      </div>
+      <div class="card-body">
+        <div class="basic-form">
+
+          <div class="form-group">
+            <label class="mb-1">Предоплата</label>
+            <input type="string" class="form-control" value="{{ item.prepayment }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Торг</label>
+            <input type="string" class="form-control" value="{{ item.bargainTypeForUser }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Рассчет</label>
+            <input type="string" class="form-control" value="{{ item.calculateTypeForUser }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">НДС</label>
+            <input type="string" class="form-control" value="{{ item.vat ?? '' }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Без НДС</label>
+            <input type="string" class="form-control" value="{{ item.noVat ?? '' }}" disabled>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Контакты</h4>
+      </div>
+
+      @each(item in item.contacts)
+        <div class="card-header">
+
+          <div class="basic-form">
+
+            <div class="form-group">
+              <label class="mb-1">ID</label>
+              <input type="string" class="form-control" value="{{ item.id }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Имя</label>
+              <input type="string" class="form-control" value="{{ item.firstName }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Телефон</label>
+              <input type="string" class="form-control" value="{{ item.phone }}" disabled>
+            </div>
+
+          </div>
+
+        </div>
+      @endeach
+    </div>
+  </div>
+@endsection

@@ -17,16 +17,16 @@ export default class IndexController {
   public async getAllCities({ response }: HttpContextContract) {
     try {
       const cities: string[] = []
-      const csvCities: Buffer = fs.readFileSync(__dirname + '/../../../../city.csv')
+      const csvCities: Buffer = fs.readFileSync(__dirname + '/../../../../backups/city.csv')
       const parsedCities: CsvCity[] = parse(csvCities, { columns: true })
 
-      let i: number = 1
+      // let i: number = 1
       for (const item of parsedCities) {
         // Logger.info('Index:' + i)
 
         if (item.city)
           cities.push(item.city)
-        i++
+        // i++
       }
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS, cities))

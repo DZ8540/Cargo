@@ -1,3 +1,5 @@
+@set('currentUser', session.get('user'))
+
 <div class="header">
   <div class="header-content">
     <nav class="navbar navbar-expand">
@@ -11,9 +13,9 @@
         <ul class="navbar-nav header-right">
           <li class="nav-item dropdown header-profile">
             <a class="nav-link" href="javascript:;" role="button" data-toggle="dropdown">
-              <img src="/images/profile/12.png" width="20" alt="" />
+              <img src="{{ getMedia(currentUser?.avatar) }}" width="20" alt="" />
               <div class="header-info">
-                <span>Hello,<strong> Roberto</strong></span>
+                <span>Привет,<strong> {{ currentUser?.firstName }}</strong></span>
               </div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">

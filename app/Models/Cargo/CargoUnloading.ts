@@ -6,7 +6,8 @@ import type { BelongsTo, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm
 
 import CargoLoadingType from './CargoLoadingType'
 import { TABLES_NAMES } from 'Config/database'
-import { BaseModel, beforeFetch, beforeFind, belongsTo, column, scope } from '@ioc:Adonis/Lucid/Orm'
+import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
+import { BaseModel, beforeFetch, beforeFind, belongsTo, column, scope, computed } from '@ioc:Adonis/Lucid/Orm'
 
 export default class CargoUnloading extends BaseModel {
   public static readonly table: string = TABLES_NAMES.CARGOS_UNLOADINGS
@@ -63,6 +64,20 @@ export default class CargoUnloading extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  /**
+   * * Computed properties
+   */
+
+  @computed()
+  public get dateFromForUser(): string {
+    return this.dateFrom ? this.dateFrom.setLocale('ru-RU').toFormat(GLOBAL_DATETIME_FORMAT) : ''
+  }
+
+  @computed()
+  public get dateToForUser(): string {
+    return this.dateTo ? this.dateTo.setLocale('ru-RU').toFormat(GLOBAL_DATETIME_FORMAT) : ''
+  }
 
   /**
    * * Relations

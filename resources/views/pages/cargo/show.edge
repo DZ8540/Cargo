@@ -1,0 +1,499 @@
+@layout('layouts/index')
+
+@set('title', `Груз - ${item.id}`)
+
+@section('body')
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">{{ title }}</h4>
+
+        <div class="d-flex">
+          @if(item.isArchive)
+            <form action="{{ route('cargo.unArchive', { id: item.id }) }}" method="POST">
+              {{ csrfField() }}
+              <button type="submit" class="btn btn-primary btn-sm">Разархивировать</button>
+            </form>
+          @else
+            <form action="{{ route('cargo.archive', { id: item.id }) }}" method="POST">
+              {{ csrfField() }}
+              <button type="submit" class="btn btn-danger btn-sm">Архивировать</button>
+            </form>
+          @endif
+
+          <a href="{{ route('cargo.index') }}" class="ml-3 btn btn-primary btn-sm">Назад</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="basic-form">
+
+          <div class="form-group">
+            <label class="mb-1">ID</label>
+            <input type="string" class="form-control" value="{{ item.id }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Архив</label>
+            <input type="string" class="form-control" value="{{ item.isArchiveForUser }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Примечание</label>
+            <textarea type="string" class="form-control" disabled>{{ item.note ?? '' }}</textarea>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Требования к машине</h4>
+      </div>
+      <div class="card-body">
+        <div class="basic-form">
+
+          <div class="form-group">
+            <label class="mb-1">Тип кузова</label>
+            <input type="string" class="form-control" value="{{ item.carBodyType.name }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Температура от</label>
+            <input type="string" class="form-control" value="{{ item.fromTemperature ?? '' }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Температура до</label>
+            <input type="string" class="form-control" value="{{ item.toTemperature ?? '' }}" disabled>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Оплата</h4>
+      </div>
+      <div class="card-body">
+        <div class="basic-form">
+
+          <div class="form-group">
+            <label class="mb-1">Предоплата</label>
+            <input type="string" class="form-control" value="{{ item.prepayment }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Торг</label>
+            <input type="string" class="form-control" value="{{ item.bargainTypeForUser }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Рассчет</label>
+            <input type="string" class="form-control" value="{{ item.calculateTypeForUser }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">НДС</label>
+            <input type="string" class="form-control" value="{{ item.vat ?? '' }}" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-1">Без НДС</label>
+            <input type="string" class="form-control" value="{{ item.noVat ?? '' }}" disabled>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Пользователь</h4>
+      </div>
+      <div class="card-body">
+        <a href="{{ route('users.show', { id: item.user.id }) }}" class="text-primary">{{ item.user.fullName }}</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Загрузки</h4>
+      </div>
+
+      @each(item in item.loadings)
+        <div class="card-header">
+
+          <div class="basic-form">
+
+            <div class="form-group">
+              <label class="mb-1">ID</label>
+              <input type="string" class="form-control" value="{{ item.id }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Тип</label>
+              <input type="string" class="form-control" value="{{ item.loadingType.name }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Тип даты</label>
+              <input type="string" class="form-control" value="{{ item.typeForUser }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                <input type="checkbox" name="isAllDay" class="custom-control-input" id="isAllDay" {{ item.isAllDay ? 'checked' : '' }} disabled>
+                <label class="custom-control-label" for="isAllDay">Круглосуточно</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Населеный пункт</label>
+              <input type="string" class="form-control" value="{{ item.town }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Адрес</label>
+              <input type="string" class="form-control" value="{{ item.address }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Дата</label>
+              <input type="string" class="form-control" value="{{ item.dateForUser }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Дни</label>
+              <input type="string" class="form-control" value="{{ item.days ?? '' }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Тип постоянной даты</label>
+              <input type="string" class="form-control" value="{{ item.periodTypeForUser }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Время загрузки от</label>
+              <input type="string" class="form-control" value="{{ item.timeFrom }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Время загрузки до</label>
+              <input type="string" class="form-control" value="{{ item.timeTo }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Тип перевозки</label>
+              <input type="string" class="form-control" value="{{ item.transportationTypeForUser }}" disabled>
+            </div>
+
+          </div>
+
+        </div>
+      @endeach
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Разгрузки</h4>
+      </div>
+
+      @each(item in item.unloadings)
+        <div class="card-header">
+
+          <div class="basic-form">
+
+            <div class="form-group">
+              <label class="mb-1">ID</label>
+              <input type="string" class="form-control" value="{{ item.id }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Тип</label>
+              <input type="string" class="form-control" value="{{ item.loadingType.name }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                <input type="checkbox" name="isAllDay" class="custom-control-input" id="isAllDay" {{ item.isAllDay ? 'checked' : '' }} disabled>
+                <label class="custom-control-label" for="isAllDay">Круглосуточно</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Населеный пункт</label>
+              <input type="string" class="form-control" value="{{ item.town }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Адрес</label>
+              <input type="string" class="form-control" value="{{ item.address }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Дата от</label>
+              <input type="string" class="form-control" value="{{ item.dateFromForUser }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Дата до</label>
+              <input type="string" class="form-control" value="{{ item.dateToForUser }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Время загрузки от</label>
+              <input type="string" class="form-control" value="{{ item.timeFrom }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Время загрузки до</label>
+              <input type="string" class="form-control" value="{{ item.timeTo }}" disabled>
+            </div>
+
+          </div>
+
+        </div>
+      @endeach
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Грузы</h4>
+      </div>
+
+      @each(item in item.items)
+        <div class="card-header">
+
+          <div class="basic-form">
+
+            <div class="form-group">
+              <label class="mb-1">ID</label>
+              <input type="string" class="form-control" value="{{ item.id }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Тип</label>
+              <input type="string" class="form-control" value="{{ item.type.name }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Тип упаковки</label>
+              <input type="string" class="form-control" value="{{ item.packageType.name }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Кол-во упаковок</label>
+              <input type="string" class="form-control" value="{{ item.packageCount ?? '' }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Вес</label>
+              <input type="string" class="form-control" value="{{ item.weight }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Объем</label>
+              <input type="string" class="form-control" value="{{ item.capacity }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Длина</label>
+              <input type="string" class="form-control" value="{{ item.height ?? '' }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Ширина</label>
+              <input type="string" class="form-control" value="{{ item.width ?? '' }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Высота</label>
+              <input type="string" class="form-control" value="{{ item.length ?? '' }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Особые пометки</label>
+              <input type="string" class="form-control" value="{{ item.noteTypeForUser }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Разрешения</label>
+
+              <div class="row">
+                <div class="col-4">
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                      <input type="checkbox" name="adr1" class="custom-control-input" id="adr1" {{ item.adr1 ? 'checked' : '' }} disabled>
+                      <label class="custom-control-label" for="adr1">ADR1</label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                      <input type="checkbox" name="adr2" class="custom-control-input" id="adr2" {{ item.adr2 ? 'checked' : '' }} disabled>
+                      <label class="custom-control-label" for="adr2">ADR2</label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                      <input type="checkbox" name="adr3" class="custom-control-input" id="adr3" {{ item.adr3 ? 'checked' : '' }} disabled>
+                      <label class="custom-control-label" for="adr3">ADR3</label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                      <input type="checkbox" name="adr4" class="custom-control-input" id="adr4" {{ item.adr4 ? 'checked' : '' }} disabled>
+                      <label class="custom-control-label" for="adr4">ADR4</label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                      <input type="checkbox" name="adr5" class="custom-control-input" id="adr5" {{ item.adr5 ? 'checked' : '' }} disabled>
+                      <label class="custom-control-label" for="adr5">ADR5</label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                      <input type="checkbox" name="adr6" class="custom-control-input" id="adr6" {{ item.adr6 ? 'checked' : '' }} disabled>
+                      <label class="custom-control-label" for="adr6">ADR6</label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                      <input type="checkbox" name="adr7" class="custom-control-input" id="adr7" {{ item.adr7 ? 'checked' : '' }} disabled>
+                      <label class="custom-control-label" for="adr7">ADR7</label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                      <input type="checkbox" name="adr8" class="custom-control-input" id="adr8" {{ item.adr8 ? 'checked' : '' }} disabled>
+                      <label class="custom-control-label" for="adr8">ADR8</label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                      <input type="checkbox" name="adr9" class="custom-control-input" id="adr9" {{ item.adr9 ? 'checked' : '' }} disabled>
+                      <label class="custom-control-label" for="adr9">ADR9</label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                      <input type="checkbox" name="tir" class="custom-control-input" id="tir" {{ item.tir ? 'checked' : '' }} disabled>
+                      <label class="custom-control-label" for="tir">TIR</label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="col-4">
+
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox mb-3 checkbox-success">
+                      <input type="checkbox" name="ekmt" class="custom-control-input" id="ekmt" {{ item.ekmt ? 'checked' : '' }} disabled>
+                      <label class="custom-control-label" for="ekmt">EKMT</label>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      @endeach
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Контакты</h4>
+      </div>
+
+      @each(item in item.contacts)
+        <div class="card-header">
+
+          <div class="basic-form">
+
+            <div class="form-group">
+              <label class="mb-1">ID</label>
+              <input type="string" class="form-control" value="{{ item.id }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Имя</label>
+              <input type="string" class="form-control" value="{{ item.firstName }}" disabled>
+            </div>
+
+            <div class="form-group">
+              <label class="mb-1">Телефон</label>
+              <input type="string" class="form-control" value="{{ item.phone }}" disabled>
+            </div>
+
+          </div>
+
+        </div>
+      @endeach
+    </div>
+  </div>
+@endsection

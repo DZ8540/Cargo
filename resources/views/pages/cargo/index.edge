@@ -1,0 +1,80 @@
+@layout('layouts/index')
+
+@set('title', 'Все грузы')
+
+@section('body')
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">{{ title }}</h4>
+      </div>
+
+      <div class="card-body">
+        <div class="table-responsive">
+
+          <table class="table table-responsive-md">
+            <thead>
+              <tr>
+                <th class="width80"><strong>#</strong></th>
+
+                <th><strong>Архив</strong></th>
+                <th><strong>Пользователь</strong></th>
+                <th><strong>Предоплата</strong></th>
+                <th><strong>Торг</strong></th>
+                <th><strong>Рассчет</strong></th>
+                <th><strong>Температура от</strong></th>
+                <th><strong>Температура до</strong></th>
+                <th><strong>НДС</strong></th>
+                <th><strong>Без НДС</strong></th>
+
+                <th><strong>Действия</strong></th>
+              </tr>
+            </thead>
+            <tbody>
+
+              @each(item in cargo)
+                <tr>
+                  <td><strong>{{ item.id }}</strong></td>
+                  <td>{{ item.isArchiveForUser }}</td>
+                  <td>
+                    <a href="{{ route('users.show', { id: item.user.id }) }}" class="text-primary">{{ item.user.fullName }}</a>
+                  </td>
+                  <td>{{ item.prepayment }}</td>
+                  <td>{{ item.bargainTypeForUser }}</td>
+                  <td>{{ item.calculateTypeForUser }}</td>
+                  <td>{{ item.fromTemperature ?? '' }}</td>
+                  <td>{{ item.toTemperature ?? '' }}</td>
+                  <td>{{ item.vatPrice ?? '' }}</td>
+                  <td>{{ item.noVatPrice ?? '' }}</td>
+
+                  <td>
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-success light sharp" data-toggle="dropdown"
+                        aria-expanded="false">
+                        <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
+                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"></rect>
+                            <circle fill="#000000" cx="5" cy="12" r="2"></circle>
+                            <circle fill="#000000" cx="12" cy="12" r="2"></circle>
+                            <circle fill="#000000" cx="19" cy="12" r="2"></circle>
+                          </g>
+                        </svg>
+                      </button>
+                      <div class="dropdown-menu" style="">
+                        <a class="dropdown-item" href="{{ route('cargo.show', { id: item.id }) }}">Показать</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              @endeach
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @!component('components/pagination', { obj: cargo })
+@endsection

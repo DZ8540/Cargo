@@ -8,7 +8,7 @@ import type { ArchivingConfig } from 'Contracts/app'
 import type { JSONPaginate } from 'Contracts/database'
 import type { PaginateConfig, ServiceConfig } from 'Contracts/services'
 import type { TransactionClientContract } from '@ioc:Adonis/Lucid/Database'
-import type { ModelAttributes, ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
+import type { ModelAttributes, ModelPaginatorContract, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 // * Types
 
 import ms from 'ms'
@@ -20,12 +20,32 @@ import { DateTime } from 'luxon'
 import { ResponseCodes, ResponseMessages } from 'Config/response'
 
 export default class RouteService {
+  public static async paginate(config: PaginateConfig<Route>): Promise<ModelPaginatorContract<Route>> {
+    let query: ModelQueryBuilderContract<typeof Route> = Route
+      .query()
+      .withScopes((scopes) => scopes.notTemplate())
+
+    if (config.relations) {
+      for (const item of config.relations) {
+        query = query.preload(item)
+      }
+    }
+
+    try {
+      return await query.getViaPaginate(config)
+    } catch (err: any) {
+      Logger.error(err)
+      throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
+    }
+  }
+
   public static async paginateByCity(city: string, config: PaginateConfig<Route>): Promise<JSONPaginate> {
     try {
       const routes: JSONPaginate = (await Route
         .query()
+        .withScopes((scopes) => scopes.getOnlyVerified())
         .withScopes((scopes) => scopes.notTemplate())
-        .withScopes((scopes) => scopes.notInArchive())
+        .withScopes((scopes) => scopes.getByIsArchive(false))
         .withScopes((scopes) => scopes.getByCity(city))
         .getViaPaginate(config))
         .toJSON()
@@ -44,7 +64,7 @@ export default class RouteService {
       const routes: JSONPaginate = (await Route
         .query()
         .withScopes((scopes) => scopes.notTemplate())
-        .withScopes((scopes) => scopes.notInArchive())
+        .withScopes((scopes) => scopes.getByIsArchive(false))
         .withScopes((scopes) => scopes.getByUserId(userId))
         .getViaPaginate(config))
         .toJSON()
@@ -63,7 +83,7 @@ export default class RouteService {
       const routes: JSONPaginate = (await Route
         .query()
         .withScopes((scopes) => scopes.notTemplate())
-        .withScopes((scopes) => scopes.inArchive())
+        .withScopes((scopes) => scopes.getByIsArchive(true))
         .withScopes((scopes) => scopes.getByUserId(userId))
         .getViaPaginate(config))
         .toJSON()
@@ -196,8 +216,9 @@ export default class RouteService {
     try {
       const routes: { total: number }[] = await Route
         .query()
+        .withScopes((scopes) => scopes.getOnlyVerified())
         .withScopes((scopes) => scopes.notTemplate())
-        .withScopes((scopes) => scopes.notInArchive())
+        .withScopes((scopes) => scopes.getByIsArchive(false))
         .count('* as total')
         .pojo()
 
@@ -208,7 +229,7 @@ export default class RouteService {
     }
   }
 
-  public static async unArchive(id: Route['id']): Promise<void> {
+  public static async archiveAction(id: Route['id'], isArchive: boolean): Promise<void> {
     let item: Route
 
     try {
@@ -218,7 +239,7 @@ export default class RouteService {
     }
 
     try {
-      await item.merge({ isArchive: false }).save()
+      await item.merge({ isArchive }).save()
     } catch (err: any) {
       Logger.error(err)
       throw { code: ResponseCodes.DATABASE_ERROR, message: ResponseMessages.ERROR } as Err
@@ -228,8 +249,9 @@ export default class RouteService {
   public static async search(payload: RouteSearchValidator['schema']['props']): Promise<JSONPaginate> {
     let query = Route
       .query()
+      .withScopes((scopes) => scopes.getOnlyVerified())
       .withScopes((scopes) => scopes.notTemplate())
-      .withScopes((scopes) => scopes.notInArchive())
+      .withScopes((scopes) => scopes.getByIsArchive(false))
     const config: PaginateConfig<Route> = {
       page: payload.page,
       limit: payload.limit,
@@ -379,7 +401,7 @@ export default class RouteService {
       return await Route
         .query()
         .withScopes((scopes) => scopes.notTemplate())
-        .withScopes((scopes) => scopes.notInArchive())
+        .withScopes((scopes) => scopes.getByIsArchive(false))
         .withScopes((scopes) => scopes.getForArchiving(expirationDate))
         .getViaPaginate(config)
     } catch (err: any) {

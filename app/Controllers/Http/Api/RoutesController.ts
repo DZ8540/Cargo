@@ -178,7 +178,7 @@ export default class RoutesController {
     const id: Route['id'] = params.id
 
     try {
-      await RouteService.unArchive(id)
+      await RouteService.archiveAction(id, false)
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
     } catch (err: Err | any) {

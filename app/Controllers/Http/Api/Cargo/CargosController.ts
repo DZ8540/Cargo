@@ -170,7 +170,7 @@ export default class CargosController {
     const id: Cargo['id'] = params.id
 
     try {
-      await CargoService.unArchive(id)
+      await CargoService.archiveAction(id, false)
 
       return response.status(200).send(new ResponseService(ResponseMessages.SUCCESS))
     } catch (err: Err | any) {

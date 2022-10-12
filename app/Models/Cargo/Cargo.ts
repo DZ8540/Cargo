@@ -12,7 +12,8 @@ import CargoLoading from './CargoLoading'
 import CarBodyType from '../Car/CarBodyType'
 import CargoUnloading from './CargoUnloading'
 import RouteOrCargoContact from '../RouteOrCargoContact'
-import { BaseModel, column, hasMany, scope, belongsTo, beforeFetch, beforeFind } from '@ioc:Adonis/Lucid/Orm'
+import { CARGOS_BARGAIN_TYPES, CARGOS_CALCULATE_TYPES } from 'Config/cargo'
+import { BaseModel, column, hasMany, scope, belongsTo, beforeFetch, beforeFind, computed } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Cargo extends BaseModel {
   public static readonly columns = [
@@ -83,6 +84,31 @@ export default class Cargo extends BaseModel {
   public updatedAt: DateTime
 
   /**
+   * * Computed properties
+   */
+
+  @computed()
+  public get isArchiveForUser(): string {
+    return this.isArchive ? 'Да' : 'Нет'
+  }
+
+  @computed()
+  public get bargainTypeForUser(): string {
+    if (this.bargainType !== undefined && this.bargainType !== null)
+      return CARGOS_BARGAIN_TYPES[Number(this.bargainType)]
+    else
+      return ''
+  }
+
+  @computed()
+  public get calculateTypeForUser(): string {
+    if (this.calculateType !== undefined && this.calculateType !== null)
+      return CARGOS_CALCULATE_TYPES[Number(this.calculateType)]
+    else
+      return ''
+  }
+
+  /**
    * * Relations
    */
 
@@ -138,12 +164,8 @@ export default class Cargo extends BaseModel {
     query.whereNull('template_id')
   })
 
-  public static inArchive = scope((query) => {
-    query.where('isArchive', true)
-  })
-
-  public static notInArchive = scope((query) => {
-    query.where('isArchive', false)
+  public static getByIsArchive = scope((query, isArchive: Cargo['isArchive']) => {
+    query.where('isArchive', isArchive)
   })
 
   /**

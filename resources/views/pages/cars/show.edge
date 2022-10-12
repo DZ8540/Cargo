@@ -12,12 +12,12 @@
           @if(item.isVerified)
             <form action="{{ route('cars.unVerify', { id: item.id }) }}" method="POST">
               {{ csrfField() }}
-              <button type="submit" class="btn btn-primary btn-sm">Разблокировать</button>
+              <button type="submit" class="btn btn-primary btn-sm">Верифицирован</button>
             </form>
           @else
             <form action="{{ route('cars.verify', { id: item.id }) }}" method="POST">
               {{ csrfField() }}
-              <button type="submit" class="btn btn-danger btn-sm">Заблокировать</button>
+              <button type="submit" class="btn btn-danger btn-sm">Не верифицирован</button>
             </form>
           @endif
 

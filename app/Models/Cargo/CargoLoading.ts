@@ -7,7 +7,9 @@ import type { BelongsTo, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm
 
 import CargoLoadingType from './CargoLoadingType'
 import { TABLES_NAMES } from 'Config/database'
-import { BaseModel, beforeFetch, beforeFind, belongsTo, column, scope } from '@ioc:Adonis/Lucid/Orm'
+import { GLOBAL_DATETIME_FORMAT } from 'Config/app'
+import { BaseModel, beforeFetch, beforeFind, belongsTo, column, scope, computed } from '@ioc:Adonis/Lucid/Orm'
+import { CARGOS_LOADING_PERIOD_TYPES, CARGOS_LOADING_TRANSPORTATION_TYPES, CARGOS_LOADING_TYPE_TYPES } from 'Config/cargo'
 
 export default class CargoLoading extends BaseModel {
   public static readonly table: string = TABLES_NAMES.CARGOS_LOADINGS
@@ -74,6 +76,36 @@ export default class CargoLoading extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  /**
+   * * Computed properties
+   */
+
+  @computed()
+  public get typeForUser(): string {
+    return CARGOS_LOADING_TYPE_TYPES[Number(this.type)]
+  }
+
+  @computed()
+  public get dateForUser(): string {
+    return this.date ? this.date.setLocale('ru-RU').toFormat(GLOBAL_DATETIME_FORMAT) : ''
+  }
+
+  @computed()
+  public get periodTypeForUser(): string {
+    if (this.periodType !== undefined && this.periodType !== null)
+      return CARGOS_LOADING_PERIOD_TYPES[this.periodType]
+    else
+      return ''
+  }
+
+  @computed()
+  public get transportationTypeForUser(): string {
+    if (this.transportationType !== undefined && this.transportationType !== null)
+      return CARGOS_LOADING_TRANSPORTATION_TYPES[Number(this.transportationType)]
+    else
+      return ''
+  }
 
   /**
    * * Relations

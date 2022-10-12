@@ -26,7 +26,7 @@
       ],
       "Helpers/*": [
         "./helpers/*"
-      ]
+      ],
     },
     "types": [
       "@adonisjs/core",
