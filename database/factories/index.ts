@@ -96,7 +96,7 @@ export const RouteFactory = Factory
 
       note: faker.random.words(10),
 
-      carId: faker.datatype.number({ min: 1, max: 20 }),
+      carId: faker.datatype.number({ min: 1, max: 10 }),
       userId: faker.datatype.number({ min: 1, max: 20 }),
       templateId: faker.datatype.number({ min: 1, max: 20 }),
     }
@@ -219,6 +219,7 @@ export const CargoLoadingFactory = Factory
       transportationType: faker.datatype.boolean(),
 
       cargoId: faker.datatype.number({ min: 1, max: 50 }),
+      cargoLoadingTypeId: faker.datatype.number({ min: 1, max: 10 }),
     }
   })
   .build()
@@ -236,6 +237,7 @@ export const CargoUnloadingFactory = Factory
       timeTo: DateTime.now().plus({ days: 10 }).toFormat('HH:mm'),
 
       cargoId: faker.datatype.number({ min: 1, max: 50 }),
+      cargoLoadingTypeId: faker.datatype.number({ min: 1, max: 10 }),
     }
   })
   .build()
@@ -282,6 +284,7 @@ export const CargoItemFactory = Factory
       }),
 
       cargoId: faker.datatype.number({ min: 1, max: 20 }),
+      cargoItemTypeId: faker.datatype.number({ min: 1, max: 20 }),
       cargoItemPackageTypeId: faker.datatype.number({ min: 1, max: 10 }),
     }
   })
@@ -299,7 +302,7 @@ export const CarBodyTypeFactory = Factory
   .build()
 
 export const CarFactory = Factory
-  .define(Car, ({ faker }) => {
+  .define(Car, async ({ faker }) => {
     return {
       name: faker.lorem.word(),
 
@@ -316,6 +319,7 @@ export const CarFactory = Factory
       pts: faker.unique(faker.vehicle.vrm),
 
       userId: faker.datatype.number({ min: 1, max: 20 }),
+      carBodyTypeId: faker.datatype.number({ min: 1, max: 20 }),
     }
   })
   .build()

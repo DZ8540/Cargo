@@ -15,7 +15,7 @@ export default class extends BaseSeeder {
       // await CarBodyTypeFactory.with('cars', 10).createMany(10)
 
       const types: Partial<ModelAttributes<CarBodyType>>[] = []
-      const csvTypes: Buffer = fs.readFileSync(__dirname + '/../../backups/carBodyTypes.csv')
+      const csvTypes: Buffer = fs.readFileSync(__dirname + '/../../../backups/carBodyTypes.csv')
       const parsedTypes: string[][] = parse(csvTypes)
 
       // let i: number = 1

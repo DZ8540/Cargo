@@ -17,12 +17,18 @@ export default class IndexSeeder extends BaseSeeder {
     await this.runSeeder(await import('../User/User'))
 
     /**
+     * * Car
+     */
+
+    await this.runSeeder(await import('../Car/CarBodyType'))
+    await this.runSeeder(await import('../Car/Car'))
+
+    /**
      * * Other
      */
 
     await this.runSeeder(await import('../Template'))
     await this.runSeeder(await import('../News'))
-    await this.runSeeder(await import('../CarBodyType'))
     await this.runSeeder(await import('../Route'))
     await this.runSeeder(await import('../Topic'))
 
@@ -33,7 +39,10 @@ export default class IndexSeeder extends BaseSeeder {
 
     await this.runSeeder(await import('../Cargo/Cargo'))
     await this.runSeeder(await import('../Cargo/CargoLoadingType'))
+    await this.runSeeder(await import('../Cargo/CargoLoading'))
+    await this.runSeeder(await import('../Cargo/CargoUnloading'))
     await this.runSeeder(await import('../Cargo/CargoItemPackageType'))
     await this.runSeeder(await import('../Cargo/CargoItemType'))
+    await this.runSeeder(await import('../Cargo/CargoItem'))
   }
 }
